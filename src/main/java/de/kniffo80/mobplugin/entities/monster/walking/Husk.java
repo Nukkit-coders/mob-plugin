@@ -7,10 +7,8 @@ import cn.nukkit.event.entity.EntityDamageEvent.DamageCause;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
-
 import de.kniffo80.mobplugin.entities.monster.WalkingMonster;
 import de.kniffo80.mobplugin.utils.Utils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +24,7 @@ public class Husk extends WalkingMonster implements EntityAgeable {
     public int getNetworkId() {
         return NETWORK_ID;
     }
-    
+
     @Override
     public String getName() {
         return "Husk";

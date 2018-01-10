@@ -1,6 +1,7 @@
 package de.kniffo80.mobplugin.entities.animal.walking;
 
 import cn.nukkit.Player;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
@@ -23,17 +24,28 @@ public class Ocelot extends WalkingAnimal {
 
     @Override
     public float getWidth() {
-        return 0.72f;
+        if (this.isBaby()) {
+            return 0.3f;
+        }
+        return 0.6f;
     }
 
     @Override
     public float getHeight() {
-        return 0.9f;
+        if (this.isBaby()) {
+            return 0.35f;
+        }
+        return 0.7f;
     }
 
     @Override
     public double getSpeed() {
         return 1.4;
+    }
+
+    @Override
+    public boolean isBaby() {
+        return this.getDataFlag(DATA_FLAGS, Entity.DATA_FLAG_BABY);
     }
 
     @Override
@@ -54,8 +66,8 @@ public class Ocelot extends WalkingAnimal {
     public Item[] getDrops() {
         return new Item[0];
     }
-    
-    public int getKillExperience () {
+
+    public int getKillExperience() {
         return Utils.rand(1, 4); // gain 1-3 experience
     }
 

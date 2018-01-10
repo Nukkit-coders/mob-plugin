@@ -21,12 +21,12 @@ public class Bat extends FlyingAnimal {
 
     @Override
     public float getWidth() {
-        return 0.3f;
+        return 0.5f;
     }
 
     @Override
     public float getHeight() {
-        return 0.3f;
+        return 0.9f;
     }
 
     @Override

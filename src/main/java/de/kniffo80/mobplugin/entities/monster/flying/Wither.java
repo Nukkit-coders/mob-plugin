@@ -5,17 +5,10 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.item.Item;
-import cn.nukkit.level.Location;
 import cn.nukkit.level.format.FullChunk;
-import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
-
-import de.kniffo80.mobplugin.MobPlugin;
-import de.kniffo80.mobplugin.entities.BaseEntity;
-import de.kniffo80.mobplugin.entities.animal.Animal;
 import de.kniffo80.mobplugin.entities.monster.FlyingMonster;
 import de.kniffo80.mobplugin.utils.Utils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +24,7 @@ public class Wither extends FlyingMonster {
     public int getNetworkId() {
         return NETWORK_ID;
     }
-    
+
     @Override
     public String getName() {
         return "Wither";
@@ -77,7 +70,7 @@ public class Wither extends FlyingMonster {
 
     @Override
     public void attackEntity(Entity player) {
-	return;
+        return;
     }
 
     @Override

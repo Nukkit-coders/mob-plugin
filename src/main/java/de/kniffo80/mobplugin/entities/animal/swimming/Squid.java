@@ -3,14 +3,12 @@ package de.kniffo80.mobplugin.entities.animal.swimming;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.item.Item;
+import cn.nukkit.item.ItemDye;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.utils.DyeColor;
 import de.kniffo80.mobplugin.entities.animal.WalkingAnimal;
 import de.kniffo80.mobplugin.utils.Utils;
-import de.kniffo80.mobplugin.items.MobPluginItems;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Squid extends WalkingAnimal {
 
@@ -27,16 +25,12 @@ public class Squid extends WalkingAnimal {
 
     @Override
     public float getWidth() {
-        return 0.95f;
+        return 0.8f;
     }
 
     @Override
     public float getHeight() {
-        return 0.95f;
-    }
-    
-    public float getLength() {
-        return 0.95f;
+        return 0.8f;
     }
 
     @Override
@@ -58,20 +52,14 @@ public class Squid extends WalkingAnimal {
 
     @Override
     public Item[] getDrops() {
-        List<Item> drops = new ArrayList<>();
         if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
-            int inkSacDrop = Utils.rand(1, 4); // drops 1-3 ink sacs
-            for (int i=0; i < inkSacDrop; i++) {
-                drops.add(Item.get(MobPluginItems.INK_SAC, 0, 1));
-            }
         }
-        return drops.toArray(new Item[drops.size()]);
+        return new Item[]{new ItemDye(DyeColor.BLACK.getDyeData())};
     }
-    
+
     @Override
-    public int getKillExperience () {
+    public int getKillExperience() {
         return Utils.rand(1, 4); // gain 1-3 experience
     }
-    
 
 }

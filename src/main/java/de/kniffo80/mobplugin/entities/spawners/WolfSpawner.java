@@ -1,6 +1,6 @@
 /**
  * WolfSpawner.java
- * 
+ *
  * Created on 10:39:49
  */
 package de.kniffo80.mobplugin.entities.spawners;
@@ -18,7 +18,7 @@ import de.kniffo80.mobplugin.entities.monster.walking.Wolf;
 
 /**
  * Each entity get it's own spawner class.
- * 
+ *
  * @author <a href="mailto:kniffman@googlemail.com">Michael Gertz</a>
  */
 public class WolfSpawner extends AbstractEntitySpawner {
@@ -38,6 +38,8 @@ public class WolfSpawner extends AbstractEntitySpawner {
 
         if (biomeId != Biome.FOREST && biomeId != Biome.BIRCH_FOREST && biomeId == Biome.TAIGA) {
             result = SpawnResult.WRONG_BLOCK;
+        } else if (blockLightLevel < 9) { // uncommented because lightlevel doesn't work now
+            result = SpawnResult.WRONG_LIGHTLEVEL;
         } else if (pos.y > 127 || pos.y < 1 || level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z) == Block.AIR) { // cannot spawn on AIR block
             result = SpawnResult.POSITION_MISMATCH;
         } else {
@@ -46,7 +48,7 @@ public class WolfSpawner extends AbstractEntitySpawner {
 
         return result;
     }
-    
+
     /* (@Override)
      * @see cn.nukkit.entity.ai.IEntitySpawner#getEntityNetworkId()
      */
@@ -62,7 +64,7 @@ public class WolfSpawner extends AbstractEntitySpawner {
     public String getEntityName() {
         return "Wolf";
     }
-    
+
     /* (@Override)
      * @see de.kniffo80.mobplugin.entities.autospawn.AbstractEntitySpawner#getLogprefix()
      */

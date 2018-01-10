@@ -11,15 +11,14 @@ import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBow;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Location;
+import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.FullChunk;
-import cn.nukkit.level.sound.LaunchSound;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.MobEquipmentPacket;
 import de.kniffo80.mobplugin.MobPlugin;
 import de.kniffo80.mobplugin.entities.monster.WalkingMonster;
 import de.kniffo80.mobplugin.utils.Utils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,13 +29,13 @@ public class Skeleton extends WalkingMonster {
     public Skeleton(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
     }
-    
+
     @Override
     public void initEntity() {
         super.initEntity();
 
         this.setMaxHealth(20);
-    }    
+    }
 
     @Override
     public int getNetworkId() {
@@ -84,7 +83,7 @@ public class Skeleton extends WalkingMonster {
                     projectile.kill();
                 } else {
                     projectile.spawnToAll();
-                    this.level.addSound(new LaunchSound(this), this.getViewers().values());
+                    this.level.addSound(this, Sound.RANDOM_BOW);
                 }
             }
         }
@@ -124,18 +123,18 @@ public class Skeleton extends WalkingMonster {
         if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
             int bones = Utils.rand(0, 3); // drops 0-2 bones
             int arrows = Utils.rand(0, 3); // drops 0-2 arrows
-            for (int i=0; i < bones; i++) {
+            for (int i = 0; i < bones; i++) {
                 drops.add(Item.get(Item.BONE, 0, 1));
             }
-            for (int i=0; i < arrows; i++) {
+            for (int i = 0; i < arrows; i++) {
                 drops.add(Item.get(Item.ARROW, 0, 1));
             }
         }
         return drops.toArray(new Item[drops.size()]);
     }
-    
+
     @Override
-    public int getKillExperience () {
+    public int getKillExperience() {
         return 5; // gain 5 experience
     }
 
