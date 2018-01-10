@@ -1,6 +1,7 @@
 package de.kniffo80.mobplugin.entities.animal.walking;
 
 import cn.nukkit.Player;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.item.Item;
@@ -8,7 +9,6 @@ import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import de.kniffo80.mobplugin.entities.animal.WalkingAnimal;
 import de.kniffo80.mobplugin.utils.Utils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +46,11 @@ public class Cow extends WalkingAnimal {
         return 1.2f;
     }
 
+    @Override
+    public boolean isBaby() {
+        return this.getDataFlag(DATA_FLAGS, Entity.DATA_FLAG_BABY);
+    }
+
     public void initEntity() {
         super.initEntity();
         this.setMaxHealth(10);
@@ -63,16 +68,16 @@ public class Cow extends WalkingAnimal {
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
         if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
-            
+
             int leatherDropCount = Utils.rand(0, 3);
             int beefDrop = Utils.rand(1, 4);
-            
+
             // in any case, cow drops leather (0-2)
-            for (int i=0; i < leatherDropCount; i++) {
+            for (int i = 0; i < leatherDropCount; i++) {
                 drops.add(Item.get(Item.LEATHER, 0, 1));
             }
             // when cow is burning, it drops steak instead of raw beef (1-3)
-            for (int i=0; i < beefDrop; i++) {
+            for (int i = 0; i < beefDrop; i++) {
                 drops.add(Item.get(this.isOnFire() ? Item.STEAK : Item.RAW_BEEF, 0, 1));
             }
         }
@@ -86,5 +91,5 @@ public class Cow extends WalkingAnimal {
     public int getKillExperience() {
         return Utils.rand(1, 4);
     }
-    
+
 }

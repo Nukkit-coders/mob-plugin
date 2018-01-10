@@ -1,8 +1,10 @@
 package de.kniffo80.mobplugin.entities.animal;
 
 import cn.nukkit.Player;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.data.ShortEntityData;
 import cn.nukkit.event.entity.EntityDamageEvent;
+import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
@@ -11,6 +13,9 @@ import co.aikar.timings.Timings;
 import de.kniffo80.mobplugin.entities.WalkingEntity;
 
 public abstract class WalkingAnimal extends WalkingEntity implements Animal {
+
+    protected int inLoveTicks = 0;
+    protected int spawnBabyDelay = 0; //TODO: spawn baby animal
 
     public WalkingAnimal(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
@@ -25,11 +30,15 @@ public abstract class WalkingAnimal extends WalkingEntity implements Animal {
     protected void initEntity() {
         super.initEntity();
 
+        if (this.getDataFlag(DATA_FLAG_BABY, 0)) {
+            this.setDataFlag(DATA_FLAG_BABY, DATA_TYPE_BYTE);
+        }
+
     }
 
     @Override
     public boolean isBaby() {
-        return false;
+        return this.getDataFlag(DATA_FLAG_BABY, 0);
     }
 
     @Override
@@ -85,6 +94,21 @@ public abstract class WalkingAnimal extends WalkingEntity implements Animal {
             this.moveTime = 0;
         }
         return true;
+    }
+
+    public boolean onInteract(Entity entity, Item item) {
+        //TODO: mating
+
+        return false;
+    }
+
+    public void setInLove() {
+        this.inLoveTicks = 600;
+        this.setDataFlag(DATA_FLAGS, DATA_FLAG_INLOVE);
+    }
+
+    public boolean isBreedingItem(Item item) {
+        return item != null && item.getId() == Item.WHEAT;
     }
 
 }

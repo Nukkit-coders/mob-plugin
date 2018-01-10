@@ -1,6 +1,6 @@
 /**
  * CreeperSpawner.java
- * 
+ *
  * Created on 10:39:49
  */
 package de.kniffo80.mobplugin.entities.spawners;
@@ -17,7 +17,7 @@ import de.kniffo80.mobplugin.entities.autospawn.SpawnResult;
 
 /**
  * Each entity get it's own spawner class.
- * 
+ *
  * @author <a href="mailto:kniffman@googlemail.com">Michael Gertz</a>
  */
 public class ChickenSpawner extends AbstractEntitySpawner {
@@ -37,6 +37,8 @@ public class ChickenSpawner extends AbstractEntitySpawner {
 
         if (blockId != Block.GRASS) { // only spawns on gras
             result = SpawnResult.WRONG_BLOCK;
+        } else if (blockLightLevel < 9) { // uncommented because lightlevel doesn't work now
+            result = SpawnResult.WRONG_LIGHTLEVEL;
         } else if (pos.y > 127 || pos.y < 1 || level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z) == Block.AIR) { // cannot spawn on AIR block
             result = SpawnResult.POSITION_MISMATCH;
         } else { // creeper is spawned
@@ -45,7 +47,7 @@ public class ChickenSpawner extends AbstractEntitySpawner {
 
         return result;
     }
-    
+
     /* (@Override)
      * @see cn.nukkit.entity.ai.IEntitySpawner#getEntityNetworkId()
      */
@@ -61,7 +63,7 @@ public class ChickenSpawner extends AbstractEntitySpawner {
     public String getEntityName() {
         return "Chicken";
     }
-    
+
     /* (@Override)
      * @see de.kniffo80.mobplugin.entities.autospawn.AbstractEntitySpawner#getLogprefix()
      */

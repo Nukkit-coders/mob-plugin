@@ -13,6 +13,7 @@ max-spawns:
   donkey: 0
   enderman: 0
   ghast: 0
+  husk: 0
   horse: 0
   iron-golem: 0
   mooshroom: 0
@@ -21,6 +22,7 @@ max-spawns:
   pig: 1
   pig-zombie: 0
   rabbit: 0
+  stray: 0 
   silverfish: 0
   sheep: 1
   skeleton: 0
@@ -28,6 +30,8 @@ max-spawns:
   snow-golem: 0
   spider: 0
   squid: 0
+  wither: 0
+  wither-skeleton: 0
   witch: 0
   wolf: 0
   zombie: 0

@@ -16,36 +16,54 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.AddEntityPacket;
 import cn.nukkit.potion.Effect;
+import co.aikar.timings.Timings;
 import de.kniffo80.mobplugin.MobPlugin;
 import de.kniffo80.mobplugin.entities.monster.Monster;
-
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public abstract class BaseEntity extends EntityCreature {
 
-    protected int         stayTime     = 0;
+    protected int stayTime = 0;
 
-    protected int         moveTime     = 0;
+    protected int moveTime = 0;
 
-    protected Vector3     target       = null;
+    public double moveMultifier = 1.0d;
 
-    protected Entity      followTarget = null;
+    protected Vector3 target = null;
+
+    protected Entity followTarget = null;
+
+    public boolean inWater = false;
+
+    public boolean inLava = false;
+
+    public boolean onClimbable = false;
+
+    protected boolean fireProof = false;
+
+    private boolean movement = true;
+
+    private boolean friendly = false;
+
+    private boolean wallcheck = true;
 
     protected List<Block> blocksAround = new ArrayList<>();
 
-    private boolean       movement     = true;
+    protected List<Block> collisionBlocks = new ArrayList<>();
 
-    private boolean       friendly     = false;
-
-    private boolean       wallcheck    = true;
+    ///Jump
+    private int maxJumpHeight = 1; // default: 1 block jump height - this should be 2 for horses e.g.
+    protected boolean isJumping;
+    public float jumpMovementFactor = 0.02F;
 
     public BaseEntity(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
     }
 
     public abstract Vector3 updateMove(int tickDiff);
-    
+
     public abstract int getKillExperience();
 
     public boolean isFriendly() {
@@ -80,6 +98,14 @@ public abstract class BaseEntity extends EntityCreature {
         return 1;
     }
 
+    public int getMaxJumpHeight() {
+        return this.maxJumpHeight;
+    }
+
+    public int getAge() {
+        return this.age;
+    }
+
     public Entity getTarget() {
         return this.followTarget != null ? this.followTarget : (this.target instanceof Entity ? (Entity) this.target : null);
     }
@@ -104,6 +130,11 @@ public abstract class BaseEntity extends EntityCreature {
         if (this.namedTag.contains("WallCheck")) {
             this.setWallCheck(this.namedTag.getBoolean("WallCheck"));
         }
+
+        if (this.namedTag.contains("Age")) {
+            this.age = this.namedTag.getShort("Age");
+        }
+
         this.setDataProperty(new ByteEntityData(DATA_FLAG_NO_AI, (byte) 1));
     }
 
@@ -111,6 +142,7 @@ public abstract class BaseEntity extends EntityCreature {
         super.saveNBT();
         this.namedTag.putBoolean("Movement", this.isMovement());
         this.namedTag.putBoolean("WallCheck", this.isWallCheck());
+        this.namedTag.putShort("Age", this.age);
     }
 
     @Override
@@ -142,7 +174,7 @@ public abstract class BaseEntity extends EntityCreature {
                 this.lastZ = this.z;
                 this.lastYaw = this.yaw;
                 this.lastPitch = this.pitch;
-    
+
                 this.addMovement(this.x, this.y, this.z, this.yaw, this.pitch, this.yaw);
             }
         }
@@ -187,7 +219,44 @@ public abstract class BaseEntity extends EntityCreature {
     }
 
     @Override
+    protected void checkBlockCollision() {
+        Vector3 vector = new Vector3(0.0D, 0.0D, 0.0D);
+        Iterator d = this.getBlocksAround().iterator();
+
+        inWater = false;
+        inLava = false;
+        onClimbable = false;
+
+        while (d.hasNext()) {
+            Block block = (Block) d.next();
+
+            if (block.hasEntityCollision()) {
+                block.onEntityCollide(this);
+                block.addVelocityToEntity(this, vector);
+            }
+
+            if (block.getId() == Block.WATER || block.getId() == Block.STILL_WATER) {
+                inWater = true;
+            } else if (block.getId() == Block.LAVA || block.getId() == Block.STILL_LAVA) {
+                inLava = true;
+            } else if (block.getId() == Block.LADDER || block.getId() == Block.VINE) {
+                onClimbable = true;
+            }
+        }
+
+        if (vector.lengthSquared() > 0.0D) {
+            vector = vector.normalize();
+            double d1 = 0.014D;
+            this.motionX += vector.x * d1;
+            this.motionY += vector.y * d1;
+            this.motionZ += vector.z * d1;
+        }
+    }
+
+    @Override
     public boolean entityBaseTick(int tickDiff) {
+
+        Timings.entityMoveTimer.startTiming();
 
         boolean hasUpdate = false;
 
@@ -256,6 +325,8 @@ public abstract class BaseEntity extends EntityCreature {
         this.age += tickDiff;
         this.ticksLived += tickDiff;
 
+        Timings.entityMoveTimer.stopTiming();
+
         return hasUpdate;
     }
 
@@ -279,6 +350,25 @@ public abstract class BaseEntity extends EntityCreature {
         return true;
     }
 
+    public List<Block> getCollisionBlocks() {
+        return collisionBlocks;
+    }
+
+    public int getMaxFallHeight() {
+        if (!(this.target instanceof Entity)) {
+            return 3;
+        } else {
+            int i = (int) (this.getHealth() - this.getMaxHealth() * 0.33F);
+            i = i - (3 - this.getServer().getDifficulty()) * 4;
+
+            if (i < 0) {
+                i = 0;
+            }
+
+            return i + 3;
+        }
+    }
+
     @Override
     public boolean setMotion(Vector3 motion) {
         if (MobPlugin.MOB_AI_ENABLED) {
@@ -289,7 +379,7 @@ public abstract class BaseEntity extends EntityCreature {
                     return false;
                 }
             }
-    
+
             this.motionX = motion.x;
             this.motionY = motion.y;
             this.motionZ = motion.z;
@@ -300,19 +390,20 @@ public abstract class BaseEntity extends EntityCreature {
     @Override
     public boolean move(double dx, double dy, double dz) {
         if (MobPlugin.MOB_AI_ENABLED) {
-            // Timings.entityMoveTimer.startTiming();
-    
-            double movX = dx;
+
+            Timings.entityMoveTimer.startTiming();
+
+            double movX = dx * moveMultifier;
             double movY = dy;
-            double movZ = dz;
-    
+            double movZ = dz * moveMultifier;
+
             AxisAlignedBB[] list = this.level.getCollisionCubes(this, this.level.getTickRate() > 1 ? this.boundingBox.getOffsetBoundingBox(dx, dy, dz) : this.boundingBox.addCoord(dx, dy, dz));
             if (this.isWallCheck()) {
                 for (AxisAlignedBB bb : list) {
                     dx = bb.calculateXOffset(this.boundingBox, dx);
                 }
                 this.boundingBox.offset(dx, 0, 0);
-    
+
                 for (AxisAlignedBB bb : list) {
                     dz = bb.calculateZOffset(this.boundingBox, dz);
                 }
@@ -322,17 +413,16 @@ public abstract class BaseEntity extends EntityCreature {
                 dy = bb.calculateYOffset(this.boundingBox, dy);
             }
             this.boundingBox.offset(0, dy, 0);
-    
+
             this.setComponents(this.x + dx, this.y + dy, this.z + dz);
             this.checkChunks();
-    
+
             this.checkGroundState(movX, movY, movZ, dx, dy, dz);
             this.updateFallState(this.onGround);
-    
-            // Timings.entityMoveTimer.stopTiming();
+
+            Timings.entityMoveTimer.stopTiming();
         }
         return true;
     }
-
 
 }
