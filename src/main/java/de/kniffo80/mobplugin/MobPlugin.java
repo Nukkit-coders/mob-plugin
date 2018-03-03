@@ -401,7 +401,7 @@ public class MobPlugin extends PluginBase implements Listener {
         }
     }
 
-    @EventHandler
+    /*@EventHandler
     public void PlayerMouseOverEntityEvent(PlayerMouseOverEntityEvent ev) {
         if (this.counter > 10) {
             counter = 0;
@@ -425,7 +425,7 @@ public class MobPlugin extends PluginBase implements Listener {
         } else {
             counter++;
         }
-    }
+    }*/
 
 
 

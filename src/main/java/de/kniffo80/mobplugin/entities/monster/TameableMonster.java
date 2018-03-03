@@ -17,6 +17,8 @@ public abstract class TameableMonster extends WalkingMonster implements Tameable
 
     private Player          owner           = null;
 
+    private String          ownerUUID       = "";
+
     private boolean         sitting         = false;
 
     public TameableMonster(FullChunk chunk, CompoundTag nbt) {
@@ -55,6 +57,10 @@ public abstract class TameableMonster extends WalkingMonster implements Tameable
     @Override
     public Player getOwner() {
         return owner;
+    }
+
+    public boolean hasOwner(){
+        return owner!=null;
     }
 
     /**
@@ -106,4 +112,13 @@ public abstract class TameableMonster extends WalkingMonster implements Tameable
 //        }
     }
 
+    @Override
+    public String getOwnerUUID() {
+        return ownerUUID;
+    }
+
+    @Override
+    public void setOwnerUUID(String ownerUUID) {
+        this.ownerUUID = ownerUUID;
+    }
 }

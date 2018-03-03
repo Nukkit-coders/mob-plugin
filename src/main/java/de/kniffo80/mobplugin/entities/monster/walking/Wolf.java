@@ -1,17 +1,21 @@
 package de.kniffo80.mobplugin.entities.monster.walking;
 
 import cn.nukkit.Player;
+import cn.nukkit.Server;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.entity.data.IntEntityData;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.item.Item;
+import cn.nukkit.item.ItemDye;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.network.protocol.EntityEventPacket;
 import cn.nukkit.utils.DyeColor;
 import de.kniffo80.mobplugin.MobPlugin;
 import de.kniffo80.mobplugin.entities.monster.TameableMonster;
+import de.kniffo80.mobplugin.utils.Utils;
 
 import java.util.HashMap;
 
@@ -86,6 +90,35 @@ public class Wolf extends TameableMonster {
 
     public void setAngry(boolean angry) {
         this.angry = angry ? 1 : 0;
+    }
+
+    @Override
+    public boolean onInteract(Player player, Item item) {
+        if(item.equals(Item.get(Item.BONE))){
+            if(!this.hasOwner()) {
+                player.getInventory().removeItem(Item.get(Item.BONE, 0, 1));
+                if (Utils.rand(0, 3) == 3) {
+                    EntityEventPacket packet = new EntityEventPacket();
+                    packet.eid = player.getId();
+                    packet.event = EntityEventPacket.TAME_SUCCESS;
+                    Server.broadcastPacket(new Player[]{player}, packet);
+                    this.setOwner(player);
+                    this.setCollarColor(DyeColor.RED);
+                    return true;
+                } else {
+                    EntityEventPacket packet = new EntityEventPacket();
+                    packet.eid = player.getId();
+                    packet.event = EntityEventPacket.TAME_FAIL;
+                    Server.broadcastPacket(new Player[]{player}, packet);
+                }
+            }
+        }else if(item.equals(Item.get(Item.DYE),false)){
+            if(this.hasOwner() && player.equals(this.getOwner())){
+                this.setCollarColor(((ItemDye)item).getDyeColor());
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

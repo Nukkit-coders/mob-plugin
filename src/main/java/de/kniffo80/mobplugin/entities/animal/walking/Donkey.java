@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author <a href="mailto:kniffman@googlemail.com">Michael Gertz</a>
  */
-public class Donkey extends WalkingAnimal {
+public class Donkey extends Horse {
 
     public static final int NETWORK_ID = 24;
 

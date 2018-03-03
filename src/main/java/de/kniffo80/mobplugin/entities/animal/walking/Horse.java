@@ -21,6 +21,8 @@ import java.util.List;
 public class Horse extends WalkingAnimal {
 
     public static final int NETWORK_ID = 23;
+    private int Type = 0;
+    private int Variant = this.getRandomVariant();
 
     public Horse(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
@@ -60,6 +62,35 @@ public class Horse extends WalkingAnimal {
     public void initEntity() {
         super.initEntity();
         this.setMaxHealth(15);
+        if(this instanceof Donkey){
+            this.Type = 1;
+        }else if(this instanceof Mule){
+            this.Type = 2;
+        }else if(this instanceof ZombieHorse){
+            this.Type = 3;
+        }else if(this instanceof SkeletonHorse){
+            this.Type = 4;
+        }else{
+            this.Type = 0;
+        }
+        if(this.namedTag.contains("Variant")){
+            this.Variant = this.namedTag.getInt("Variant");
+        }else{
+            this.Variant = this.getRandomVariant();
+        }
+
+
+    }
+    @Override
+    public void saveNBT() {
+        super.saveNBT();
+        this.namedTag.putByte("Type", this.Type);
+        this.namedTag.putInt("Variant", this.Variant);
+    }
+
+    @Override
+    public boolean onInteract(Player player, Item item) {
+        return false;
     }
 
     @Override
@@ -97,4 +128,30 @@ public class Horse extends WalkingAnimal {
         return Utils.rand(1, 4);
     }
 
+    public int getType() {
+        return Type;
+    }
+
+    public void setType(int type) {
+        Type = type;
+    }
+
+    public int getVariant() {
+        return Variant;
+    }
+
+    public void setVariant(int variant) {
+        Variant = variant;
+    }
+
+    private int getRandomVariant(){
+        int VariantList[] = {
+                0,1,2,3,4,5,6,
+                256,257,258,259,260,261,262,
+                512,513,514,515,516,517,518,
+                768,769,770,771,772,773,774,
+                1024,1025,1026,1027,1028,1029,1030
+        };
+        return VariantList[Utils.rand(0,VariantList.length)];
+    }
 }

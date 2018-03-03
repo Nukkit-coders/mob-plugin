@@ -7,7 +7,9 @@ import cn.nukkit.entity.data.ByteEntityData;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemDye;
+import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.FullChunk;
+import cn.nukkit.level.particle.ItemBreakParticle;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.DyeColor;
 import de.kniffo80.mobplugin.entities.animal.WalkingAnimal;
@@ -92,6 +94,10 @@ public class Sheep extends WalkingAnimal {
         if (item.getId() == Item.DYE) {
             this.setColor(((ItemDye) item).getDyeColor().getWoolData());
             return true;
+        }else if(item.equals(Item.get(Item.WHEAT,0,1)) && !this.isBaby()){
+            player.getInventory().removeItem(Item.get(Item.WHEAT,0,1));
+            this.level.addParticle(new ItemBreakParticle(this.add(0,this.getMountedYOffset(),0),Item.get(Item.WHEAT)));
+            this.setInLove();
         }
 
         return item.getId() == Item.SHEARS && shear();
@@ -105,7 +111,7 @@ public class Sheep extends WalkingAnimal {
 
         this.sheared = true;
         this.setDataFlag(DATA_FLAGS, DATA_FLAG_SHEARED, true);
-
+        this.level.addSound(this,Sound.MOB_SHEEP_SHEAR);
         this.level.dropItem(this, Item.get(Item.WOOL, getColor(), Utils.rand(0,4)));
         return true;
     }
