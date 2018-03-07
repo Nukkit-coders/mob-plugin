@@ -3,6 +3,7 @@ entities:
   auto-spawn-tick: 300
   worlds-spawn-disabled: "exampleworld"
 
+#Change the 0 to 1 and nothing higher. 0 = Disabled 1 = Allow them to spawn
 max-spawns:
   bat: 0
   blaze: 0
