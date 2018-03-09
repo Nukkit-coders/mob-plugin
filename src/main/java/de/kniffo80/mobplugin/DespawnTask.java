@@ -10,17 +10,16 @@ import de.kniffo80.mobplugin.entities.BaseEntity;
  */
 public class DespawnTask extends PluginTask<MobPlugin> {
 
-    public MobPlugin plugin;
+    public static MobPlugin plugin;
 
     public DespawnTask(MobPlugin owner) {
         super(owner);
-        this.plugin = owner;
     }
 
     @Override
     public void onRun(int i) {
         int count = 0;
-        for (Level level : this.plugin.getServer().getLevels().values()) {
+        for (Level level : plugin.getServer().getLevels().values()) {
             for (Entity entity : level.getEntities()) {
                 if (entity instanceof BaseEntity) {
                     entity.close();
@@ -28,7 +27,7 @@ public class DespawnTask extends PluginTask<MobPlugin> {
                 }
             }
         }
-        this.plugin.getServer().broadcastMessage(plugin.PluginPrefix + " Removed " + count + " entities from all levels.");
+        plugin.getServer().broadcastMessage(plugin.PluginPrefix + " Removed " + count + " entities from all levels.");
     }
 
 }
