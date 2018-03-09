@@ -1,6 +1,7 @@
 entities:
   mob-ai: true
   auto-spawn-tick: 300
+  despawn-tick: 1500
   worlds-spawn-disabled: "exampleworld"
 
 max-spawns:
