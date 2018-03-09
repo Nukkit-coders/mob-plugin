@@ -81,12 +81,17 @@ public class MobPlugin extends PluginBase implements Listener {
         // we need this flag as it's controlled by the plugin's entities
         MOB_AI_ENABLED = pluginConfig.getBoolean("entities.mob-ai", false);
         int spawnDelay = pluginConfig.getInt("entities.auto-spawn-tick", 0);
+        int despawnDelay = pluginConfig.getInt("entities.despawn-tick", 0);
 
         // register as listener to plugin events
         this.getServer().getPluginManager().registerEvents(this, this);
 
         if (spawnDelay > 0) {
             this.getServer().getScheduler().scheduleRepeatingTask(this, new AutoSpawnTask(this), spawnDelay, true);
+        }
+        
+        if (despawnDelay > 0) {
+            this.getServer().getScheduler().scheduleRepeatingTask(new DespawnTask(this), despawnDelay);
         }
 
         Utils.logServerInfo(String.format("Plugin enabled successful [aiEnabled:%s] [autoSpawnTick:%d]", MOB_AI_ENABLED, spawnDelay));
