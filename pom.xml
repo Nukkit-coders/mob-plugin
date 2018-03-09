@@ -6,7 +6,7 @@
 
     <groupId>de.kniffo80.mobplugin</groupId>
     <artifactId>MobPlugin</artifactId>
-    <version>1.0</version>
+    <version>0.7</version>
     <build>
         <defaultGoal>install</defaultGoal>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
