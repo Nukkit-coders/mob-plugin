@@ -73,6 +73,7 @@ public abstract class WalkingEntity extends BaseEntity {
         if (this.followTarget instanceof EntityCreature && !((EntityCreature) this.followTarget).closed && this.followTarget.isAlive() && this.targetOption((EntityCreature) this.followTarget, this.distanceSquared(this.followTarget)) && this.target != null) {
             return;
         }
+        this.followTarget = null;
 
         int x, z;
         if (this.stayTime > 0) {

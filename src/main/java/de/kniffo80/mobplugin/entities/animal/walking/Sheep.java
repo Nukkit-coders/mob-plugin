@@ -96,6 +96,7 @@ public class Sheep extends WalkingAnimal {
             return true;
         }else if(item.equals(Item.get(Item.WHEAT,0,1)) && !this.isBaby()){
             player.getInventory().removeItem(Item.get(Item.WHEAT,0,1));
+            this.getLevel().addSound(this,Sound.RANDOM_EAT);
             this.level.addParticle(new ItemBreakParticle(this.add(0,this.getMountedYOffset(),0),Item.get(Item.WHEAT)));
             this.setInLove();
         }
@@ -129,6 +130,7 @@ public class Sheep extends WalkingAnimal {
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
         if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
+            if(!this.shear())
             drops.add(Item.get(Item.WOOL, this.namedTag.getByte("Color"), 1)); // each time drops 1 wool
             int muttonDrop = Utils.rand(1, 3); // drops 1-2 muttons / cooked muttons
             for (int i = 0; i < muttonDrop; i++) {
@@ -153,9 +155,9 @@ public class Sheep extends WalkingAnimal {
         ThreadLocalRandom random = ThreadLocalRandom.current();
         int rand = random.nextInt(0, 100);
 
-        if(rand > 5 && 0 <= rand)return DyeColor.BLACK.getDyeData();
-        if(rand > 10 && 5 <= rand)return DyeColor.GRAY.getDyeData();
-        if(rand > 15 && 10 <= rand)return DyeColor.LIGHT_GRAY.getDyeData();
+        if(rand <= 5 && 0 > rand)return DyeColor.BLACK.getDyeData();
+        if(rand <= 10 && 5 > rand)return DyeColor.GRAY.getDyeData();
+        if(rand <= 15 && 10 > rand)return DyeColor.LIGHT_GRAY.getDyeData();
 
         return DyeColor.WHITE.getDyeData();
     }
