@@ -71,6 +71,7 @@ public class Cow extends WalkingAnimal {
             return true;
         }else if(item.equals(Item.get(Item.WHEAT,0)) && !this.isBaby()){
             player.getInventory().removeItem(Item.get(Item.WHEAT,0,1));
+            this.getLevel().addSound(this,Sound.RANDOM_EAT);
             this.level.addParticle(new ItemBreakParticle(this.add(0,this.getMountedYOffset(),0),Item.get(Item.WHEAT)));
             this.setInLove();
         }

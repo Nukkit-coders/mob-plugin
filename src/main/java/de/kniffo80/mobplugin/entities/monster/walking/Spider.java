@@ -91,10 +91,10 @@ public class Spider extends WalkingMonster {
             return true;
         }
 
-        Vector3 before = this.target;
+        //Vector3 before = this.target;
         boolean isJump = false;
         this.checkTarget();
-        if (this.target instanceof EntityCreature || before != this.target) {
+        if (this.followTarget instanceof EntityCreature && null != this.target) {
             double x = this.target.x - this.x;
             double y = this.target.y - this.y;
             double z = this.target.z - this.z;
@@ -103,7 +103,7 @@ public class Spider extends WalkingMonster {
             double diff = Math.abs(x) + Math.abs(z);
             double distance = Math.sqrt(Math.pow(this.x - target.x, 2) + Math.pow(this.z - target.z, 2));
             if (distance <= 2) {
-                if (target instanceof EntityCreature) {
+                if (followTarget instanceof EntityCreature) {
                     if (distance <= this.getWidth() && this.y - target.y > 1) {
                         this.motionY = -this.getGravity() * 4;
                         if (this.attackDelay < 20) {
@@ -112,7 +112,7 @@ public class Spider extends WalkingMonster {
                         } else {
                             this.motionX = 0;
                             this.motionZ = 0;
-                            this.attackEntity((Entity) target);
+                            this.attackEntity(followTarget);
                         }
                     } else {
                         if (!this.isFriendly() && this.attackDelay >= 12) {

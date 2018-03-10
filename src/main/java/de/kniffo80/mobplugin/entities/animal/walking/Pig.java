@@ -6,6 +6,7 @@ import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.entity.EntityRideable;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.item.Item;
+import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.level.particle.ItemBreakParticle;
 import cn.nukkit.nbt.tag.CompoundTag;
@@ -80,16 +81,19 @@ public class Pig extends WalkingAnimal implements EntityRideable {
     public boolean onInteract(Player player, Item item) {
         if (item.equals(Item.get(Item.CARROT,0)) && !this.isBaby()) {
             player.getInventory().removeItem(Item.get(Item.CARROT,0,1));
+            this.getLevel().addSound(this, Sound.RANDOM_EAT);
             this.level.addParticle(new ItemBreakParticle(this.add(0,this.getMountedYOffset(),0),Item.get(Item.CARROT)));
             this.setInLove();
             return true;
         }else if (item.equals(Item.get(Item.POTATO,0)) && !this.isBaby()) {
             player.getInventory().removeItem(Item.get(Item.POTATO,0,1));
+            this.getLevel().addSound(this,Sound.RANDOM_EAT);
             this.level.addParticle(new ItemBreakParticle(this.add(0,this.getMountedYOffset(),0),Item.get(Item.POTATO)));
             this.setInLove();
             return true;
         }else if (item.equals(Item.get(Item.BEETROOT,0)) && !this.isBaby()) {
             player.getInventory().removeItem(Item.get(Item.BEETROOT,0,1));
+            this.getLevel().addSound(this,Sound.RANDOM_EAT);
             this.level.addParticle(new ItemBreakParticle(this.add(0,this.getMountedYOffset(),0),Item.get(Item.BEETROOT)));
             this.setInLove();
             return true;
