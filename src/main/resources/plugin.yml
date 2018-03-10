@@ -1,7 +1,7 @@
 name: MobPlugin
 main: de.kniffo80.mobplugin.MobPlugin
-version: "1.0"
-api: ["1.0.0"]
+version: "0.7"
+api: ["1.0.5"]
 
 load: STARTUP
 author: kniffo80, matt404, augesrob, PetteriM1, PikyCZ, zzz1999

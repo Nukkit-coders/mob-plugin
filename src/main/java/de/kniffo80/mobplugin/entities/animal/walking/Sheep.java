@@ -14,7 +14,6 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.DyeColor;
 import de.kniffo80.mobplugin.entities.animal.WalkingAnimal;
 import de.kniffo80.mobplugin.utils.Utils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -94,9 +93,9 @@ public class Sheep extends WalkingAnimal {
         if (item.getId() == Item.DYE) {
             this.setColor(((ItemDye) item).getDyeColor().getWoolData());
             return true;
-        }else if(item.equals(Item.get(Item.WHEAT,0,1)) && !this.isBaby()){
-            player.getInventory().removeItem(Item.get(Item.WHEAT,0,1));
-            this.level.addParticle(new ItemBreakParticle(this.add(0,this.getMountedYOffset(),0),Item.get(Item.WHEAT)));
+        } else if (item.equals(Item.get(Item.WHEAT, 0, 1)) && !this.isBaby()) {
+            player.getInventory().removeItem(Item.get(Item.WHEAT, 0, 1));
+            this.level.addParticle(new ItemBreakParticle(this.add(0, this.getMountedYOffset(), 0), Item.get(Item.WHEAT)));
             this.setInLove();
         }
 
@@ -104,15 +103,17 @@ public class Sheep extends WalkingAnimal {
     }
 
     public boolean shear() {
-        if(this.isBaby())return false;
+        if (this.isBaby()) {
+            return false;
+        }
         if (sheared) {
             return false;
         }
 
         this.sheared = true;
         this.setDataFlag(DATA_FLAGS, DATA_FLAG_SHEARED, true);
-        this.level.addSound(this,Sound.MOB_SHEEP_SHEAR);
-        this.level.dropItem(this, Item.get(Item.WOOL, getColor(), Utils.rand(0,4)));
+        this.level.addSound(this, Sound.MOB_SHEEP_SHEAR);
+        this.level.dropItem(this, Item.get(Item.WOOL, getColor(), Utils.rand(0, 4)));
         return true;
     }
 
@@ -138,10 +139,9 @@ public class Sheep extends WalkingAnimal {
         return drops.toArray(new Item[drops.size()]);
     }
 
-
     public void setColor(int color) {
         this.color = color;
-        this.namedTag.putByte("Color",color);
+        this.namedTag.putByte("Color", color);
         this.setDataProperty(new ByteEntityData(DATA_COLOUR, color));
     }
 
@@ -153,9 +153,15 @@ public class Sheep extends WalkingAnimal {
         ThreadLocalRandom random = ThreadLocalRandom.current();
         int rand = random.nextInt(0, 100);
 
-        if(rand > 5 && 0 <= rand)return DyeColor.BLACK.getDyeData();
-        if(rand > 10 && 5 <= rand)return DyeColor.GRAY.getDyeData();
-        if(rand > 15 && 10 <= rand)return DyeColor.LIGHT_GRAY.getDyeData();
+        if (rand > 5 && 0 <= rand) {
+            return DyeColor.BLACK.getDyeData();
+        }
+        if (rand > 10 && 5 <= rand) {
+            return DyeColor.GRAY.getDyeData();
+        }
+        if (rand > 15 && 10 <= rand) {
+            return DyeColor.LIGHT_GRAY.getDyeData();
+        }
 
         return DyeColor.WHITE.getDyeData();
     }

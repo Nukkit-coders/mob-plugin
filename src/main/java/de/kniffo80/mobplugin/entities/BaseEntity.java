@@ -5,6 +5,7 @@ import cn.nukkit.block.Block;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.entity.data.ByteEntityData;
+import cn.nukkit.event.entity.EntityDamageByBlockEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.entity.EntityMotionEvent;
@@ -25,16 +26,26 @@ import java.util.List;
 
 public abstract class BaseEntity extends EntityCreature {
 
+    EntityDamageEvent source;
+
+    //int
     protected int stayTime = 0;
 
     protected int moveTime = 0;
 
+    //float
+    public float maxJumpHeight = 1.2f; // default: 1 block jump height - this should be 2 for horses e.g.
+
+    //double
     public double moveMultifier = 1.0d;
 
+    //Vector
     protected Vector3 target = null;
 
+    //Entity
     protected Entity followTarget = null;
 
+    //boolean
     public boolean inWater = false;
 
     public boolean inLava = false;
@@ -49,14 +60,10 @@ public abstract class BaseEntity extends EntityCreature {
 
     private boolean wallcheck = true;
 
+    //List
     protected List<Block> blocksAround = new ArrayList<>();
 
     protected List<Block> collisionBlocks = new ArrayList<>();
-
-    ///Jump
-    private int maxJumpHeight = 1; // default: 1 block jump height - this should be 2 for horses e.g.
-    protected boolean isJumping;
-    public float jumpMovementFactor = 0.02F;
 
     public BaseEntity(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
@@ -98,7 +105,7 @@ public abstract class BaseEntity extends EntityCreature {
         return 1;
     }
 
-    public int getMaxJumpHeight() {
+    public float getMaxJumpHeight() {
         return this.maxJumpHeight;
     }
 
@@ -106,11 +113,11 @@ public abstract class BaseEntity extends EntityCreature {
         return this.age;
     }
 
-    public Vector3 getTarget(){
+    public Vector3 getTarget() {
         return this.target;
     }
 
-    public void setTarget(Vector3 vec){
+    public void setTarget(Vector3 vec) {
         this.target = vec;
     }
 
@@ -263,9 +270,11 @@ public abstract class BaseEntity extends EntityCreature {
     @Override
     public boolean entityBaseTick(int tickDiff) {
 
-        Timings.entityMoveTimer.startTiming();
+        Timings.entityBaseTickTimer.startTiming();
 
-        boolean hasUpdate = false;
+        this.setDataFlag(DATA_FLAGS, DATA_FLAG_BREATHING, !this.isInsideOfWater());
+
+        boolean hasUpdate = super.entityBaseTick(tickDiff);
 
         this.blocksAround = null;
         this.justCreated = false;
@@ -293,6 +302,26 @@ public abstract class BaseEntity extends EntityCreature {
         if (this.y <= -16 && this.isAlive()) {
             hasUpdate = true;
             this.attack(new EntityDamageEvent(this, EntityDamageEvent.DamageCause.VOID, 10));
+        }
+
+        if (this.y < 10) {
+            this.close();
+        }
+
+        if (source != null) {
+            if (((EntityDamageByBlockEvent) source).equals(Block.CACTUS)) {
+                this.attack(new EntityDamageEvent(this, EntityDamageEvent.DamageCause.CONTACT, 1));
+            }
+            if (((EntityDamageByBlockEvent) source).equals(Block.LAVA)) {
+                this.attack(new EntityDamageEvent(this, EntityDamageEvent.DamageCause.CONTACT, 4));
+            }
+        }
+
+        if (!this.isAlive()) {
+            this.removeAllEffects();
+            this.despawnFromAll();
+            this.close();
+            return false;
         }
 
         if (this.fireTicks > 0) {
@@ -332,7 +361,7 @@ public abstract class BaseEntity extends EntityCreature {
         this.age += tickDiff;
         this.ticksLived += tickDiff;
 
-        Timings.entityMoveTimer.stopTiming();
+        Timings.entityBaseTickTimer.stopTiming();
 
         return hasUpdate;
     }

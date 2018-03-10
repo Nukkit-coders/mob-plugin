@@ -9,7 +9,6 @@ import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import de.kniffo80.mobplugin.entities.monster.WalkingMonster;
 import de.kniffo80.mobplugin.utils.Utils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +42,7 @@ public class Slime extends WalkingMonster {
     }
 
     @Override
-    public int getMaxJumpHeight() {
+    public float getMaxJumpHeight() {
         return 2;
     }
 
@@ -51,7 +50,7 @@ public class Slime extends WalkingMonster {
         this.setMaxHealth(16);
         super.initEntity();
 
-        this.setDamage(new int[] { 0, 2, 3, 4 });
+        this.setDamage(new int[]{0, 2, 3, 4});
     }
 
     public void attackEntity(Entity player) {
@@ -113,7 +112,7 @@ public class Slime extends WalkingMonster {
     }
 
     @Override
-    public int getKillExperience () {
+    public int getKillExperience() {
         return 4;
     }
 

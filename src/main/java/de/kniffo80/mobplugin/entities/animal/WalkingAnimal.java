@@ -35,7 +35,6 @@ public abstract class WalkingAnimal extends WalkingEntity implements Animal {
         if (this.getDataFlag(DATA_FLAG_BABY, 0)) {
             this.setDataFlag(DATA_FLAG_BABY, DATA_TYPE_BYTE);
         }
-
     }
 
     @Override
@@ -50,11 +49,11 @@ public abstract class WalkingAnimal extends WalkingEntity implements Animal {
 
         hasUpdate = super.entityBaseTick(tickDiff);
 
-        if(this.isInLove()) {
+        if (this.isInLove()) {
             this.inLoveTicks -= tickDiff;
             if (this.age % 20 == 0) {
                 for (int i = 0; i < 3; i++) {
-                    this.level.addParticle(new HeartParticle(this.add(Utils.rand(-1.0,1.0),this.getMountedYOffset()+ Utils.rand(-1.0,1.0),Utils.rand(-1.0,1.0))));
+                    this.level.addParticle(new HeartParticle(this.add(Utils.rand(-1.0, 1.0), this.getMountedYOffset() + Utils.rand(-1.0, 1.0), Utils.rand(-1.0, 1.0))));
                 }
             }
         }
@@ -117,7 +116,7 @@ public abstract class WalkingAnimal extends WalkingEntity implements Animal {
         this.setDataFlag(DATA_FLAGS, DATA_FLAG_INLOVE);
     }
 
-    public boolean isInLove(){
+    public boolean isInLove() {
         return inLoveTicks > 0;
     }
 

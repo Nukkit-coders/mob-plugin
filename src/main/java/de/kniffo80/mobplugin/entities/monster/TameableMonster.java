@@ -13,13 +13,13 @@ import de.kniffo80.mobplugin.entities.Tameable;
  */
 public abstract class TameableMonster extends WalkingMonster implements Tameable {
 
-    private Server          server          = null;
+    private Server server = null;
 
-    private Player          owner           = null;
+    private Player owner = null;
 
-    private String          ownerUUID       = "";
+    private String ownerUUID = "";
 
-    private boolean         sitting         = false;
+    private boolean sitting = false;
 
     public TameableMonster(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
@@ -59,12 +59,13 @@ public abstract class TameableMonster extends WalkingMonster implements Tameable
         return owner;
     }
 
-    public boolean hasOwner(){
-        return owner!=null;
+    public boolean hasOwner() {
+        return owner != null;
     }
 
     /**
      * Sets the owner of the tameable {@link Entity}
+     *
      * @param player the player that is the owner
      */
     public void setOwner(Player player) {
@@ -87,17 +88,16 @@ public abstract class TameableMonster extends WalkingMonster implements Tameable
         setSittingDataProperty(flag);
     }
 
-
-    private void setTamed (boolean tamed) {
+    private void setTamed(boolean tamed) {
         this.setDataFlag(DATA_FLAGS, DATA_FLAG_TAMED, tamed);
         // following code isn't working
-//        int var = getDataPropertyByte(DATA_TAMED_FLAG);
-//
-//        if (tamed) {
-//            setDataProperty(new ByteEntityData(DATA_TAMED_FLAG, Byte.valueOf((byte) (var | 4))));
-//        } else {
-//            setDataProperty(new ByteEntityData(DATA_TAMED_FLAG, Byte.valueOf((byte) (var & -5))));
-//        }
+        //int var = getDataPropertyByte(DATA_TAMED_FLAG);
+        //
+        //if (tamed) {
+        //            setDataProperty(new ByteEntityData(DATA_TAMED_FLAG, Byte.valueOf((byte) (var | 4))));
+        //        } else {
+        //            setDataProperty(new ByteEntityData(DATA_TAMED_FLAG, Byte.valueOf((byte) (var & -5))));
+        //        }
     }
 
     private void setSittingDataProperty(boolean sit) {

@@ -1,7 +1,5 @@
 package de.kniffo80.mobplugin;
 
-import cn.nukkit.scheduler.AsyncPool;
-import cn.nukkit.scheduler.AsyncTask;
 import de.kniffo80.mobplugin.runnable.RouteFinderSearchTask;
 
 import java.util.concurrent.*;
@@ -9,14 +7,15 @@ import java.util.concurrent.*;
 /**
  * @author zzz1999 @ MobPlugin
  */
-public class RouteFinderThreadPool{
-    public static ThreadPoolExecutor executor = new ThreadPoolExecutor(5,10,1,TimeUnit.SECONDS,new LinkedBlockingQueue<>());
+public class RouteFinderThreadPool {
 
-    public static void executeRouteFinderThread(RouteFinderSearchTask t){
+    public static ThreadPoolExecutor executor = new ThreadPoolExecutor(5, 10, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+
+    public static void executeRouteFinderThread(RouteFinderSearchTask t) {
         executor.execute(t);
     }
 
-    public static void shutDownNow(){
+    public static void shutDownNow() {
         executor.shutdownNow();
     }
 

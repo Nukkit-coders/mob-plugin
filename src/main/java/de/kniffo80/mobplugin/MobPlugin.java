@@ -2,7 +2,6 @@ package de.kniffo80.mobplugin;
 
 import cn.nukkit.IPlayer;
 import cn.nukkit.Player;
-import cn.nukkit.Server;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
 import cn.nukkit.blockentity.BlockEntity;
@@ -17,7 +16,6 @@ import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDeathEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
-import cn.nukkit.event.player.PlayerMouseOverEntityEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Location;
@@ -28,10 +26,9 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.DoubleTag;
 import cn.nukkit.nbt.tag.FloatTag;
 import cn.nukkit.nbt.tag.ListTag;
-import cn.nukkit.network.protocol.EntityEventPacket;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
-import cn.nukkit.utils.DyeColor;
+import cn.nukkit.utils.TextFormat;
 import de.kniffo80.mobplugin.entities.BaseEntity;
 import de.kniffo80.mobplugin.entities.animal.flying.*;
 import de.kniffo80.mobplugin.entities.animal.jumping.Rabbit;
@@ -42,9 +39,8 @@ import de.kniffo80.mobplugin.entities.monster.flying.*;
 import de.kniffo80.mobplugin.entities.monster.jumping.*;
 import de.kniffo80.mobplugin.entities.monster.swimming.*;
 import de.kniffo80.mobplugin.entities.monster.walking.*;
-import de.kniffo80.mobplugin.entities.projectile.EntityFireBall;
+import de.kniffo80.mobplugin.entities.projectile.*;
 import de.kniffo80.mobplugin.utils.Utils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +57,10 @@ public class MobPlugin extends PluginBase implements Listener {
 
     public static MobPlugin instance;
 
-    public static MobPlugin getInstance(){
+    public String PluginPrefix = TextFormat.colorize("&c[&bMob&6Plugin&c]");
+    public String IntVersion = TextFormat.colorize("&c[&a0.7&c]");
+
+    public static MobPlugin getInstance() {
         return instance;
     }
 
@@ -96,77 +95,91 @@ public class MobPlugin extends PluginBase implements Listener {
     @Override
     public void onDisable() {
         RouteFinderThreadPool.shutDownNow();
-        Utils.logServerInfo("Plugin disabled successful.");
+        Utils.logServerInfo(PluginPrefix + " disabled successful.");
+        this.saveConfig();
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (cmd.getName().toLowerCase().equals("mob")) {
+        if (sender instanceof Player) {
+            if (cmd.getName().toLowerCase().equals("mob")) {
+                if (!sender.hasPermission("mobplugin.command")) {
+                    sender.sendMessage(PluginPrefix + TextFormat.RED + " You don't have permission to use this command.");
+                    return false;
+                }
 
-            if (args.length == 0) {
-                sender.sendMessage("-- MobPlugin 1.0 --");
-                sender.sendMessage("/mob spawn <mob> <opt:player> - Spawn a mob");
-                sender.sendMessage("/mob removeall - Remove all living mobs");
-                sender.sendMessage("/mob removeitems - Remove all items from ground");
-            } else {
-                switch (args[0]) {
+                if (args.length == 0) {
+                    sender.sendMessage(TextFormat.GOLD + "-- " + PluginPrefix + " --");
+                    sender.sendMessage(TextFormat.GREEN + "/mob spawn <mob>" + TextFormat.YELLOW + "- Spawn Mob");
+                    sender.sendMessage(TextFormat.GREEN + "/mob removemobs" + TextFormat.YELLOW + "- Remove all Mobs");
+                    sender.sendMessage(TextFormat.GREEN + "/mob removeitems" + TextFormat.YELLOW + "- Remove all items on ground");
+                    sender.sendMessage(TextFormat.GREEN + "/mob version" + TextFormat.YELLOW + "- Show MobPlugin Version");
+                } else {
+                    switch (args[0]) {
 
-                    case "spawn":
-                        String mob = args[1];
-                        Player playerThatSpawns = null;
+                        case "spawn":
+                            String mob = args[1];
+                            Player playerThatSpawns = null;
 
-                        if (args.length == 3) {
-                            playerThatSpawns = this.getServer().getPlayer(args[2]);
-                        } else {
-                            playerThatSpawns = (Player) sender;
-                        }
-
-                        if (playerThatSpawns != null) {
-                            Position pos = playerThatSpawns.getPosition();
-
-                            Entity ent;
-                            if ((ent = MobPlugin.create(mob, pos)) != null) {
-                                ent.spawnToAll();
-                                sender.sendMessage("Spawned " + mob + " to " + playerThatSpawns.getName());
+                            if (args.length == 3) {
+                                playerThatSpawns = this.getServer().getPlayer(args[2]);
                             } else {
-                                sender.sendMessage("Unable to spawn " + mob);
+                                playerThatSpawns = (Player) sender;
                             }
-                        } else {
-                            sender.sendMessage("Unknown player " + (args.length == 3 ? args[2] : ((Player) sender).getName()));
-                        }
-                        break;
-                    case "removeall":
-                        int count = 0;
-                        for (Level level : getServer().getLevels().values()) {
-                            for (Entity entity : level.getEntities()) {
-                                if (entity instanceof BaseEntity) {
-                                    entity.close();
-                                    count++;
+
+                            if (playerThatSpawns != null) {
+                                Position pos = playerThatSpawns.getPosition();
+
+                                Entity ent;
+                                if ((ent = MobPlugin.create(mob, pos)) != null) {
+                                    ent.spawnToAll();
+                                    sender.sendMessage(PluginPrefix + " Spawned " + mob + " to " + playerThatSpawns.getName());
+                                } else {
+                                    sender.sendMessage(PluginPrefix + " Unable to spawn " + mob);
+                                }
+                            } else {
+                                sender.sendMessage(PluginPrefix + " Unknown player " + (args.length == 3 ? args[2] : ((Player) sender).getName()));
+                            }
+                            break;
+                        case "removemobs":
+                            int count = 0;
+                            for (Level level : getServer().getLevels().values()) {
+                                for (Entity entity : level.getEntities()) {
+                                    if (entity instanceof BaseEntity) {
+                                        entity.close();
+                                        count++;
+                                    }
                                 }
                             }
-                        }
-                        sender.sendMessage("Removed " + count + " entities from all levels.");
-                        break;
-                    case "removeitems":
-                        count = 0;
-                        for (Level level : getServer().getLevels().values()) {
-                            for (Entity entity : level.getEntities()) {
-                                if (entity instanceof EntityItem && entity.isOnGround()) {
-                                    entity.close();
-                                    count++;
+                            sender.sendMessage(PluginPrefix + " Removed " + count + " entities from all levels.");
+                            break;
+                        case "removeitems":
+                            count = 0;
+                            for (Level level : getServer().getLevels().values()) {
+                                for (Entity entity : level.getEntities()) {
+                                    if (entity instanceof EntityItem && entity.isOnGround()) {
+                                        entity.close();
+                                        count++;
+                                    }
                                 }
                             }
-                        }
-                        sender.sendMessage("Removed " + count + " items on ground from all levels.");
-                        break;
-                    default:
-                        sender.sendMessage("Unkown command.");
-                        break;
+                            sender.sendMessage(PluginPrefix + " Removed " + count + " items on ground from all levels.");
+                            break;
+                        case "version":
+                            sender.sendMessage(PluginPrefix + TextFormat.GREEN + " Version " + IntVersion + "working with MCPE 1.2.11");
+                            break;
+                        default:
+                            sender.sendMessage(PluginPrefix + " Unknow command.");
+                            break;
+                    }
                 }
             }
-        }
-        return true;
+            return true;
 
+        } else {
+            sender.sendMessage(PluginPrefix + TextFormat.RED + " Only player can use this command!");
+            return true;
+        }
     }
 
     /**
@@ -228,8 +241,14 @@ public class MobPlugin extends PluginBase implements Listener {
         Entity.registerEntity(Zombie.class.getSimpleName(), Zombie.class);
         Entity.registerEntity(ZombieVillager.class.getSimpleName(), ZombieVillager.class);
 
-        // register the fireball entity
-        Entity.registerEntity("FireBall", EntityFireBall.class);
+        //Register Projectile
+        Entity.registerEntity("BlueWitherSkull", BlueWitherSkull.class);
+        Entity.registerEntity("BlazeFireBall", BlazeFireBall.class);
+        Entity.registerEntity("EnderCharge", EnderCharge.class);
+        Entity.registerEntity("EntityFireBall", EntityFireBall.class);
+        Entity.registerEntity("LlamaSpit", LlamaSpit.class);
+        Entity.registerEntity("EvocationFangs", EvocationFangs.class);
+        Entity.registerEntity("ShulkerBullet", ShulkerBullet.class);
 
         // register the mob spawner (which is probably not needed anymore)
         BlockEntity.registerBlockEntity("MobSpawner", BlockEntitySpawner.class);
@@ -395,9 +414,12 @@ public class MobPlugin extends PluginBase implements Listener {
 
         Block block = ev.getBlock();
         if ((block.getId() == Block.MONSTER_EGG)
-            && block.getLevel().getBlockLightAt((int) block.x, (int) block.y, (int) block.z) < 12 && Utils.rand(1, 5) == 1) {
+                && block.getLevel().getBlockLightAt((int) block.x, (int) block.y, (int) block.z) < 12 && Utils.rand(1, 5) == 1) {
 
-              Silverfish entity = (Silverfish) create("Silverfish", block.add(0.5, 0, 0.5)); if(entity != null){ entity.spawnToAll(); }
+            Silverfish entity = (Silverfish) create("Silverfish", block.add(0.5, 0, 0.5));
+            if (entity != null) {
+                entity.spawnToAll();
+            }
         }
     }
 
@@ -426,7 +448,4 @@ public class MobPlugin extends PluginBase implements Listener {
             counter++;
         }
     }*/
-
-
-
 }

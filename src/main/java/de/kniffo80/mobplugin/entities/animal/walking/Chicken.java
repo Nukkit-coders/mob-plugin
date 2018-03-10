@@ -6,12 +6,10 @@ import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.FullChunk;
-import cn.nukkit.level.particle.GenericParticle;
 import cn.nukkit.level.particle.ItemBreakParticle;
 import cn.nukkit.nbt.tag.CompoundTag;
 import de.kniffo80.mobplugin.entities.animal.WalkingAnimal;
 import de.kniffo80.mobplugin.utils.Utils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,26 +66,27 @@ public class Chicken extends WalkingAnimal {
     @Override
     public void initEntity() {
         super.initEntity();
-        if(this.namedTag.contains("EggLayTime")){
+        if (this.namedTag.contains("EggLayTime")) {
             this.EggLayTime = this.namedTag.getInt("EggLayTime");
-        }else{
+        } else {
             this.EggLayTime = this.getRandomEggLayTime();
         }
-        if(this.namedTag.contains("IsChickenJockey")){
+        if (this.namedTag.contains("IsChickenJockey")) {
             this.IsChickenJockey = this.namedTag.getBoolean("IsChickenJockey");
-        }else{
+        } else {
             this.IsChickenJockey = false;
         }
 
         this.setMaxHealth(4);
     }
+
     @Override
     public boolean entityBaseTick(int tickDiff) {
         boolean hasUpdate = super.entityBaseTick(tickDiff);
-        if(this.EggLayTime > 0){
-            EggLayTime-=tickDiff;
-        }else{
-            this.level.dropItem(this,Item.get(Item.EGG,0,1));
+        if (this.EggLayTime > 0) {
+            EggLayTime -= tickDiff;
+        } else {
+            this.level.dropItem(this, Item.get(Item.EGG, 0, 1));
             this.level.addSound(this, Sound.MOB_CHICKEN_PLOP);
             this.EggLayTime = this.getRandomEggLayTime();
         }
@@ -109,21 +108,21 @@ public class Chicken extends WalkingAnimal {
 
     @Override
     public boolean onInteract(Player player, Item item) {
-        if((item.equals(Item.get(Item.SEEDS,0))) && !this.isBaby()){
-            player.getInventory().removeItem(Item.get(Item.SEEDS,0,1));
-            this.level.addParticle(new ItemBreakParticle(this.add(Utils.rand(-0.5,0.5),this.getMountedYOffset(),Utils.rand(-0.5,0.5)),Item.get(Item.SEEDS)));
+        if ((item.equals(Item.get(Item.SEEDS, 0))) && !this.isBaby()) {
+            player.getInventory().removeItem(Item.get(Item.SEEDS, 0, 1));
+            this.level.addParticle(new ItemBreakParticle(this.add(Utils.rand(-0.5, 0.5), this.getMountedYOffset(), Utils.rand(-0.5, 0.5)), Item.get(Item.SEEDS)));
             this.setInLove();
-        }else if((item.equals(Item.get(Item.BEETROOT_SEEDS,0))) && !this.isBaby()){
-            player.getInventory().removeItem(Item.get(Item.BEETROOT_SEEDS,0,1));
-            this.level.addParticle(new ItemBreakParticle(this.add(Utils.rand(-0.5,0.5),this.getMountedYOffset(),Utils.rand(-0.5,0.5)),Item.get(Item.BEETROOT_SEEDS)));
+        } else if ((item.equals(Item.get(Item.BEETROOT_SEEDS, 0))) && !this.isBaby()) {
+            player.getInventory().removeItem(Item.get(Item.BEETROOT_SEEDS, 0, 1));
+            this.level.addParticle(new ItemBreakParticle(this.add(Utils.rand(-0.5, 0.5), this.getMountedYOffset(), Utils.rand(-0.5, 0.5)), Item.get(Item.BEETROOT_SEEDS)));
             this.setInLove();
-        }else if((item.equals(Item.get(Item.MELON_SEEDS,0))) && !this.isBaby()){
-            player.getInventory().removeItem(Item.get(Item.MELON_SEEDS,0,1));
-            this.level.addParticle(new ItemBreakParticle(this.add(Utils.rand(-0.5,0.5),this.getMountedYOffset(),Utils.rand(-0.5,0.5)),Item.get(Item.MELON_SEEDS)));
+        } else if ((item.equals(Item.get(Item.MELON_SEEDS, 0))) && !this.isBaby()) {
+            player.getInventory().removeItem(Item.get(Item.MELON_SEEDS, 0, 1));
+            this.level.addParticle(new ItemBreakParticle(this.add(Utils.rand(-0.5, 0.5), this.getMountedYOffset(), Utils.rand(-0.5, 0.5)), Item.get(Item.MELON_SEEDS)));
             this.setInLove();
-        }else if((item.equals(Item.get(Item.PUMPKIN_SEEDS,0))) && !this.isBaby()){
-            player.getInventory().removeItem(Item.get(Item.PUMPKIN_SEEDS,0,1));
-            this.level.addParticle(new ItemBreakParticle(this.add(Utils.rand(-0.5,0.5),this.getMountedYOffset(),Utils.rand(-0.5,0.5)),Item.get(Item.PUMPKIN_SEEDS)));
+        } else if ((item.equals(Item.get(Item.PUMPKIN_SEEDS, 0))) && !this.isBaby()) {
+            player.getInventory().removeItem(Item.get(Item.PUMPKIN_SEEDS, 0, 1));
+            this.level.addParticle(new ItemBreakParticle(this.add(Utils.rand(-0.5, 0.5), this.getMountedYOffset(), Utils.rand(-0.5, 0.5)), Item.get(Item.PUMPKIN_SEEDS)));
             this.setInLove();
         }
         return false;
@@ -132,7 +131,7 @@ public class Chicken extends WalkingAnimal {
     public void saveNBT() {
         super.saveNBT();
         this.namedTag.putInt("EggLayTime", this.EggLayTime);
-        this.namedTag.putBoolean("IsChickenJockey",this.IsChickenJockey);
+        this.namedTag.putBoolean("IsChickenJockey", this.IsChickenJockey);
     }
 
     @Override
@@ -154,8 +153,8 @@ public class Chicken extends WalkingAnimal {
         return Utils.rand(1, 4); // gain 1-3 experience
     }
 
-    public int getRandomEggLayTime(){
-        return Utils.rand(6000,12000);
+    public int getRandomEggLayTime() {
+        return Utils.rand(6000, 12000);
     }
 
     public boolean isChickenJockey() {

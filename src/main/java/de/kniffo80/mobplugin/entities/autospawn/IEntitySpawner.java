@@ -4,7 +4,6 @@ import cn.nukkit.IPlayer;
 import cn.nukkit.Player;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
-
 import java.util.List;
 
 /**
@@ -16,8 +15,8 @@ public interface IEntitySpawner {
 
     public SpawnResult spawn(IPlayer iPlayer, Position pos, Level level);
 
-    public int getEntityNetworkId ();
+    public int getEntityNetworkId();
 
-    public String getEntityName ();
+    public String getEntityName();
 
 }

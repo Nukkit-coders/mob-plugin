@@ -19,13 +19,13 @@ import de.kniffo80.mobplugin.utils.Utils;
 
 public abstract class WalkingMonster extends WalkingEntity implements Monster {
 
-    private int[]   minDamage;
+    private int[] minDamage;
 
-    private int[]   maxDamage;
+    private int[] maxDamage;
 
-    protected int   attackDelay = 0;
+    protected int attackDelay = 0;
 
-    private boolean canAttack   = true;
+    private boolean canAttack = true;
 
     public WalkingMonster(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
@@ -89,11 +89,11 @@ public abstract class WalkingMonster extends WalkingEntity implements Monster {
         }
 
         if (minDamage == null || minDamage.length < 4) {
-            minDamage = new int[] { 0, 0, 0, 0 };
+            minDamage = new int[]{0, 0, 0, 0};
         }
 
         if (maxDamage == null || maxDamage.length < 4) {
-            maxDamage = new int[] { 0, 0, 0, 0 };
+            maxDamage = new int[]{0, 0, 0, 0};
         }
 
         for (int i = 0; i < 4; i++) {
@@ -123,8 +123,9 @@ public abstract class WalkingMonster extends WalkingEntity implements Monster {
     }
 
     public void setMaxDamage(int[] damage) {
-        if (damage.length < 4)
+        if (damage.length < 4) {
             return;
+        }
 
         for (int i = 0; i < 4; i++) {
             this.setMaxDamage(Math.max(damage[i], this.getMinDamage(i)), i);
@@ -176,11 +177,11 @@ public abstract class WalkingMonster extends WalkingEntity implements Monster {
 
     @Override
     public boolean entityBaseTick(int tickDiff) {
-        
+
         boolean hasUpdate;
-        
+
         Timings.entityBaseTickTimer.startTiming();
-        
+
         hasUpdate = super.entityBaseTick(tickDiff);
 
         this.attackDelay += tickDiff;

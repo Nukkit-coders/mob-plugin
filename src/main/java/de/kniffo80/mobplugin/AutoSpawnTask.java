@@ -8,31 +8,29 @@ import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.utils.Config;
 import de.kniffo80.mobplugin.entities.animal.flying.*;
-import de.kniffo80.mobplugin.entities.animal.jumping.*;
 import de.kniffo80.mobplugin.entities.animal.jumping.Rabbit;
+import de.kniffo80.mobplugin.entities.animal.swimming.Squid;
 import de.kniffo80.mobplugin.entities.animal.walking.*;
 import de.kniffo80.mobplugin.entities.autospawn.IEntitySpawner;
 import de.kniffo80.mobplugin.entities.monster.flying.*;
-import de.kniffo80.mobplugin.entities.monster.jumping.*;
+import de.kniffo80.mobplugin.entities.monster.jumping.Slime;
 import de.kniffo80.mobplugin.entities.monster.walking.*;
 import de.kniffo80.mobplugin.entities.spawners.*;
 import de.kniffo80.mobplugin.utils.Utils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class AutoSpawnTask implements Runnable {
 
-    private Map<Integer, Integer> maxSpawns      = new HashMap<>();
+    private Map<Integer, Integer> maxSpawns = new HashMap<>();
 
-    private List<IEntitySpawner>  entitySpawners = new ArrayList<>();
+    private List<IEntitySpawner> entitySpawners = new ArrayList<>();
 
-    private Config                pluginConfig   = null;
+    private Config pluginConfig = null;
 
-    private MobPlugin             plugin         = null;
+    private MobPlugin plugin = null;
 
     public AutoSpawnTask(MobPlugin plugin) {
         this.pluginConfig = plugin.getConfig();
@@ -78,11 +76,14 @@ public class AutoSpawnTask implements Runnable {
         entitySpawners.add(new OcelotSpawner(this, this.pluginConfig));
         entitySpawners.add(new PigSpawner(this, this.pluginConfig));
         entitySpawners.add(new PolarBearSpawner(this, this.pluginConfig));
+        entitySpawners.add(new PigZombieSpawner(this, this.pluginConfig));
         entitySpawners.add(new RabbitSpawner(this, this.pluginConfig));
         entitySpawners.add(new SheepSpawner(this, this.pluginConfig));
         entitySpawners.add(new SkeletonSpawner(this, this.pluginConfig));
         entitySpawners.add(new SpiderSpawner(this, this.pluginConfig));
         entitySpawners.add(new StraySpawner(this, this.pluginConfig));
+        entitySpawners.add(new SquidSpawner(this, this.pluginConfig));
+        entitySpawners.add(new SlimeSpawner(this, this.pluginConfig));
         entitySpawners.add(new WolfSpawner(this, this.pluginConfig));
         entitySpawners.add(new ZombieSpawner(this, this.pluginConfig));
     }
@@ -100,11 +101,14 @@ public class AutoSpawnTask implements Runnable {
         maxSpawns.put(Ocelot.NETWORK_ID, this.pluginConfig.getInt("max-spawns.ocelot", 0));
         maxSpawns.put(Pig.NETWORK_ID, this.pluginConfig.getInt("max-spawns.pig", 0));
         maxSpawns.put(PolarBear.NETWORK_ID, this.pluginConfig.getInt("max-spawns.polarbear", 0));
+        maxSpawns.put(PigZombie.NETWORK_ID, this.pluginConfig.getInt("max-spawns.pigzombie", 0));
         maxSpawns.put(Rabbit.NETWORK_ID, this.pluginConfig.getInt("max-spawns.rabbit", 0));
         maxSpawns.put(Sheep.NETWORK_ID, this.pluginConfig.getInt("max-spawns.sheep", 0));
         maxSpawns.put(Skeleton.NETWORK_ID, this.pluginConfig.getInt("max-spawns.skeleton", 0));
         maxSpawns.put(Spider.NETWORK_ID, this.pluginConfig.getInt("max-spawns.spider", 0));
         maxSpawns.put(Stray.NETWORK_ID, this.pluginConfig.getInt("max-spawns.stray", 0));
+        maxSpawns.put(Squid.NETWORK_ID, this.pluginConfig.getInt("max-spawns.squid", 0));
+        maxSpawns.put(Slime.NETWORK_ID, this.pluginConfig.getInt("max-spawns.slime", 0));
         maxSpawns.put(Wolf.NETWORK_ID, this.pluginConfig.getInt("max-spawns.wolf", 0));
         maxSpawns.put(Zombie.NETWORK_ID, this.pluginConfig.getInt("max-spawns.zombie", 0));
 

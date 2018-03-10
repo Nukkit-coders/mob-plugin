@@ -1,6 +1,5 @@
 package de.kniffo80.mobplugin.entities.autospawn;
 
-
 /**
  * Describes spawn results for Spawner task (which is used only internally)
  *

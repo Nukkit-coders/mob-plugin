@@ -8,7 +8,6 @@ import cn.nukkit.level.Position;
 import cn.nukkit.utils.Config;
 import de.kniffo80.mobplugin.AutoSpawnTask;
 import de.kniffo80.mobplugin.utils.Utils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -20,9 +19,9 @@ public abstract class AbstractEntitySpawner implements IEntitySpawner {
 
     protected AutoSpawnTask spawnTask;
 
-    protected Server        server;
+    protected Server server;
 
-    protected List<String>  disabledSpawnWorlds = new ArrayList<>();
+    protected List<String> disabledSpawnWorlds = new ArrayList<>();
 
     public AbstractEntitySpawner(AutoSpawnTask spawnTask, Config pluginConfig) {
         this.spawnTask = spawnTask;
@@ -45,7 +44,7 @@ public abstract class AbstractEntitySpawner implements IEntitySpawner {
         if (isSpawnAllowedByDifficulty()) {
             SpawnResult lastSpawnResult = null;
             for (Player player : onlinePlayers) {
-                if (isWorldSpawnAllowed (player.getLevel())) {
+                if (isWorldSpawnAllowed(player.getLevel())) {
                     lastSpawnResult = spawn(player);
                     if (lastSpawnResult.equals(SpawnResult.MAX_SPAWN_REACHED)) {
                         break;
@@ -59,10 +58,11 @@ public abstract class AbstractEntitySpawner implements IEntitySpawner {
 
     /**
      * Checks if the given level's name is on blacklist for auto spawn
+     *
      * @param level the level to be checked
      * @return <code>true</code> when world spawn is allowed
      */
-    private boolean isWorldSpawnAllowed (Level level) {
+    private boolean isWorldSpawnAllowed(Level level) {
         for (String worldName : this.disabledSpawnWorlds) {
             if (level.getName().toLowerCase().equals(worldName.toLowerCase())) {
                 return false;
@@ -103,7 +103,8 @@ public abstract class AbstractEntitySpawner implements IEntitySpawner {
     }
 
     /**
-     * A simple method that evaluates based on the difficulty set in server if a spawn is allowed or not
+     * A simple method that evaluates based on the difficulty set in server if a
+     * spawn is allowed or not
      *
      * @return
      */
@@ -134,6 +135,6 @@ public abstract class AbstractEntitySpawner implements IEntitySpawner {
         return Difficulty.getByDiffculty(this.server.getDifficulty());
     }
 
-    protected abstract String getLogprefix ();
+    protected abstract String getLogprefix();
 
 }

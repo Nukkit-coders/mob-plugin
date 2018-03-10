@@ -8,18 +8,19 @@ import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.potion.Effect;
+import co.aikar.timings.Timings;
 import de.kniffo80.mobplugin.entities.FlyingEntity;
 import de.kniffo80.mobplugin.utils.Utils;
 
 public abstract class FlyingMonster extends FlyingEntity implements Monster {
 
-    protected int[]   minDamage;
+    protected int[] minDamage;
 
-    protected int[]   maxDamage;
+    protected int[] maxDamage;
 
-    protected int     attackDelay = 0;
+    protected int attackDelay = 0;
 
-    protected boolean canAttack   = true;
+    protected boolean canAttack = true;
 
     public FlyingMonster(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
@@ -77,15 +78,16 @@ public abstract class FlyingMonster extends FlyingEntity implements Monster {
     }
 
     public void setDamage(int[] damage) {
-        if (damage.length < 4)
+        if (damage.length < 4) {
             return;
+        }
 
         if (minDamage == null || minDamage.length < 4) {
-            minDamage = new int[] { 0, 0, 0, 0 };
+            minDamage = new int[]{0, 0, 0, 0};
         }
 
         if (maxDamage == null || maxDamage.length < 4) {
-            maxDamage = new int[] { 0, 0, 0, 0 };
+            maxDamage = new int[]{0, 0, 0, 0};
         }
 
         for (int i = 0; i < 4; i++) {
@@ -165,8 +167,10 @@ public abstract class FlyingMonster extends FlyingEntity implements Monster {
     }
 
     public boolean entityBaseTick(int tickDiff) {
+
+        Timings.entityBaseTickTimer.startTiming();
+
         boolean hasUpdate;
-        // Timings.timerEntityBaseTick.startTiming();
 
         hasUpdate = super.entityBaseTick(tickDiff);
 
@@ -183,7 +187,7 @@ public abstract class FlyingMonster extends FlyingEntity implements Monster {
             this.setDataProperty(new ShortEntityData(DATA_AIR, 300));
         }
 
-        // Timings.timerEntityBaseTick.stopTiming();
+        Timings.entityBaseTickTimer.stopTiming();
         return hasUpdate;
     }
 

@@ -95,18 +95,18 @@ public abstract class FlyingEntity extends BaseEntity {
             if (!this.isMovement()) {
                 return null;
             }
-    
+
             if (this.isKnockback()) {
                 this.move(this.motionX * tickDiff, this.motionY * tickDiff, this.motionZ * tickDiff);
                 this.updateMovement();
                 return null;
             }
-    
+
             if (this.followTarget != null && !this.followTarget.closed && this.followTarget.isAlive()) {
                 double x = this.followTarget.x - this.x;
                 double y = this.followTarget.y - this.y;
                 double z = this.followTarget.z - this.z;
-    
+
                 double diff = Math.abs(x) + Math.abs(z);
                 if (this.stayTime > 0 || this.distance(this.followTarget) <= (this.getWidth() + 0.0d) / 2 + 0.05) {
                     this.motionX = 0;
@@ -119,14 +119,14 @@ public abstract class FlyingEntity extends BaseEntity {
                 this.yaw = Math.toDegrees(-Math.atan2(x / diff, z / diff));
                 this.pitch = y == 0 ? 0 : Math.toDegrees(-Math.atan2(y, Math.sqrt(x * x + z * z)));
             }
-    
+
             Vector3 before = this.target;
             this.checkTarget();
             if (this.target instanceof EntityCreature || before != this.target) {
                 double x = this.target.x - this.x;
                 double y = this.target.y - this.y;
                 double z = this.target.z - this.z;
-    
+
                 double diff = Math.abs(x) + Math.abs(z);
                 if (this.stayTime > 0 || this.distance(this.target) <= (this.getWidth() + 0.0d) / 2 + 0.05) {
                     this.motionX = 0;
@@ -139,7 +139,7 @@ public abstract class FlyingEntity extends BaseEntity {
                 this.yaw = Math.toDegrees(-Math.atan2(x / diff, z / diff));
                 this.pitch = y == 0 ? 0 : Math.toDegrees(-Math.atan2(y, Math.sqrt(x * x + z * z)));
             }
-    
+
             double dx = this.motionX * tickDiff;
             double dy = this.motionY * tickDiff;
             double dz = this.motionZ * tickDiff;
@@ -151,7 +151,7 @@ public abstract class FlyingEntity extends BaseEntity {
                 Vector2 be = new Vector2(this.x + dx, this.z + dz);
                 this.move(dx, dy, dz);
                 Vector2 af = new Vector2(this.x, this.z);
-    
+
                 if (be.x != af.x || be.y != af.y) {
                     this.moveTime -= 90 * tickDiff;
                 }

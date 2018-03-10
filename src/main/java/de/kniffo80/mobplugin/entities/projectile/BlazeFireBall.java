@@ -1,9 +1,6 @@
 package de.kniffo80.mobplugin.entities.projectile;
 
 import cn.nukkit.Player;
-import cn.nukkit.block.Block;
-import cn.nukkit.block.BlockCobblestone;
-import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.projectile.EntityProjectile;
 import cn.nukkit.event.entity.ExplosionPrimeEvent;
 import cn.nukkit.level.Explosion;
@@ -13,15 +10,21 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.AddEntityPacket;
 import de.kniffo80.mobplugin.utils.Utils;
 
-import java.util.List;
+/**
+ *
+ * @author PikyCZ
+ */
+public class BlazeFireBall extends EntityProjectile {
 
-public class EntityFireBall extends EntityProjectile {
-
-    public static final int NETWORK_ID = 85;
+    public static final int NETWORK_ID = 94;
 
     protected boolean critical = false;
 
     protected boolean canExplode = false;
+
+    public BlazeFireBall(FullChunk chunk, CompoundTag nbt) {
+        super(chunk, nbt);
+    }
 
     @Override
     public int getNetworkId() {
@@ -30,12 +33,12 @@ public class EntityFireBall extends EntityProjectile {
 
     @Override
     public float getWidth() {
-        return 0.5f;
+        return 0.3125f;
     }
 
     @Override
     public float getHeight() {
-        return 0.5f;
+        return 0.3125f;
     }
 
     @Override
@@ -53,16 +56,6 @@ public class EntityFireBall extends EntityProjectile {
         return 4;
     }
 
-    public EntityFireBall(FullChunk chunk, CompoundTag nbt, Entity shootingEntity) {
-        this(chunk, nbt, shootingEntity, false);
-    }
-
-    public EntityFireBall(FullChunk chunk, CompoundTag nbt, Entity shootingEntity, boolean critical) {
-        super(chunk, nbt, shootingEntity);
-
-        this.critical = critical;
-    }
-
     public boolean isExplode() {
         return this.canExplode;
     }
@@ -76,7 +69,8 @@ public class EntityFireBall extends EntityProjectile {
             return false;
         }
 
-        // this.timings.startTiming();
+        this.timing.startTiming();
+
         boolean hasUpdate = super.onUpdate(currentTick);
 
         if (!this.hadCollision && this.critical) {
@@ -92,9 +86,6 @@ public class EntityFireBall extends EntityProjectile {
                 this.server.getPluginManager().callEvent(ev);
                 if (!ev.isCancelled()) {
                     Explosion explosion = new Explosion(this, (float) ev.getForce(), this.shootingEntity);
-                    if (this.shootingEntity.getLevelBlock() instanceof BlockCobblestone) {
-                        return false;
-                    }
                     if (ev.isBlockBreaking()) {
                         explosion.explodeA();
                     }
@@ -105,7 +96,8 @@ public class EntityFireBall extends EntityProjectile {
             hasUpdate = true;
         }
 
-        // this.timings.stopTiming();
+        this.timing.startTiming();
+
         return hasUpdate;
     }
 
@@ -124,4 +116,5 @@ public class EntityFireBall extends EntityProjectile {
 
         super.spawnTo(player);
     }
+
 }

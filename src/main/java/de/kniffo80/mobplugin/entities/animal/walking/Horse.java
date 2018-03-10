@@ -9,7 +9,6 @@ import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import de.kniffo80.mobplugin.entities.animal.WalkingAnimal;
 import de.kniffo80.mobplugin.utils.Utils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +48,7 @@ public class Horse extends WalkingAnimal {
         return 1.6f;
     }
 
-    public int getMaxJumpHeight() {
+    public float getMaxJumpHeight() {
         return 2;
     }
 
@@ -62,25 +61,25 @@ public class Horse extends WalkingAnimal {
     public void initEntity() {
         super.initEntity();
         this.setMaxHealth(15);
-        if(this instanceof Donkey){
+        if (this instanceof Donkey) {
             this.Type = 1;
-        }else if(this instanceof Mule){
+        } else if (this instanceof Mule) {
             this.Type = 2;
-        }else if(this instanceof ZombieHorse){
+        } else if (this instanceof ZombieHorse) {
             this.Type = 3;
-        }else if(this instanceof SkeletonHorse){
+        } else if (this instanceof SkeletonHorse) {
             this.Type = 4;
-        }else{
+        } else {
             this.Type = 0;
         }
-        if(this.namedTag.contains("Variant")){
+        if (this.namedTag.contains("Variant")) {
             this.Variant = this.namedTag.getInt("Variant");
-        }else{
+        } else {
             this.Variant = this.getRandomVariant();
         }
 
-
     }
+
     @Override
     public void saveNBT() {
         super.saveNBT();
@@ -144,14 +143,14 @@ public class Horse extends WalkingAnimal {
         Variant = variant;
     }
 
-    private int getRandomVariant(){
+    private int getRandomVariant() {
         int VariantList[] = {
-                0,1,2,3,4,5,6,
-                256,257,258,259,260,261,262,
-                512,513,514,515,516,517,518,
-                768,769,770,771,772,773,774,
-                1024,1025,1026,1027,1028,1029,1030
+            0, 1, 2, 3, 4, 5, 6,
+            256, 257, 258, 259, 260, 261, 262,
+            512, 513, 514, 515, 516, 517, 518,
+            768, 769, 770, 771, 772, 773, 774,
+            1024, 1025, 1026, 1027, 1028, 1029, 1030
         };
-        return VariantList[Utils.rand(0,VariantList.length)];
+        return VariantList[Utils.rand(0, VariantList.length)];
     }
 }

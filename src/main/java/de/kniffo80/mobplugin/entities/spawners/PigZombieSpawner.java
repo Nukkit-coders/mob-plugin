@@ -7,16 +7,16 @@ import cn.nukkit.level.Position;
 import cn.nukkit.level.generator.biome.Biome;
 import cn.nukkit.utils.Config;
 import de.kniffo80.mobplugin.AutoSpawnTask;
-import de.kniffo80.mobplugin.entities.animal.walking.Horse;
 import de.kniffo80.mobplugin.entities.autospawn.AbstractEntitySpawner;
 import de.kniffo80.mobplugin.entities.autospawn.SpawnResult;
+import de.kniffo80.mobplugin.entities.monster.walking.PigZombie;
 
 /**
  * @author PikyCZ
  */
-public class HorseSpawner extends AbstractEntitySpawner {
+public class PigZombieSpawner extends AbstractEntitySpawner {
 
-    public HorseSpawner(AutoSpawnTask spawnTask, Config pluginConfig) {
+    public PigZombieSpawner(AutoSpawnTask spawnTask, Config pluginConfig) {
         super(spawnTask, pluginConfig);
     }
 
@@ -33,16 +33,16 @@ public class HorseSpawner extends AbstractEntitySpawner {
         int blockLightLevel = level.getBlockLightAt((int) pos.x, (int) pos.y, (int) pos.z);
         int biomeId = level.getBiomeId((int) pos.x, (int) pos.z);
 
-        if (!Block.solid[blockId]) { // only spawns on solid blocks
+        if (Block.transparent[blockId]) { // only spawns on opaque blocks
             result = SpawnResult.WRONG_BLOCK;
-        } else if (blockLightLevel > 9) {
+        } else if (blockLightLevel < 9) {
             result = SpawnResult.WRONG_LIGHTLEVEL;
-        } else if (biomeId != Biome.PLAINS || biomeId != Biome.SAVANNA) {
+        } else if (biomeId != Biome.HELL) {
             result = SpawnResult.WRONG_BLOCK;
         } else if (pos.y > 127 || pos.y < 1 || level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z) == Block.AIR) { // cannot spawn on AIR block
             result = SpawnResult.POSITION_MISMATCH;
-        } else { // horse is spawned
-            this.spawnTask.createEntity(getEntityName(), pos.add(0, 2.8, 0));
+        } else {
+            this.spawnTask.createEntity(getEntityName(), pos.add(0, 2.3, 0));
         }
 
         return result;
@@ -50,12 +50,12 @@ public class HorseSpawner extends AbstractEntitySpawner {
 
     @Override
     public int getEntityNetworkId() {
-        return Horse.NETWORK_ID;
+        return PigZombie.NETWORK_ID;
     }
 
     @Override
     public String getEntityName() {
-        return "Horse";
+        return "PigZombie";
     }
 
 }
