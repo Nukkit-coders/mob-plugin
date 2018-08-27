@@ -7,13 +7,11 @@ import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.entity.EntityMotionEvent;
-import cn.nukkit.level.Level;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.math.AxisAlignedBB;
 import cn.nukkit.math.NukkitMath;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.network.protocol.AddEntityPacket;
 import co.aikar.timings.Timings;
 import nukkitcoders.mobplugin.MobPlugin;
 import nukkitcoders.mobplugin.entities.monster.Monster;
@@ -158,27 +156,6 @@ public abstract class BaseEntity extends EntityCreature {
         this.namedTag.putBoolean("Movement", this.isMovement());
         this.namedTag.putBoolean("WallCheck", this.isWallCheck());
         this.namedTag.putShort("Age", this.age);
-    }
-
-    @Override
-    public void spawnTo(Player player) {
-        if (!this.hasSpawned.containsKey(player.getLoaderId()) && player.usedChunks.containsKey(Level.chunkHash(this.chunk.getX(), this.chunk.getZ()))) {
-            AddEntityPacket pk = new AddEntityPacket();
-            pk.entityRuntimeId = this.getId();
-            pk.entityUniqueId = this.getId();
-            pk.type = this.getNetworkId();
-            pk.x = (float) this.x;
-            pk.y = (float) this.y;
-            pk.z = (float) this.z;
-            pk.speedX = pk.speedY = pk.speedZ = 0;
-            pk.yaw = (float) this.yaw;
-            pk.pitch = (float) this.pitch;
-            pk.metadata = this.dataProperties;
-
-            player.dataPacket(pk);
-
-            this.hasSpawned.put(player.getLoaderId(), player);
-        }
     }
 
     @Override

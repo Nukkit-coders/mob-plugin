@@ -1,6 +1,5 @@
 package nukkitcoders.mobplugin.entities.projectile;
 
-import cn.nukkit.Player;
 import cn.nukkit.block.BlockCobblestone;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.projectile.EntityProjectile;
@@ -9,7 +8,6 @@ import cn.nukkit.level.Explosion;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.level.particle.CriticalParticle;
 import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.network.protocol.AddEntityPacket;
 import nukkitcoders.mobplugin.utils.Utils;
 
 public class EntityFireBall extends EntityProjectile {
@@ -76,7 +74,6 @@ public class EntityFireBall extends EntityProjectile {
             return false;
         }
 
-        // this.timings.startTiming();
         boolean hasUpdate = super.onUpdate(currentTick);
 
         if (!this.hadCollision && this.critical) {
@@ -102,23 +99,6 @@ public class EntityFireBall extends EntityProjectile {
             hasUpdate = true;
         }
 
-        // this.timings.stopTiming();
         return hasUpdate;
-    }
-
-    public void spawnTo(Player player) {
-        AddEntityPacket pk = new AddEntityPacket();
-        pk.type = NETWORK_ID;
-        pk.entityRuntimeId = this.getId();
-        pk.x = (float) this.x;
-        pk.y = (float) this.y;
-        pk.z = (float) this.z;
-        pk.speedX = (float) this.motionX;
-        pk.speedY = (float) this.motionY;
-        pk.speedZ = (float) this.motionZ;
-        pk.metadata = this.dataProperties;
-        player.dataPacket(pk);
-
-        super.spawnTo(player);
     }
 }
