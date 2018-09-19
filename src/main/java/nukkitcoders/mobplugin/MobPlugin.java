@@ -305,7 +305,7 @@ public class MobPlugin extends PluginBase implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void PlayerInteractEvent(PlayerInteractEvent ev) {
         if (ev.getFace() == null || ev.getAction() != PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK) {
             return;
@@ -334,12 +334,8 @@ public class MobPlugin extends PluginBase implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void BlockPlaceEvent(BlockPlaceEvent ev) {
-        if (ev.isCancelled()) {
-            return;
-        }
-
         Block block = ev.getBlock();
         if (block.getId() == Block.JACK_O_LANTERN || block.getId() == Block.PUMPKIN) {
             if (block.getSide(BlockFace.DOWN).getId() == Item.SNOW_BLOCK && block.getSide(BlockFace.DOWN, 2).getId() == Item.SNOW_BLOCK) {
@@ -376,11 +372,8 @@ public class MobPlugin extends PluginBase implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void BlockBreakEvent(BlockBreakEvent ev) {
-        if (ev.isCancelled()) {
-            return;
-        }
 
         Block block = ev.getBlock();
         if ((block.getId() == Block.MONSTER_EGG)
