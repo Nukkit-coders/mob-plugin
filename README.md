@@ -5,8 +5,10 @@ Development: **[kniffo80](https://github.com/kniffo80)**
              **[PetteriM1](https://github.com/PetteriM1)**
              **[PikyCZ](https://github.com/PikyCZ)**
              **[zzz1999](https://github.com/zzz1999)**
+             **[Sergey Dertan](https://github.com/SergeyDertan)**
 
 MobPlugin is a plugin that implements mobs and animals for Nukkit servers including movement, aggression etc.
+This version have working spawners.
 
 ## Notice
 This plugin is in development. Therefore, It is possible to function abnormally.
