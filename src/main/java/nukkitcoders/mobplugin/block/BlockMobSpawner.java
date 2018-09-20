@@ -9,7 +9,6 @@ import cn.nukkit.item.ItemBlock;
 import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.math.BlockFace;
 import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.utils.MainLogger;
 import nukkitcoders.mobplugin.entities.block.BlockEntitySpawner;
 
 import static nukkitcoders.mobplugin.entities.block.BlockEntitySpawner.*;
@@ -34,7 +33,6 @@ public class BlockMobSpawner extends cn.nukkit.block.BlockMobSpawner {
     @Override
     public boolean place(Item item, Block block, Block target, BlockFace face, double fx, double fy, double fz, Player player) {
         if (!super.place(item, block, target, face, fx, fy, fz, player)) return false;
-        MainLogger.getLogger().info("place, EID: " + this.entityId); //TODO remove
         CompoundTag nbt = new CompoundTag()
                 .putString(TAG_ID, BlockEntity.MOB_SPAWNER)
                 .putInt(TAG_ENTITY_ID, this.entityId)
