@@ -185,6 +185,7 @@ public class MobPlugin extends PluginBase implements Listener {
     }
 
     private void registerSpawners() {
+        /* items with meta > 15 conflict with others ids
         Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Bat.NETWORK_ID] = new BlockMobSpawner(Bat.NETWORK_ID);
         Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Chicken.NETWORK_ID] = new BlockMobSpawner(Chicken.NETWORK_ID);
         Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Cod.NETWORK_ID] = new BlockMobSpawner(Cod.NETWORK_ID);
@@ -240,6 +241,7 @@ public class MobPlugin extends PluginBase implements Listener {
         Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Wolf.NETWORK_ID] = new BlockMobSpawner(Wolf.NETWORK_ID);
         Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Zombie.NETWORK_ID] = new BlockMobSpawner(Zombie.NETWORK_ID);
         Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + ZombieVillager.NETWORK_ID] = new BlockMobSpawner(ZombieVillager.NETWORK_ID);
+        */
     }
 
     private void registerEntities() {
