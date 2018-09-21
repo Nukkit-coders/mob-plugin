@@ -140,9 +140,14 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
         return new CompoundTag()
                 .putString(TAG_ID, BlockEntity.MOB_SPAWNER)
                 .putInt(TAG_ENTITY_ID, this.entityId)
-                .putDouble(TAG_X, this.x)
-                .putDouble(TAG_Y, this.y)
-                .putDouble(TAG_Z, this.z);
+                .putInt(TAG_X, (int) this.x)
+                .putInt(TAG_Y, (int) this.y)
+                .putInt(TAG_Z, (int) this.z)
+                .putShort(TAG_SPAWN_RANGE, this.spawnRange)
+                .putShort(TAG_MIN_SPAWN_DELAY, this.minSpawnDelay)
+                .putShort(TAG_MAX_SPAWN_DELAY, this.maxSpawnDelay)
+                .putShort(TAG_MAX_NEARBY_ENTITIES, this.maxNearbyEntities)
+                .putShort(TAG_REQUIRED_PLAYER_RANGE, this.requiredPlayerRange);
     }
 
     @Override
