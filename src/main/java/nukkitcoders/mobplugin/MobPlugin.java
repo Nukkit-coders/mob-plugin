@@ -412,7 +412,7 @@ public class MobPlugin extends PluginBase implements Listener {
         Block block = ev.getBlock();
         if (block.getId() == Block.JACK_O_LANTERN || block.getId() == Block.PUMPKIN) {
             if (block.getSide(BlockFace.DOWN).getId() == Item.SNOW_BLOCK && block.getSide(BlockFace.DOWN, 2).getId() == Item.SNOW_BLOCK) {
-                Entity entity = create("SnowGolem", block.add(0.5, -2, 0.5));
+                Entity entity = create(SnowGolem.NETWORK_ID, block.add(0.5, -2, 0.5));
                 if (entity != null) {
                     entity.spawnToAll();
                 }
@@ -433,7 +433,7 @@ public class MobPlugin extends PluginBase implements Listener {
                 }
 
                 if (second != null) {
-                    Entity entity = MobPlugin.create("IronGolem", block.add(0.5, -1, 0.5));
+                    Entity entity = MobPlugin.create(IronGolem.NETWORK_ID, block.add(0.5, -1, 0.5));
                     if (entity != null) {
                         entity.spawnToAll();
                     }
@@ -451,7 +451,7 @@ public class MobPlugin extends PluginBase implements Listener {
         if ((block.getId() == Block.MONSTER_EGG)
                 && block.getLevel().getBlockLightAt((int) block.x, (int) block.y, (int) block.z) < 12 && Utils.rand(1, 5) == 1) {
 
-            Silverfish entity = (Silverfish) create("Silverfish", block.add(0.5, 0, 0.5));
+            Silverfish entity = (Silverfish) create(Silverfish.NETWORK_ID, block.add(0.5, 0, 0.5));
             if (entity != null) {
                 entity.spawnToAll();
                 EntityEventPacket pk = new EntityEventPacket();
