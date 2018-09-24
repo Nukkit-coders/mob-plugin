@@ -1,12 +1,13 @@
 package nukkitcoders.mobplugin.event.spawner;
 
 import cn.nukkit.Player;
+import cn.nukkit.block.Block;
 import cn.nukkit.event.Cancellable;
-import cn.nukkit.event.Event;
 import cn.nukkit.event.HandlerList;
+import cn.nukkit.event.block.BlockEvent;
 import nukkitcoders.mobplugin.entities.block.BlockEntitySpawner;
 
-public class SpawnerChangeTypeEvent extends Event implements Cancellable {
+public class SpawnerChangeTypeEvent extends BlockEvent implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
     private final BlockEntitySpawner spawner;
@@ -14,7 +15,8 @@ public class SpawnerChangeTypeEvent extends Event implements Cancellable {
     private final int oldEntityType;
     private final int newEntityType;
 
-    public SpawnerChangeTypeEvent(BlockEntitySpawner spawner, Player player, int oldEntityType, int newEntityType) {
+    public SpawnerChangeTypeEvent(BlockEntitySpawner spawner, Block block, Player player, int oldEntityType, int newEntityType) {
+        super(block);
         this.spawner = spawner;
         this.player = player;
         this.oldEntityType = oldEntityType;
