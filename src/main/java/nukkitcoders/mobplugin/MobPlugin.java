@@ -29,6 +29,7 @@ import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.network.protocol.EntityEventPacket;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
+import nukkitcoders.mobplugin.block.BlockMobSpawner;
 import nukkitcoders.mobplugin.entities.BaseEntity;
 import nukkitcoders.mobplugin.entities.animal.flying.Bat;
 import nukkitcoders.mobplugin.entities.animal.flying.Parrot;
@@ -385,12 +386,12 @@ public class MobPlugin extends PluginBase implements Listener {
         ev.setCancelled(true);
         BlockEntity blockEntity = block.getLevel().getBlockEntity(block);
         if (blockEntity != null && blockEntity instanceof BlockEntitySpawner) {
-            SpawnerChangeTypeEvent event = new SpawnerChangeTypeEvent((BlockEntitySpawner) blockEntity, ev.getPlayer(), ((BlockEntitySpawner) blockEntity).getSpawnEntityType(), item.getDamage());
+            SpawnerChangeTypeEvent event = new SpawnerChangeTypeEvent((BlockEntitySpawner) blockEntity, ev.getBlock(), ev.getPlayer(), ((BlockEntitySpawner) blockEntity).getSpawnEntityType(), item.getDamage());
             this.getServer().getPluginManager().callEvent(event);
             if (event.isCancelled()) return;
             ((BlockEntitySpawner) blockEntity).setSpawnEntityType(item.getDamage());
         } else {
-            SpawnerCreateEvent event = new SpawnerCreateEvent(ev.getPlayer(), item.getDamage());
+            SpawnerCreateEvent event = new SpawnerCreateEvent(ev.getPlayer(), ev.getBlock(), item.getDamage());
             this.getServer().getPluginManager().callEvent(event);
             if (event.isCancelled()) return;
             if (blockEntity != null) {
