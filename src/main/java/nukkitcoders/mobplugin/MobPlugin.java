@@ -4,7 +4,6 @@ import cn.nukkit.IPlayer;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
-import cn.nukkit.block.BlockID;
 import cn.nukkit.blockentity.BlockEntity;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
@@ -30,7 +29,6 @@ import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.network.protocol.EntityEventPacket;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
-import nukkitcoders.mobplugin.block.BlockMobSpawner;
 import nukkitcoders.mobplugin.entities.BaseEntity;
 import nukkitcoders.mobplugin.entities.animal.flying.Bat;
 import nukkitcoders.mobplugin.entities.animal.flying.Parrot;
@@ -45,6 +43,8 @@ import nukkitcoders.mobplugin.entities.monster.swimming.ElderGuardian;
 import nukkitcoders.mobplugin.entities.monster.swimming.Guardian;
 import nukkitcoders.mobplugin.entities.monster.walking.*;
 import nukkitcoders.mobplugin.entities.projectile.EntityFireBall;
+import nukkitcoders.mobplugin.event.spawner.SpawnerChangeTypeEvent;
+import nukkitcoders.mobplugin.event.spawner.SpawnerCreateEvent;
 import nukkitcoders.mobplugin.utils.Utils;
 
 import java.util.ArrayList;
@@ -385,8 +385,14 @@ public class MobPlugin extends PluginBase implements Listener {
         ev.setCancelled(true);
         BlockEntity blockEntity = block.getLevel().getBlockEntity(block);
         if (blockEntity != null && blockEntity instanceof BlockEntitySpawner) {
+            SpawnerChangeTypeEvent event = new SpawnerChangeTypeEvent((BlockEntitySpawner) blockEntity, ev.getPlayer(), ((BlockEntitySpawner) blockEntity).getSpawnEntityType(), item.getDamage());
+            this.getServer().getPluginManager().callEvent(event);
+            if (event.isCancelled()) return;
             ((BlockEntitySpawner) blockEntity).setSpawnEntityType(item.getDamage());
         } else {
+            SpawnerCreateEvent event = new SpawnerCreateEvent(ev.getPlayer(), item.getDamage());
+            this.getServer().getPluginManager().callEvent(event);
+            if (event.isCancelled()) return;
             if (blockEntity != null) {
                 blockEntity.close();
             }
