@@ -382,18 +382,19 @@ public class MobPlugin extends PluginBase implements Listener {
         Block block = ev.getBlock();
 
         if (item.getId() != Item.SPAWN_EGG || block.getId() != Block.MONSTER_SPAWNER) return;
-
-        ev.setCancelled(true);
+        
         BlockEntity blockEntity = block.getLevel().getBlockEntity(block);
         if (blockEntity != null && blockEntity instanceof BlockEntitySpawner) {
             SpawnerChangeTypeEvent event = new SpawnerChangeTypeEvent((BlockEntitySpawner) blockEntity, ev.getBlock(), ev.getPlayer(), ((BlockEntitySpawner) blockEntity).getSpawnEntityType(), item.getDamage());
             this.getServer().getPluginManager().callEvent(event);
             if (event.isCancelled()) return;
             ((BlockEntitySpawner) blockEntity).setSpawnEntityType(item.getDamage());
+            ev.setCancelled(true);
         } else {
             SpawnerCreateEvent event = new SpawnerCreateEvent(ev.getPlayer(), ev.getBlock(), item.getDamage());
             this.getServer().getPluginManager().callEvent(event);
             if (event.isCancelled()) return;
+            ev.setCancelled(true);
             if (blockEntity != null) {
                 blockEntity.close();
             }
