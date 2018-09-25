@@ -364,7 +364,7 @@ public class MobPlugin extends PluginBase implements Listener {
             // don't drop that fucking experience orbs because they're somehow buggy :(
             // if (player.isSurvival()) {
             // for (int i = 1; i <= killExperience; i++) {
-            // player.getLevel().dropExpOrb(baseEntity, 1);
+            // player.getLevel().dropExpOrb(baseEntity, 11);
             // }
             // }
         }
