@@ -29,7 +29,7 @@ import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.network.protocol.EntityEventPacket;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
-import nukkitcoders.mobplugin.block.BlockMobSpawner;
+import cn.nukkit.utils.MainLogger;
 import nukkitcoders.mobplugin.entities.BaseEntity;
 import nukkitcoders.mobplugin.entities.animal.flying.Bat;
 import nukkitcoders.mobplugin.entities.animal.flying.Parrot;
@@ -44,6 +44,7 @@ import nukkitcoders.mobplugin.entities.monster.swimming.ElderGuardian;
 import nukkitcoders.mobplugin.entities.monster.swimming.Guardian;
 import nukkitcoders.mobplugin.entities.monster.walking.*;
 import nukkitcoders.mobplugin.entities.projectile.EntityFireBall;
+import nukkitcoders.mobplugin.event.entity.SpawnGolemEvent;
 import nukkitcoders.mobplugin.event.spawner.SpawnerChangeTypeEvent;
 import nukkitcoders.mobplugin.event.spawner.SpawnerCreateEvent;
 import nukkitcoders.mobplugin.utils.Utils;
@@ -382,7 +383,7 @@ public class MobPlugin extends PluginBase implements Listener {
         Block block = ev.getBlock();
 
         if (item.getId() != Item.SPAWN_EGG || block.getId() != Block.MONSTER_SPAWNER) return;
-        
+
         BlockEntity blockEntity = block.getLevel().getBlockEntity(block);
         if (blockEntity != null && blockEntity instanceof BlockEntitySpawner) {
             SpawnerChangeTypeEvent event = new SpawnerChangeTypeEvent((BlockEntitySpawner) blockEntity, ev.getBlock(), ev.getPlayer(), ((BlockEntitySpawner) blockEntity).getSpawnEntityType(), item.getDamage());
@@ -411,37 +412,57 @@ public class MobPlugin extends PluginBase implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void BlockPlaceEvent(BlockPlaceEvent ev) {
         Block block = ev.getBlock();
+        Player player = ev.getPlayer();
         if (block.getId() == Block.JACK_O_LANTERN || block.getId() == Block.PUMPKIN) {
             if (block.getSide(BlockFace.DOWN).getId() == Item.SNOW_BLOCK && block.getSide(BlockFace.DOWN, 2).getId() == Item.SNOW_BLOCK) {
+
+                SpawnGolemEvent event = new SpawnGolemEvent(player, block.add(0.5, -2, 0.5), SpawnGolemEvent.GolemType.SNOW_GOLEM);
+
+                this.getServer().getPluginManager().callEvent(event);
+
+                if (event.isCancelled()) return;
+
                 Entity entity = create(SnowGolem.NETWORK_ID, block.add(0.5, -2, 0.5));
-                if (entity != null) {
-                    entity.spawnToAll();
-                }
+
+                if (entity != null) entity.spawnToAll();
+
+                block.level.setBlock(block.add(0, -1, 0), new BlockAir());
+                block.level.setBlock(block.add(0, -2, 0), new BlockAir());
 
                 ev.setCancelled();
-                block.getLevel().setBlock(block.add(0, -1, 0), new BlockAir());
-                block.getLevel().setBlock(block.add(0, -2, 0), new BlockAir());
+                if (player.isSurvival()) player.getInventory().removeItem(Item.get(block.getId()));
             } else if (block.getSide(BlockFace.DOWN).getId() == Item.IRON_BLOCK && block.getSide(BlockFace.DOWN, 2).getId() == Item.IRON_BLOCK) {
+                int removeId = block.getId();
                 block = block.getSide(BlockFace.DOWN);
 
-                Block first, second = null;
-                if ((first = block.getSide(BlockFace.EAST)).getId() == Item.IRON_BLOCK && (second = block.getSide(BlockFace.WEST)).getId() == Item.IRON_BLOCK) {
-                    block.getLevel().setBlock(first, new BlockAir());
-                    block.getLevel().setBlock(second, new BlockAir());
-                } else if ((first = block.getSide(BlockFace.NORTH)).getId() == Item.IRON_BLOCK && (second = block.getSide(BlockFace.SOUTH)).getId() == Item.IRON_BLOCK) {
-                    block.getLevel().setBlock(first, new BlockAir());
-                    block.getLevel().setBlock(second, new BlockAir());
+                Block first = null, second = null;
+                if (block.getSide(BlockFace.EAST).getId() == Item.IRON_BLOCK && block.getSide(BlockFace.WEST).getId() == Item.IRON_BLOCK) {
+                    first = block.getSide(BlockFace.EAST);
+                    second = block.getSide(BlockFace.WEST);
+                } else if (block.getSide(BlockFace.NORTH).getId() == Item.IRON_BLOCK && block.getSide(BlockFace.SOUTH).getId() == Item.IRON_BLOCK) {
+                    first = block.getSide(BlockFace.NORTH);
+                    second = block.getSide(BlockFace.SOUTH);
                 }
 
-                if (second != null) {
-                    Entity entity = MobPlugin.create(IronGolem.NETWORK_ID, block.add(0.5, -1, 0.5));
-                    if (entity != null) {
-                        entity.spawnToAll();
-                    }
-                    block.getLevel().setBlock(block, new BlockAir());
-                    block.getLevel().setBlock(block.add(0, -1, 0), new BlockAir());
-                    ev.setCancelled();
-                }
+                if (second == null || first == null) return;
+
+                SpawnGolemEvent event = new SpawnGolemEvent(player, block.add(0.5, -1, 0.5), SpawnGolemEvent.GolemType.IRON_GOLEM);
+
+                this.getServer().getPluginManager().callEvent(event);
+
+                if (event.isCancelled()) return;
+
+                Entity entity = MobPlugin.create(IronGolem.NETWORK_ID, block.add(0.5, -1, 0.5));
+
+                if (entity != null) entity.spawnToAll();
+
+                block.level.setBlock(first, new BlockAir());
+                block.level.setBlock(second, new BlockAir());
+                block.level.setBlock(block, new BlockAir());
+                block.level.setBlock(block.add(0, -1, 0), new BlockAir());
+
+                ev.setCancelled();
+                if (player.isSurvival()) player.getInventory().removeItem(Item.get(removeId));
             }
         }
     }
@@ -449,17 +470,16 @@ public class MobPlugin extends PluginBase implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void BlockBreakEvent(BlockBreakEvent ev) {
         Block block = ev.getBlock();
-        if ((block.getId() == Block.MONSTER_EGG)
-                && block.getLevel().getBlockLightAt((int) block.x, (int) block.y, (int) block.z) < 12 && Utils.rand(1, 5) == 1) {
+        if ((block.getId() == Block.MONSTER_EGG) && block.level.getBlockLightAt((int) block.x, (int) block.y, (int) block.z) < 12 && Utils.rand(1, 5) == 1) {
 
             Silverfish entity = (Silverfish) create(Silverfish.NETWORK_ID, block.add(0.5, 0, 0.5));
-            if (entity != null) {
-                entity.spawnToAll();
-                EntityEventPacket pk = new EntityEventPacket();
-                pk.eid = entity.getId();
-                pk.event = 27;
-                entity.getLevel().addChunkPacket(entity.getChunkX() >> 4, entity.getChunkZ() >> 4, pk);
-            }
+            if (entity == null) return;
+
+            entity.spawnToAll();
+            EntityEventPacket pk = new EntityEventPacket();
+            pk.eid = entity.getId();
+            pk.event = 27;
+            entity.level.addChunkPacket(entity.getChunkX() >> 4, entity.getChunkZ() >> 4, pk);
         }
     }
 
