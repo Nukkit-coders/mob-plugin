@@ -102,75 +102,74 @@ public class MobPlugin extends PluginBase implements Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (cmd.getName().toLowerCase().equals("mob")) {
+        if (!cmd.getName().toLowerCase().equals("mob")) return true;
 
-            if (args.length == 0) {
-                sender.sendMessage("-- MobPlugin 1.1 --");
-                sender.sendMessage("/mob spawn <mob> <opt:player> - Spawn a mob");
-                sender.sendMessage("/mob removeall - Remove all living mobs");
-                sender.sendMessage("/mob removeitems - Remove all items from ground");
-            } else {
-                switch (args[0]) {
+        if (args.length == 0) {
+            sender.sendMessage("-- MobPlugin " + this.getDescription().getVersion() + " --");
+            sender.sendMessage("/mob spawn <mob> <opt:player> - Spawn a mob");
+            sender.sendMessage("/mob removeall - Remove all living mobs");
+            sender.sendMessage("/mob removeitems - Remove all items from ground");
+            return true;
+        }
 
-                    case "spawn":
+        switch (args[0]) {
+            case "spawn":
 
-                        if (args.length == 1) {
-                            sender.sendMessage("Usage: /mob spawn <mob> <opt:player>");
-                            break;
-                        }
-
-                        String mob = args[1];
-                        Player playerThatSpawns = null;
-
-                        if (args.length == 3) {
-                            playerThatSpawns = this.getServer().getPlayer(args[2]);
-                        } else {
-                            playerThatSpawns = (Player) sender;
-                        }
-
-                        if (playerThatSpawns != null) {
-                            Position pos = playerThatSpawns.getPosition();
-
-                            Entity ent;
-                            if ((ent = MobPlugin.create(mob, pos)) != null) {
-                                ent.spawnToAll();
-                                sender.sendMessage("Spawned " + mob + " to " + playerThatSpawns.getName());
-                            } else {
-                                sender.sendMessage("Unable to spawn " + mob);
-                            }
-                        } else {
-                            sender.sendMessage("Unknown player " + (args.length == 3 ? args[2] : ((Player) sender).getName()));
-                        }
-                        break;
-                    case "removeall":
-                        int count = 0;
-                        for (Level level : getServer().getLevels().values()) {
-                            for (Entity entity : level.getEntities()) {
-                                if (entity instanceof BaseEntity) {
-                                    entity.close();
-                                    count++;
-                                }
-                            }
-                        }
-                        sender.sendMessage("Removed " + count + " entities from all levels.");
-                        break;
-                    case "removeitems":
-                        count = 0;
-                        for (Level level : getServer().getLevels().values()) {
-                            for (Entity entity : level.getEntities()) {
-                                if (entity instanceof EntityItem && entity.isOnGround()) {
-                                    entity.close();
-                                    count++;
-                                }
-                            }
-                        }
-                        sender.sendMessage("Removed " + count + " items on ground from all levels.");
-                        break;
-                    default:
-                        sender.sendMessage("Unkown command.");
-                        break;
+                if (args.length == 1) {
+                    sender.sendMessage("Usage: /mob spawn <mob> <opt:player>");
+                    break;
                 }
-            }
+
+                String mob = args[1];
+                Player playerThatSpawns;
+
+                if (args.length == 3) {
+                    playerThatSpawns = this.getServer().getPlayer(args[2]);
+                } else {
+                    playerThatSpawns = (Player) sender;
+                }
+
+                if (playerThatSpawns != null) {
+                    Position pos = playerThatSpawns.getPosition();
+
+                    Entity ent;
+                    if ((ent = MobPlugin.create(mob, pos)) != null) {
+                        ent.spawnToAll();
+                        sender.sendMessage("Spawned " + mob + " to " + playerThatSpawns.getName());
+                    } else {
+                        sender.sendMessage("Unable to spawn " + mob);
+                    }
+                } else {
+                    sender.sendMessage("Unknown player " + (args.length == 3 ? args[2] : sender.getName()));
+                }
+                break;
+            case "removeall":
+                int count = 0;
+                for (Level level : getServer().getLevels().values()) {
+                    for (Entity entity : level.getEntities()) {
+                        if (entity instanceof BaseEntity) {
+                            entity.close();
+                            ++count;
+                        }
+                    }
+                }
+                sender.sendMessage("Removed " + count + " entities from all levels.");
+                break;
+            case "removeitems":
+                count = 0;
+                for (Level level : getServer().getLevels().values()) {
+                    for (Entity entity : level.getEntities()) {
+                        if (entity instanceof EntityItem && entity.isOnGround()) {
+                            entity.close();
+                            ++count;
+                        }
+                    }
+                }
+                sender.sendMessage("Removed " + count + " items on ground from all levels.");
+                break;
+            default:
+                sender.sendMessage("Unkown command.");
+                break;
         }
         return true;
 
@@ -353,24 +352,21 @@ public class MobPlugin extends PluginBase implements Listener {
      */
     @EventHandler
     public void EntityDeathEvent(EntityDeathEvent ev) {
-        if (ev.getEntity() instanceof BaseEntity) {
-            BaseEntity baseEntity = (BaseEntity) ev.getEntity();
-            if (baseEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
-                Entity damager = ((EntityDamageByEntityEvent) baseEntity.getLastDamageCause()).getDamager();
-                if (damager instanceof Player) {
-                    Player player = (Player) damager;
-                    int killExperience = baseEntity.getKillExperience();
-                    if (killExperience > 0 && player != null && player.isSurvival()) {
-                        player.addExperience(killExperience);
-                        // don't drop that fucking experience orbs because they're somehow buggy :(
-                        // if (player.isSurvival()) {
-                        // for (int i = 1; i <= killExperience; i++) {
-                        // player.getLevel().dropExpOrb(baseEntity, 1);
-                        // }
-                        // }
-                    }
-                }
-            }
+        if (!(ev.getEntity() instanceof BaseEntity)) return;
+        BaseEntity baseEntity = (BaseEntity) ev.getEntity();
+        if (!(baseEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent)) return;
+        Entity damager = ((EntityDamageByEntityEvent) baseEntity.getLastDamageCause()).getDamager();
+        if (!(damager instanceof Player)) return;
+        Player player = (Player) damager;
+        int killExperience = baseEntity.getKillExperience();
+        if (killExperience > 0 && player.isSurvival()) {
+            player.addExperience(killExperience);
+            // don't drop that fucking experience orbs because they're somehow buggy :(
+            // if (player.isSurvival()) {
+            // for (int i = 1; i <= killExperience; i++) {
+            // player.getLevel().dropExpOrb(baseEntity, 1);
+            // }
+            // }
         }
     }
 
