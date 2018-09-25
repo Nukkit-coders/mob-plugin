@@ -150,6 +150,10 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
         return this.getBlock().getId() == BlockID.MONSTER_SPAWNER;
     }
 
+    public int getSpawnEntityType() {
+        return this.entityId;
+    }
+
     public void setSpawnEntityType(int entityId) {
         this.entityId = entityId;
         this.spawnToAll();
