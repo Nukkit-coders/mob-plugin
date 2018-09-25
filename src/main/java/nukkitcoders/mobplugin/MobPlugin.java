@@ -168,7 +168,7 @@ public class MobPlugin extends PluginBase implements Listener {
                 sender.sendMessage("Removed " + count + " items on ground from all levels.");
                 break;
             default:
-                sender.sendMessage("Unkown command.");
+                sender.sendMessage("Unknown command.");
                 break;
         }
         return true;
@@ -265,8 +265,8 @@ public class MobPlugin extends PluginBase implements Listener {
         Entity.registerEntity(Pufferfish.class.getSimpleName(), Pufferfish.class);
         Entity.registerEntity(Rabbit.class.getSimpleName(), Rabbit.class);
         Entity.registerEntity(Salmon.class.getSimpleName(), Salmon.class);
-        Entity.registerEntity(Sheep.class.getSimpleName(), Sheep.class);
         Entity.registerEntity(SkeletonHorse.class.getSimpleName(), SkeletonHorse.class);
+        Entity.registerEntity(Sheep.class.getSimpleName(), Sheep.class);
         Entity.registerEntity(Squid.class.getSimpleName(), Squid.class);
         Entity.registerEntity(TropicalFish.class.getSimpleName(), TropicalFish.class);
         Entity.registerEntity(Turtle.class.getSimpleName(), Turtle.class);
@@ -276,6 +276,7 @@ public class MobPlugin extends PluginBase implements Listener {
         Entity.registerEntity(Blaze.class.getSimpleName(), Blaze.class);
         Entity.registerEntity(Ghast.class.getSimpleName(), Ghast.class);
         Entity.registerEntity(CaveSpider.class.getSimpleName(), CaveSpider.class);
+        Entity.registerEntity(WitherSkeleton.class.getSimpleName(), WitherSkeleton.class);
         Entity.registerEntity(Creeper.class.getSimpleName(), Creeper.class);
         Entity.registerEntity(Drowned.class.getSimpleName(), Drowned.class);
         Entity.registerEntity(ElderGuardian.class.getSimpleName(), ElderGuardian.class);
@@ -299,7 +300,6 @@ public class MobPlugin extends PluginBase implements Listener {
         Entity.registerEntity(Vindicator.class.getSimpleName(), Vindicator.class);
         Entity.registerEntity(Witch.class.getSimpleName(), Witch.class);
         Entity.registerEntity(Wither.class.getSimpleName(), Wither.class);
-        Entity.registerEntity(WitherSkeleton.class.getSimpleName(), WitherSkeleton.class);
         Entity.registerEntity(Wolf.class.getSimpleName(), Wolf.class);
         Entity.registerEntity(Zombie.class.getSimpleName(), Zombie.class);
         Entity.registerEntity(ZombieVillager.class.getSimpleName(), ZombieVillager.class);
@@ -364,7 +364,7 @@ public class MobPlugin extends PluginBase implements Listener {
             // don't drop that fucking experience orbs because they're somehow buggy :(
             // if (player.isSurvival()) {
             // for (int i = 1; i <= killExperience; i++) {
-            // player.getLevel().dropExpOrb(baseEntity, 11);
+            // player.getLevel().dropExpOrb(baseEntity, 1);
             // }
             // }
         }
