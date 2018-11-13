@@ -99,7 +99,9 @@ public class Rabbit extends JumpingAnimal {
     @Override
     public boolean onUpdate(int currentTick) {
         boolean hasUpdate = super.onUpdate(currentTick);
-        this.level.addParticle(new PunchBlockParticle(this, this.level.getBlock((int) x, (int) y - 1, (int) z), BlockFace.UP));
+        try {
+            this.level.addParticle(new PunchBlockParticle(this, this.level.getBlock((int) x, (int) y - 1, (int) z), BlockFace.UP));
+        } catch (Exception e) {}
         return hasUpdate;
     }
 }

@@ -30,13 +30,18 @@ public class SkeletonSpawner extends AbstractEntitySpawner {
 
         int blockId = level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z);
         int blockLightLevel = level.getBlockLightAt((int) pos.x, (int) pos.y, (int) pos.z);
+        int biomeId = level.getBiomeId((int) pos.x, (int) pos.z);
         int time = level.getTime() % Level.TIME_FULL;
 
         if (Block.transparent[blockId]) {
             result = SpawnResult.WRONG_BLOCK;
         } else if (blockLightLevel > 7) {
             result = SpawnResult.WRONG_LIGHTLEVEL;
-        } else if (pos.y > 127 || pos.y < 1 || level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z) == Block.AIR) {
+        } else if (biomeId == 8) {
+            if (blockId == Block.NETHERRACK) {
+                this.spawnTask.createEntity("WitherSkeleton", pos.add(0, 2.8, 0));
+            }
+        } else if (pos.y > 256 || pos.y < 1 || level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z) == Block.AIR) {
             result = SpawnResult.POSITION_MISMATCH;
         } else if (time > 13184 && time < 22800) {
             this.spawnTask.createEntity(getEntityName(), pos.add(0, 2.8, 0));

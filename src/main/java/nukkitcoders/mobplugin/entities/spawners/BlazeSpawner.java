@@ -29,7 +29,7 @@ public class BlazeSpawner extends AbstractEntitySpawner {
         if (Block.transparent[blockId]) {
             result = SpawnResult.WRONG_BLOCK;
         } else if (biomeId != 8) {
-            result = SpawnResult.WRONG_BLOCK;
+            result = SpawnResult.WRONG_BIOME;
         } else {
             this.spawnTask.createEntity(getEntityName(), pos.add(0, 2.3, 0));
         }

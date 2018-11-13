@@ -3,16 +3,19 @@ package nukkitcoders.mobplugin.entities.monster.flying;
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
-import cn.nukkit.event.entity.EntityDamageByEntityEvent;
+import cn.nukkit.event.entity.ExplosionPrimeEvent;
+import cn.nukkit.event.entity.ProjectileLaunchEvent;
 import cn.nukkit.item.Item;
+import cn.nukkit.level.Explosion;
 import cn.nukkit.level.format.FullChunk;
+import cn.nukkit.level.Location;
+import cn.nukkit.level.Sound;
+import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
-
+import nukkitcoders.mobplugin.MobPlugin;
 import nukkitcoders.mobplugin.entities.monster.FlyingMonster;
+import nukkitcoders.mobplugin.entities.projectile.EntityBlueWitherSkull;
 import nukkitcoders.mobplugin.utils.Utils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Wither extends FlyingMonster {
 
@@ -48,16 +51,17 @@ public class Wither extends FlyingMonster {
 
         this.fireProof = true;
         this.setMaxHealth(600);
-        this.setDamage(new float[]{0, 0, 0, 0});
+        this.setHealth(600);
+        this.setDamage(new float[]{0, 2, 4, 6});
     }
 
     @Override
     public boolean targetOption(EntityCreature creature, double distance) {
         if (creature instanceof Player) {
             Player player = (Player) creature;
-            return player.spawned && player.isAlive() && !player.closed && player.isSurvival() && distance <= 81;
+            return player.spawned && player.isAlive() && !player.closed && player.isSurvival() && distance <= 100;
         }
-        return creature.isAlive() && !creature.closed && distance <= 81;
+        return creature.isAlive() && !creature.closed && distance <= 100;
     }
 
     @Override
@@ -67,18 +71,59 @@ public class Wither extends FlyingMonster {
 
     @Override
     public void attackEntity(Entity player) {
-	      return;
+    if (this.attackDelay > 20 && Utils.rand(1, 5) < 3 && this.distance(player) <= 100) {
+            this.attackDelay = 0;
+
+            double f = 1;
+            double yaw = this.yaw + Utils.rand(-220, 220) / 10;
+            double pitch = this.pitch + Utils.rand(-120, 120) / 10;
+            Location pos = new Location(this.x - Math.sin(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * 0.5, this.y + this.getEyeHeight(),
+                    this.z + Math.cos(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * 0.5, yaw, pitch, this.level);
+            Entity k = MobPlugin.create("BlueWitherSkull", pos, this);
+            if (!(k instanceof EntityBlueWitherSkull)) {
+                return;
+            }
+
+            EntityBlueWitherSkull blueskull = (EntityBlueWitherSkull) k;
+            blueskull.setExplode(true);
+            blueskull.setMotion(new Vector3(-Math.sin(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * f * f, -Math.sin(Math.toRadians(pitch)) * f * f,
+                    Math.cos(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * f * f));
+
+            ProjectileLaunchEvent launch = new ProjectileLaunchEvent(blueskull);
+            this.server.getPluginManager().callEvent(launch);
+            if (launch.isCancelled()) {
+                blueskull.kill();
+            } else {
+                blueskull.spawnToAll();
+                this.level.addSound(this, Sound.MOB_WITHER_SHOOT);
+            }
+        }
     }
 
     @Override
     public Item[] getDrops() {
-        List<Item> drops = new ArrayList<>();
-        if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
-            int netherstar = Utils.rand(0, 101) <= 3 ? 1 : 0;
-            for (int i = 0; i < netherstar; i++) {
-                drops.add(Item.get(Item.NETHER_STAR, 0, 1));
+        return new Item[]{Item.get(Item.NETHER_STAR, 0, 1)};
+    }
+
+    @Override
+    public boolean onUpdate(int currentTick) {
+        boolean hasUpdate = super.onUpdate(currentTick);
+        if (this.health < 1)
+            this.explode();
+        return hasUpdate;
+    }
+
+    public void explode() {
+        ExplosionPrimeEvent ev = new ExplosionPrimeEvent(this, 5);
+        this.server.getPluginManager().callEvent(ev);
+
+        if (!ev.isCancelled()) {
+            Explosion explosion = new Explosion(this, (float) ev.getForce(), this);
+            if (ev.isBlockBreaking()) {
+                explosion.explodeA();
             }
+            explosion.explodeB();
         }
-        return drops.toArray(new Item[drops.size()]);
+        this.close();
     }
 }

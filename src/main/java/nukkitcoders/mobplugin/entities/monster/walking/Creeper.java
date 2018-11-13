@@ -200,11 +200,6 @@ public class Creeper extends WalkingMonster implements EntityExplosive {
         return true;
     }
 
-    @Override
-    public Vector3 updateMove(int tickDiff) {
-        return null;
-    }
-
     public void attackEntity(Entity player) {
     }
 

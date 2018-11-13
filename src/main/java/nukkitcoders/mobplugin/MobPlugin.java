@@ -1,5 +1,6 @@
 package nukkitcoders.mobplugin;
 
+import cn.nukkit.entity.projectile.EntityArrow;
 import cn.nukkit.IPlayer;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
@@ -15,6 +16,7 @@ import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDeathEvent;
+import cn.nukkit.event.inventory.InventoryPickupArrowEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
@@ -42,6 +44,7 @@ import nukkitcoders.mobplugin.entities.monster.jumping.Slime;
 import nukkitcoders.mobplugin.entities.monster.swimming.ElderGuardian;
 import nukkitcoders.mobplugin.entities.monster.swimming.Guardian;
 import nukkitcoders.mobplugin.entities.monster.walking.*;
+import nukkitcoders.mobplugin.entities.projectile.EntityBlueWitherSkull;
 import nukkitcoders.mobplugin.entities.projectile.EntityFireBall;
 import nukkitcoders.mobplugin.event.entity.SpawnGolemEvent;
 import nukkitcoders.mobplugin.event.spawner.SpawnerChangeTypeEvent;
@@ -92,7 +95,6 @@ public class MobPlugin extends PluginBase implements Listener {
         }
 
         this.registerEntities();
-        this.registerSpawners();
     }
 
     @Override
@@ -184,66 +186,6 @@ public class MobPlugin extends PluginBase implements Listener {
         return this.pluginConfig;
     }
 
-    private void registerSpawners() {
-        /* items with meta > 15 conflict with others ids
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Bat.NETWORK_ID] = new BlockMobSpawner(Bat.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Chicken.NETWORK_ID] = new BlockMobSpawner(Chicken.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Cod.NETWORK_ID] = new BlockMobSpawner(Cod.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Cow.NETWORK_ID] = new BlockMobSpawner(Cow.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Dolphin.NETWORK_ID] = new BlockMobSpawner(Dolphin.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Donkey.NETWORK_ID] = new BlockMobSpawner(Donkey.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Horse.NETWORK_ID] = new BlockMobSpawner(Horse.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + MagmaCube.NETWORK_ID] = new BlockMobSpawner(MagmaCube.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Llama.NETWORK_ID] = new BlockMobSpawner(Llama.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Mooshroom.NETWORK_ID] = new BlockMobSpawner(Mooshroom.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Mule.NETWORK_ID] = new BlockMobSpawner(Mule.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Ocelot.NETWORK_ID] = new BlockMobSpawner(Ocelot.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Parrot.NETWORK_ID] = new BlockMobSpawner(Parrot.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Pig.NETWORK_ID] = new BlockMobSpawner(Pig.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + PolarBear.NETWORK_ID] = new BlockMobSpawner(PolarBear.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Pufferfish.NETWORK_ID] = new BlockMobSpawner(Pufferfish.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Rabbit.NETWORK_ID] = new BlockMobSpawner(Rabbit.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Salmon.NETWORK_ID] = new BlockMobSpawner(Salmon.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Sheep.NETWORK_ID] = new BlockMobSpawner(Sheep.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + SkeletonHorse.NETWORK_ID] = new BlockMobSpawner(SkeletonHorse.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Squid.NETWORK_ID] = new BlockMobSpawner(Squid.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + TropicalFish.NETWORK_ID] = new BlockMobSpawner(TropicalFish.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Turtle.NETWORK_ID] = new BlockMobSpawner(Turtle.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Villager.NETWORK_ID] = new BlockMobSpawner(Villager.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + ZombieHorse.NETWORK_ID] = new BlockMobSpawner(ZombieHorse.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Blaze.NETWORK_ID] = new BlockMobSpawner(Blaze.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Ghast.NETWORK_ID] = new BlockMobSpawner(Ghast.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + CaveSpider.NETWORK_ID] = new BlockMobSpawner(CaveSpider.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Creeper.NETWORK_ID] = new BlockMobSpawner(Creeper.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Drowned.NETWORK_ID] = new BlockMobSpawner(Drowned.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + ElderGuardian.NETWORK_ID] = new BlockMobSpawner(ElderGuardian.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + EnderDragon.NETWORK_ID] = new BlockMobSpawner(EnderDragon.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Enderman.NETWORK_ID] = new BlockMobSpawner(Enderman.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Endermite.NETWORK_ID] = new BlockMobSpawner(Endermite.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Evoker.NETWORK_ID] = new BlockMobSpawner(Evoker.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Guardian.NETWORK_ID] = new BlockMobSpawner(Guardian.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Husk.NETWORK_ID] = new BlockMobSpawner(Husk.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + IronGolem.NETWORK_ID] = new BlockMobSpawner(IronGolem.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Phantom.NETWORK_ID] = new BlockMobSpawner(Phantom.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + PigZombie.NETWORK_ID] = new BlockMobSpawner(PigZombie.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Shulker.NETWORK_ID] = new BlockMobSpawner(Shulker.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Silverfish.NETWORK_ID] = new BlockMobSpawner(Silverfish.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Skeleton.NETWORK_ID] = new BlockMobSpawner(Skeleton.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Slime.NETWORK_ID] = new BlockMobSpawner(Slime.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + SnowGolem.NETWORK_ID] = new BlockMobSpawner(SnowGolem.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Spider.NETWORK_ID] = new BlockMobSpawner(Spider.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Stray.NETWORK_ID] = new BlockMobSpawner(Stray.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Vex.NETWORK_ID] = new BlockMobSpawner(Vex.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Vindicator.NETWORK_ID] = new BlockMobSpawner(Vindicator.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Witch.NETWORK_ID] = new BlockMobSpawner(Witch.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Wither.NETWORK_ID] = new BlockMobSpawner(Wither.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + WitherSkeleton.NETWORK_ID] = new BlockMobSpawner(WitherSkeleton.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Wolf.NETWORK_ID] = new BlockMobSpawner(Wolf.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + Zombie.NETWORK_ID] = new BlockMobSpawner(Zombie.NETWORK_ID);
-        Block.fullList[(BlockID.MONSTER_SPAWNER << 4) + ZombieVillager.NETWORK_ID] = new BlockMobSpawner(ZombieVillager.NETWORK_ID);
-        */
-    }
-
     private void registerEntities() {
         BlockEntity.registerBlockEntity("MobSpawner", BlockEntitySpawner.class);
 
@@ -304,6 +246,7 @@ public class MobPlugin extends PluginBase implements Listener {
         Entity.registerEntity(Zombie.class.getSimpleName(), Zombie.class);
         Entity.registerEntity(ZombieVillager.class.getSimpleName(), ZombieVillager.class);
 
+        Entity.registerEntity("BlueWitherSkull", EntityBlueWitherSkull.class);
         Entity.registerEntity("FireBall", EntityFireBall.class);
     }
 
@@ -503,4 +446,12 @@ public class MobPlugin extends PluginBase implements Listener {
             counter++;
         }
     }*/
+
+    @EventHandler
+    public void onPickup(InventoryPickupArrowEvent ev) {
+        EntityArrow a = ev.getArrow();
+        if (a.namedTag.getBoolean("canNotPickup")) {
+            ev.setCancelled();
+        }
+    }
 }

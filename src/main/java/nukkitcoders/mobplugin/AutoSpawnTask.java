@@ -23,13 +23,13 @@ import java.util.Map;
 
 public class AutoSpawnTask implements Runnable {
 
-    private Map<Integer, Integer> maxSpawns      = new HashMap<>();
+    private Map<Integer, Integer> maxSpawns = new HashMap<>();
 
-    private List<IEntitySpawner>  entitySpawners = new ArrayList<>();
+    private List<IEntitySpawner> entitySpawners = new ArrayList<>();
 
-    private Config                pluginConfig   = null;
+    private Config pluginConfig = null;
 
-    private MobPlugin             plugin         = null;
+    private MobPlugin plugin = null;
 
     public AutoSpawnTask(MobPlugin plugin) {
         this.pluginConfig = plugin.getConfig();

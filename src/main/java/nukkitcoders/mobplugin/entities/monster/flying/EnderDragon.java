@@ -1,7 +1,6 @@
 package nukkitcoders.mobplugin.entities.monster.flying;
 
 import cn.nukkit.entity.Entity;
-import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import nukkitcoders.mobplugin.entities.monster.FlyingMonster;
@@ -33,20 +32,21 @@ public class EnderDragon extends FlyingMonster {
     public void initEntity() {
         super.initEntity();
         this.setMaxHealth(200);
-    }
-
-    @Override
-    public Item[] getDrops() {
-        return new Item[]{Item.get(Item.DRAGON_EGG)};
+        this.setHealth(200);
     }
 
     @Override
     public int getKillExperience() {
-        return 500;
+        for (int i = 0; i < 167;) {
+            this.level.dropExpOrb(this, 3);
+            i++;
+        }
+        return 0;
     }
 
     @Override
     public void attackEntity(Entity player) {
+        //TODO
     }
 
     @Override

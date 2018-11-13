@@ -1,14 +1,23 @@
 package nukkitcoders.mobplugin.entities.monster.walking;
 
 import cn.nukkit.Player;
+import cn.nukkit.block.Block;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
+import cn.nukkit.entity.projectile.EntityProjectile;
+import cn.nukkit.event.entity.ProjectileLaunchEvent;
+import cn.nukkit.event.entity.EntityShootBowEvent;
+import cn.nukkit.entity.projectile.EntityArrow;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBow;
 import cn.nukkit.level.Level;
+import cn.nukkit.level.Location;
+import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.FullChunk;
+import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.MobEquipmentPacket;
+import nukkitcoders.mobplugin.MobPlugin;
 import nukkitcoders.mobplugin.entities.monster.WalkingMonster;
 import nukkitcoders.mobplugin.route.WalkerRouteFinder;
 import nukkitcoders.mobplugin.utils.Utils;
@@ -72,9 +81,44 @@ public class Stray extends WalkingMonster {
         return hasUpdate;
     }
 
-    @Override
     public void attackEntity(Entity player) {
-	    return;
+        if (this.attackDelay > 30 && Utils.rand(1, 32) < 4 && this.distanceSquared(player) <= 55) {
+            this.attackDelay = 0;
+
+            double f = 1.2;
+            double yaw = this.yaw + Utils.rand(-220, 220) / 10;
+            double pitch = this.pitch + Utils.rand(-120, 120) / 10;
+            Location pos = new Location(this.x - Math.sin(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * 0.5, this.y + this.getHeight() - 0.18,
+                    this.z + Math.cos(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * 0.5, yaw, pitch, this.level);
+            if (this.getLevel().getBlockIdAt((int)pos.getX(),(int)pos.getY(),(int)pos.getZ()) == Block.AIR) {
+                Entity k = MobPlugin.create("Arrow", pos, this);
+                if (!(k instanceof EntityArrow)) {
+                    return;
+                }
+
+                EntityArrow arrow = (EntityArrow) k;
+                arrow.setMotion(new Vector3(-Math.sin(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * f * f, -Math.sin(Math.toRadians(pitch)) * f * f,
+                        Math.cos(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)) * f * f));
+
+                EntityShootBowEvent ev = new EntityShootBowEvent(this, Item.get(Item.ARROW, 0, 1), arrow, f);
+                this.server.getPluginManager().callEvent(ev);
+
+                EntityProjectile projectile = ev.getProjectile();
+                if (ev.isCancelled()) {
+                    projectile.kill();
+                } else {
+                    ProjectileLaunchEvent launch = new ProjectileLaunchEvent(projectile);
+                    this.server.getPluginManager().callEvent(launch);
+                    if (launch.isCancelled()) {
+                        projectile.kill();
+                    } else {
+                        projectile.spawnToAll();
+                        projectile.namedTag.putBoolean("canNotPickup", true);
+                        this.level.addSound(this, Sound.RANDOM_BOW);
+                    }
+                }
+            }
+        }
     }
 
     @Override

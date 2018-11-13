@@ -1,15 +1,18 @@
 package nukkitcoders.mobplugin.entities.monster.walking;
 
 import cn.nukkit.Player;
+import cn.nukkit.block.Block;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityAgeable;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.item.Item;
+import cn.nukkit.item.ItemBlock;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.EntityEventPacket;
+import cn.nukkit.network.protocol.MobArmorEquipmentPacket;
 import co.aikar.timings.Timings;
 import nukkitcoders.mobplugin.entities.monster.WalkingMonster;
 import nukkitcoders.mobplugin.route.WalkerRouteFinder;
@@ -162,5 +165,17 @@ public class Zombie extends WalkingMonster implements EntityAgeable {
     @Override
     public int getKillExperience () {
         return 5;
+    }
+
+    @Override
+    public void spawnTo(Player player) {
+        super.spawnTo(player);
+
+        if (java.time.LocalDate.now().toString().contains("-10-31")) {
+            MobArmorEquipmentPacket pk2 = new MobArmorEquipmentPacket();
+            pk2.eid = this.getId();
+            pk2.slots[0] = new ItemBlock(Block.get(Block.PUMPKIN));
+            player.dataPacket(pk2);
+        }
     }
 }

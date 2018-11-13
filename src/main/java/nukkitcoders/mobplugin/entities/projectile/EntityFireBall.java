@@ -1,13 +1,12 @@
 package nukkitcoders.mobplugin.entities.projectile;
 
-import cn.nukkit.block.BlockCobblestone;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.projectile.EntityProjectile;
 import cn.nukkit.event.entity.ExplosionPrimeEvent;
-import cn.nukkit.level.Explosion;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.level.particle.CriticalParticle;
 import cn.nukkit.nbt.tag.CompoundTag;
+import nukkitcoders.mobplugin.utils.FireBallExplosion;
 import nukkitcoders.mobplugin.utils.Utils;
 
 public class EntityFireBall extends EntityProjectile {
@@ -72,10 +71,6 @@ public class EntityFireBall extends EntityProjectile {
             return false;
         }
 
-        if (this.shootingEntity.getLevelBlock() instanceof BlockCobblestone) {
-            return false;
-        }
-
         boolean hasUpdate = super.onUpdate(currentTick);
 
         if (!this.hadCollision && this.critical) {
@@ -90,7 +85,7 @@ public class EntityFireBall extends EntityProjectile {
                 ExplosionPrimeEvent ev = new ExplosionPrimeEvent(this, 2.8);
                 this.server.getPluginManager().callEvent(ev);
                 if (!ev.isCancelled()) {
-                    Explosion explosion = new Explosion(this, (float) ev.getForce(), this.shootingEntity);
+                    FireBallExplosion explosion = new FireBallExplosion(this, (float) ev.getForce(), this.shootingEntity);
                     if (ev.isBlockBreaking()) {
                         explosion.explodeA();
                     }

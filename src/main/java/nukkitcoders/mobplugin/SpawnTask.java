@@ -2,7 +2,6 @@ package nukkitcoders.mobplugin;
 
 import cn.nukkit.IPlayer;
 import cn.nukkit.Player;
-import cn.nukkit.Server;
 import cn.nukkit.block.Block;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
@@ -16,8 +15,6 @@ import java.util.List;
  */
 public class SpawnTask implements Runnable {
 
-    private Server server = null;
-
     private static final int MAX_SPAWN_RADIUS = 10;
 
     private static final int MIN_SPAWN_RADIUS = 3;
@@ -25,7 +22,6 @@ public class SpawnTask implements Runnable {
     private MobPlugin plugin = null;
 
     public SpawnTask(MobPlugin plugin) {
-        this.server = Server.getInstance();
         this.plugin = plugin;
     }
 
@@ -58,7 +54,6 @@ public class SpawnTask implements Runnable {
     private Position getSpawnPosition (Position startSpawnPosition, int[] notAllowedBlockIds, int minAirAboveSpawnBlock, int maxFindingTries, Level level) {
         int spawnX = (int)startSpawnPosition.x; // east/west (increase = west, decrease = east)
         int spawnZ = (int)startSpawnPosition.z; // north/south (increase = south, decrease = north)
-        int spawnY = (int)startSpawnPosition.y; // up/down (63 - water level overworld, 31 nether lava sea ...) so 63 is our zero height
         Position spawnPosition = null;
 
 

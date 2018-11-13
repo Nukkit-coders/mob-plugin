@@ -27,10 +27,10 @@ public class HorseSpawner extends AbstractEntitySpawner {
         int blockId = level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z);
 
         if (biomeId != 1 && biomeId != 35 && biomeId != 128 && biomeId != 129) {
-            result = SpawnResult.WRONG_BLOCK;
+            result = SpawnResult.WRONG_BIOME;
         } else if (!Block.solid[blockId]) {
             result = SpawnResult.WRONG_BLOCK;
-        } else if (pos.y > 127 || pos.y < 1 || level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z) == Block.AIR) {
+        } else if (pos.y > 256 || pos.y < 1 || level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z) == Block.AIR) {
             result = SpawnResult.POSITION_MISMATCH;
         } else {
             this.spawnTask.createEntity(getEntityName(), pos.add(0, 2.8, 0));

@@ -6,6 +6,7 @@ author: kniffo80, matt404, augesrob, PetteriM1, PikyCZ, zzz1999, SergeyDertan
 description: Entity AI & autospawn plugin for NukkitX servers
 website: https://nukkitx.com/resources/mobplugin.3/
 load: STARTUP
+
 commands:
  mob:
   description: Mob plugin main command
