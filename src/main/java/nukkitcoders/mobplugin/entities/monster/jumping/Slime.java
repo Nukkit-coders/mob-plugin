@@ -47,6 +47,7 @@ public class Slime extends JumpingMonster {
         return 2;
     }
 
+    @Override
     protected void initEntity() {
         this.setMaxHealth(16);
         super.initEntity();
@@ -103,7 +104,7 @@ public class Slime extends JumpingMonster {
     @Override
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
-        if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
+        if (this.lastDamageCause instanceof EntityDamageByEntityEvent && !this.isBaby()) {
             int slimeBalls = Utils.rand(0, 3);
             for (int i = 0; i < slimeBalls; i++) {
                 drops.add(Item.get(Item.SLIMEBALL, 0, 1));

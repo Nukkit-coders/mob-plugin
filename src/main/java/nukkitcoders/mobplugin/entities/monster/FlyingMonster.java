@@ -2,12 +2,9 @@ package nukkitcoders.mobplugin.entities.monster;
 
 import cn.nukkit.Server;
 import cn.nukkit.entity.Entity;
-import cn.nukkit.entity.data.ShortEntityData;
-import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.potion.Effect;
 import nukkitcoders.mobplugin.entities.FlyingEntity;
 import nukkitcoders.mobplugin.utils.Utils;
 
@@ -162,26 +159,5 @@ public abstract class FlyingMonster extends FlyingEntity implements Monster {
             this.moveTime = 0;
         }
         return true;
-    }
-
-    public boolean entityBaseTick(int tickDiff) {
-        boolean hasUpdate;
-
-        hasUpdate = super.entityBaseTick(tickDiff);
-
-        this.attackDelay += tickDiff;
-        if (!this.hasEffect(Effect.WATER_BREATHING) && this.isInsideOfWater()) {
-            hasUpdate = true;
-            int airTicks = this.getDataPropertyInt(DATA_AIR) - tickDiff;
-            if (airTicks <= -20) {
-                airTicks = 0;
-                this.attack(new EntityDamageEvent(this, EntityDamageEvent.DamageCause.DROWNING, 2));
-            }
-            this.setDataProperty(new ShortEntityData(DATA_AIR, airTicks));
-        } else {
-            this.setDataProperty(new ShortEntityData(DATA_AIR, 300));
-        }
-
-        return hasUpdate;
     }
 }

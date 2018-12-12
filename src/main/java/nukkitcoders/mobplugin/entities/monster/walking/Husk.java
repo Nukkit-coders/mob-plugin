@@ -50,12 +50,7 @@ public class Husk extends WalkingMonster implements EntityAgeable {
     protected void initEntity() {
         super.initEntity();
         this.setDamage(new float[]{0, 3, 4, 6});
-        setMaxHealth(20);
-    }
-
-    @Override
-    public boolean isBaby() {
-        return false;
+        this.setMaxHealth(20);
     }
 
     public void setHealth(int health) {
@@ -93,7 +88,7 @@ public class Husk extends WalkingMonster implements EntityAgeable {
     @Override
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
-        if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
+        if (this.lastDamageCause instanceof EntityDamageByEntityEvent && !this.isBaby()) {
             int rottenFlesh = Utils.rand(0, 3);
             for (int i = 0; i < rottenFlesh; i++) {
                 drops.add(Item.get(Item.ROTTEN_FLESH, 0, 1));

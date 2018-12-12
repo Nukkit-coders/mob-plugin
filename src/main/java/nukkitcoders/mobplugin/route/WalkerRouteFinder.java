@@ -44,9 +44,6 @@ public class WalkerRouteFinder extends SimpleRouteFinder {
         this.destination = destination;
     }
 
-    /**
-     * Using Manhattan Distance.
-     */
     private int calHeuristic(Vector3 pos1, Vector3 pos2) {
         return 10 * (Math.abs(pos1.getFloorX() - pos2.getFloorX()) + Math.abs(pos1.getFloorZ() - pos2.getFloorZ())) +
                 11 * Math.abs(pos1.getFloorY() - pos2.getFloorY());
@@ -164,12 +161,6 @@ public class WalkerRouteFinder extends SimpleRouteFinder {
 
     private void putNeighborNodeIntoOpen(Node node) {
         boolean N, E, S, W;
-        /*    0 1 2  X
-         * 0 NW N NE
-         * 1  W O E
-         * 2 WS S ES
-         * Z
-         */
 
         Vector3 vector3 = new Vector3(node.getVector3().getFloorX() + 0.5, node.getVector3().getY(), node.getVector3().getFloorZ() + 0.5);
 
@@ -379,10 +370,10 @@ public class WalkerRouteFinder extends SimpleRouteFinder {
                         level.getBlock(new Vector3(vector3.getX() - 1, vector3.getY() - 1, vector3.getZ())).canPassThrough() ||
                         level.getBlock(new Vector3(vector3.getX() - 1, vector3.getY() - 1, vector3.getZ() - 1)).canPassThrough() ||
                         level.getBlock(new Vector3(vector3.getX(), vector3.getY() - 1, vector3.getZ() - 1)).canPassThrough()) return true;
-            } else if (xIsInt /*&& !zIsInt*/) {
+            } else if (xIsInt) {
                 if (level.getBlock(new Vector3(vector3.getX(), vector3.getY() - 1, vector3.getZ())).canPassThrough() ||
                         level.getBlock(new Vector3(vector3.getX() - 1, vector3.getY() - 1, vector3.getZ())).canPassThrough()) return true;
-            } else if (/*!xIsInt &&*/ zIsInt) {
+            } else if (zIsInt) {
                 if (level.getBlock(new Vector3(vector3.getX(), vector3.getY() - 1, vector3.getZ())).canPassThrough() ||
                         level.getBlock(new Vector3(vector3.getX(), vector3.getY() - 1, vector3.getZ() - 1)).canPassThrough()) return true;
             } else {
@@ -392,12 +383,6 @@ public class WalkerRouteFinder extends SimpleRouteFinder {
         return false;
     }
 
-    /**
-     * freud path smoothing
-     *
-     * @param array path
-     * @return smoothed path
-     */
     private ArrayList<Node> FloydSmooth(ArrayList<Node> array) {
         int current = 0;
         int total = 2;

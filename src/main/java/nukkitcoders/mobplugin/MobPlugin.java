@@ -61,7 +61,7 @@ import static nukkitcoders.mobplugin.entities.block.BlockEntitySpawner.*;
  */
 public class MobPlugin extends PluginBase implements Listener {
 
-    private int configVersion = 2; // change this when big changes in config
+    private int configVersion = 3;
 
     private Config pluginConfig = null;
 
@@ -78,22 +78,16 @@ public class MobPlugin extends PluginBase implements Listener {
 
     @Override
     public void onEnable() {
-        // save default config
         this.saveDefaultConfig();
-        // intialize config
         pluginConfig = getConfig();
-        // check config version
-        if (getConfig().getInt("config-version") != configVersion)
+        if (getConfig().getInt("config-version") != configVersion) {
             this.getServer().getLogger().warning("MobPlugin's config file is outdated. Delete old config and reload server to update it.");
-        // we need this flag as it's controlled by the plugin's entities
+        }
         int spawnDelay = pluginConfig.getInt("entities.auto-spawn-tick", 0);
-        // register listener for plugin events
         this.getServer().getPluginManager().registerEvents(this, this);
-        // enable autospawn
         if (spawnDelay > 0) {
             this.getServer().getScheduler().scheduleDelayedRepeatingTask(this, new AutoSpawnTask(this), spawnDelay, spawnDelay);
         }
-
         this.registerEntities();
     }
 
@@ -177,11 +171,6 @@ public class MobPlugin extends PluginBase implements Listener {
 
     }
 
-    /**
-     * Returns plugin specific yml configuration
-     *
-     * @return a {@link Config} instance
-     */
     public Config getPluginConfig() {
         return this.pluginConfig;
     }
@@ -250,12 +239,6 @@ public class MobPlugin extends PluginBase implements Listener {
         Entity.registerEntity("FireBall", EntityFireBall.class);
     }
 
-    /**
-     * @param type
-     * @param source
-     * @param args
-     * @return
-     */
     public static Entity create(Object type, Position source, Object... args) {
         FullChunk chunk = source.getLevel().getChunk((int) source.x >> 4, (int) source.z >> 4, true);
         if (!chunk.isGenerated()) {
@@ -273,12 +256,6 @@ public class MobPlugin extends PluginBase implements Listener {
         return Entity.createEntity(type.toString(), chunk, nbt, args);
     }
 
-    /**
-     * Returns all registered players to the current server
-     *
-     * @return a {@link List} containing a number of {@link IPlayer} elements,
-     * which can be {@link Player}
-     */
     public List<IPlayer> getAllRegisteredPlayers() {
         List<IPlayer> playerList = new ArrayList<>();
         for (Player player : this.getServer().getOnlinePlayers().values()) {
@@ -287,12 +264,6 @@ public class MobPlugin extends PluginBase implements Listener {
         return playerList;
     }
 
-    /**
-     * This event is called when an entity dies. We need this for experience
-     * gain.
-     *
-     * @param ev the event that is received
-     */
     @EventHandler
     public void EntityDeathEvent(EntityDeathEvent ev) {
         if (!(ev.getEntity() instanceof BaseEntity)) return;
@@ -304,12 +275,11 @@ public class MobPlugin extends PluginBase implements Listener {
         int killExperience = baseEntity.getKillExperience();
         if (killExperience > 0 && player.isSurvival()) {
             player.addExperience(killExperience);
-            // don't drop that fucking experience orbs because they're somehow buggy :(
-            // if (player.isSurvival()) {
-            // for (int i = 1; i <= killExperience; i++) {
-            // player.getLevel().dropExpOrb(baseEntity, 1);
-            // }
-            // }
+            /*if (player.isSurvival()) {
+                for (int i = 1; i <= killExperience; i++) {
+                    player.getLevel().dropExpOrb(baseEntity, 1);
+                }
+            }*/
         }
     }
 
@@ -420,32 +390,6 @@ public class MobPlugin extends PluginBase implements Listener {
             entity.level.addChunkPacket(entity.getChunkX() >> 4, entity.getChunkZ() >> 4, pk);
         }
     }
-
-    /*@EventHandler
-    public void PlayerMouseOverEntityEvent(PlayerMouseOverEntityEvent ev) {
-        if (this.counter > 10) {
-            counter = 0;
-            // wolves can be tamed using bones
-            if (ev != null && ev.getEntity() != null && ev.getPlayer() != null && ev.getEntity().getNetworkId() == Wolf.NETWORK_ID && ev.getPlayer().getInventory().getItemInHand().getId() == Item.BONE) {
-                // check if already owned and tamed ...
-                Wolf wolf = (Wolf) ev.getEntity();
-                if (!wolf.isAngry() && wolf.getOwner() == null) {
-                    // now try it out ...
-                    EntityEventPacket packet = new EntityEventPacket();
-                    packet.eid = ev.getEntity().getId();
-                    packet.event = EntityEventPacket.TAME_SUCCESS;
-                    Server.broadcastPacket(new Player[]{ev.getPlayer()}, packet);
-
-                    // set the owner
-                    wolf.setOwner(ev.getPlayer());
-                    wolf.setCollarColor(DyeColor.BLUE);
-                    wolf.saveNBT();
-                }
-            }
-        } else {
-            counter++;
-        }
-    }*/
 
     @EventHandler
     public void onPickup(InventoryPickupArrowEvent ev) {

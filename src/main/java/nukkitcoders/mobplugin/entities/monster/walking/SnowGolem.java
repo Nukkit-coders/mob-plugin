@@ -48,7 +48,7 @@ public class SnowGolem extends WalkingMonster {
     @Override
     public void initEntity() {
         super.initEntity();
-        setMaxHealth(4);
+        this.setMaxHealth(4);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class SnowGolem extends WalkingMonster {
     @Override
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
-        if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
+        if (this.lastDamageCause instanceof EntityDamageByEntityEvent && !this.isBaby()) {
             int snowBall = Utils.rand(0, 16);
             for (int i = 0; i < snowBall; i++) {
                 drops.add(Item.get(Item.SNOWBALL, 0, 1));

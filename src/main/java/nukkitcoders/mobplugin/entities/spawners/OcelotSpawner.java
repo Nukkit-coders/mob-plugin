@@ -9,18 +9,14 @@ import nukkitcoders.mobplugin.AutoSpawnTask;
 import nukkitcoders.mobplugin.entities.animal.walking.Ocelot;
 import nukkitcoders.mobplugin.entities.autospawn.AbstractEntitySpawner;
 import nukkitcoders.mobplugin.entities.autospawn.SpawnResult;
+import nukkitcoders.mobplugin.entities.BaseEntity;
 import nukkitcoders.mobplugin.utils.Utils;
 
 /**
- * Each entity get it's own spawner class.
- *
  * @author <a href="mailto:kniffman@googlemail.com">Michael Gertz</a>
  */
 public class OcelotSpawner extends AbstractEntitySpawner {
 
-    /**
-     * @param spawnTask
-     */
     public OcelotSpawner(AutoSpawnTask spawnTask, Config pluginConfig) {
         super(spawnTask, pluginConfig);
     }
@@ -28,7 +24,7 @@ public class OcelotSpawner extends AbstractEntitySpawner {
     public SpawnResult spawn(IPlayer iPlayer, Position pos, Level level) {
         SpawnResult result = SpawnResult.OK;
 
-        if (Utils.rand(0, 3) == 0) {
+        if (Utils.rand(1, 3) == 1) {
             return SpawnResult.SPAWN_DENIED;
         }
 
@@ -39,12 +35,13 @@ public class OcelotSpawner extends AbstractEntitySpawner {
             result = SpawnResult.WRONG_BIOME;
         } else if (blockId != Block.GRASS && blockId != Block.LEAVES) {
             result = SpawnResult.WRONG_BLOCK;
-        //} else if (blockLightLevel < 9) {
-        //  result = SpawnResult.WRONG_LIGHTLEVEL;
-        } else if (pos.y > 256 || pos.y < 1 || level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z) == Block.AIR) {
+        } else if (pos.y > 127 || pos.y < 1 || blockId == Block.AIR) {
             result = SpawnResult.POSITION_MISMATCH;
         } else {
-            this.spawnTask.createEntity(getEntityName(), pos.add(0, 1.9, 0));
+            BaseEntity entity = this.spawnTask.createEntity(getEntityName(), pos.add(0, 1.9, 0));
+            if (Utils.rand(0, 500) > 480) {
+                entity.setBaby(true);
+            }
         }
 
         return result;

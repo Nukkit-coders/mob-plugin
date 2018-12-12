@@ -1,6 +1,5 @@
 package nukkitcoders.mobplugin.entities.animal.walking;
 
-import cn.nukkit.entity.Entity;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
@@ -49,11 +48,6 @@ public class Llama extends WalkingAnimal {
     }
 
     @Override
-    public boolean isBaby() {
-        return this.getDataFlag(DATA_FLAGS, Entity.DATA_FLAG_BABY);
-    }
-
-    @Override
     public void initEntity() {
         super.initEntity();
         this.setMaxHealth(15);
@@ -62,7 +56,7 @@ public class Llama extends WalkingAnimal {
     @Override
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
-        if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
+        if (this.lastDamageCause instanceof EntityDamageByEntityEvent && !this.isBaby()) {
             int leather = Utils.rand(1, 3);
 
             for (int i = 0; i < leather; i++) {

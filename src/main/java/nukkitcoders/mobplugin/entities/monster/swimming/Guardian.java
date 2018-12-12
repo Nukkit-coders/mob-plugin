@@ -126,7 +126,7 @@ public class Guardian extends SwimmingMonster {
     @Override
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
-        if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
+        if (this.lastDamageCause instanceof EntityDamageByEntityEvent && !this.isBaby()) {
             int prismarineShard = Utils.rand(0, 3);
             for (int i = 0; i < prismarineShard; i++) {
                 drops.add(Item.get(Item.PRISMARINE_SHARD, 0, 1));

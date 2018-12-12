@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:kniffman@googlemail.com">Michael Gertz (mige)</a>
  */
-public class SpawnTask implements Runnable {
+public class SpawnTask extends Thread {
 
     private static final int MAX_SPAWN_RADIUS = 10;
 
@@ -25,15 +25,10 @@ public class SpawnTask implements Runnable {
         this.plugin = plugin;
     }
 
-    /*
-     * (@Override)
-     * @see java.lang.Runnable#run()
-     */
     @Override
     public void run() {
         List<IPlayer> allRegisteredUsers = this.plugin.getAllRegisteredPlayers();
 
-        // we only perform for offline players ...
         List<Player> onlinePlayers = new ArrayList<>();
         for (IPlayer iPlayer : allRegisteredUsers) {
             if (iPlayer instanceof Player) {
@@ -41,19 +36,17 @@ public class SpawnTask implements Runnable {
             }
         }
 
-        // now that we have all online players, do it for each player online ...
         for (Player player : onlinePlayers) {
             Position pos = player.getPosition();
 
-            // x - longitude, z - latitude, y - high/low (64 is sea level)
             Position spawnPosition = new Position(pos.x, pos.y, pos.z);
             getSpawnPosition(spawnPosition, new int[0], 2, 5, player.getLevel());
         }
     }
 
     private Position getSpawnPosition (Position startSpawnPosition, int[] notAllowedBlockIds, int minAirAboveSpawnBlock, int maxFindingTries, Level level) {
-        int spawnX = (int)startSpawnPosition.x; // east/west (increase = west, decrease = east)
-        int spawnZ = (int)startSpawnPosition.z; // north/south (increase = south, decrease = north)
+        int spawnX = (int)startSpawnPosition.x;
+        int spawnZ = (int)startSpawnPosition.z;
         Position spawnPosition = null;
 
 
@@ -67,10 +60,9 @@ public class SpawnTask implements Runnable {
         int maxSpawnZ1 = spawnZ - MAX_SPAWN_RADIUS;
         int maxSpawnZ2 = spawnZ + MAX_SPAWN_RADIUS;
 
-        // now we've our x/z boundaries ... let's start to check the blocks ...
         boolean found = false;
         int findTries = 0;
-        // find a randomly choosing starting point ...
+
         boolean startEast = Utils.rand();
         boolean startNorth = Utils.rand();
 

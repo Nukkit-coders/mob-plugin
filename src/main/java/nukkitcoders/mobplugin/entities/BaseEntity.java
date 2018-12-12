@@ -3,6 +3,7 @@ package nukkitcoders.mobplugin.entities;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.EntityAgeable;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
@@ -11,13 +12,12 @@ import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.math.AxisAlignedBB;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
-import co.aikar.timings.Timings;
 import nukkitcoders.mobplugin.MobPlugin;
 import nukkitcoders.mobplugin.entities.monster.Monster;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseEntity extends EntityCreature {
+public abstract class BaseEntity extends EntityCreature implements EntityAgeable {
 
     protected int stayTime = 0;
 
@@ -35,7 +35,7 @@ public abstract class BaseEntity extends EntityCreature {
 
     public boolean onClimbable = false;
 
-    protected boolean fireProof = false;
+    protected boolean baby = false;
 
     private boolean movement = true;
 
@@ -50,11 +50,11 @@ public abstract class BaseEntity extends EntityCreature {
     private boolean despawnEntities;
     
     private int despawnTicks;
-    
-    public boolean canDespawn = true;
 
     private int maxJumpHeight = 1;
+
     protected boolean isJumping;
+
     public float jumpMovementFactor = 0.02F;
 
     public BaseEntity(FullChunk chunk, CompoundTag nbt) {
@@ -97,6 +97,9 @@ public abstract class BaseEntity extends EntityCreature {
     }
 
     public double getSpeed() {
+        if (this.isBaby()) {
+            return 1.2;
+        }
         return 1;
     }
 
@@ -129,6 +132,17 @@ public abstract class BaseEntity extends EntityCreature {
     }
 
     @Override
+    public boolean isBaby() {
+        return this.baby;
+    }
+
+    public void setBaby(boolean baby) {
+        this.baby = true;
+        this.setDataFlag(DATA_FLAGS, DATA_FLAG_BABY, true);
+        this.setScale((float) 0.5);
+    }
+
+    @Override
     protected void initEntity() {
         super.initEntity();
 
@@ -143,6 +157,10 @@ public abstract class BaseEntity extends EntityCreature {
         if (this.namedTag.contains("Age")) {
             this.age = this.namedTag.getShort("Age");
         }
+
+        if (this.namedTag.getBoolean("Baby")) {
+            this.setBaby(true);
+        }
     }
 
     @Override
@@ -152,6 +170,8 @@ public abstract class BaseEntity extends EntityCreature {
 
     public void saveNBT() {
         super.saveNBT();
+
+        this.namedTag.putBoolean("Baby", this.isBaby());
         this.namedTag.putBoolean("Movement", this.isMovement());
         this.namedTag.putBoolean("WallCheck", this.isWallCheck());
         this.namedTag.putShort("Age", this.age);
@@ -172,7 +192,7 @@ public abstract class BaseEntity extends EntityCreature {
     public boolean entityBaseTick(int tickDiff) {
         super.entityBaseTick(tickDiff);
 
-        if (this.despawnEntities && this.age > this.despawnTicks && this.canDespawn) {
+        if (this.despawnEntities && this.age > this.despawnTicks && !this.hasCustomName()) {
             this.close();
         }
 
@@ -208,8 +228,6 @@ public abstract class BaseEntity extends EntityCreature {
 
     @Override
     public boolean move(double dx, double dy, double dz) {
-        Timings.entityMoveTimer.startTiming();
-
         double movX = dx * moveMultifier;
         double movY = dy;
         double movZ = dz * moveMultifier;
@@ -237,7 +255,6 @@ public abstract class BaseEntity extends EntityCreature {
         this.checkGroundState(movX, movY, movZ, dx, dy, dz);
         this.updateFallState(this.onGround);
 
-        Timings.entityMoveTimer.stopTiming();
         return true;
     }
 
@@ -248,7 +265,6 @@ public abstract class BaseEntity extends EntityCreature {
                 this.setNameTag(item.getCustomName());
                 this.setNameTagVisible(true);
                 player.getInventory().removeItem(item);
-                this.canDespawn = false;
                 return true;
             }
         }

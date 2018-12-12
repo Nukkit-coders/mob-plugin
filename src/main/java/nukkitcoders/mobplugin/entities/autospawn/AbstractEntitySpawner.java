@@ -20,9 +20,9 @@ public abstract class AbstractEntitySpawner implements IEntitySpawner {
 
     protected AutoSpawnTask spawnTask;
 
-    protected Server        server;
+    protected Server server;
 
-    protected List<String>  disabledSpawnWorlds = new ArrayList<>();
+    protected List<String> disabledSpawnWorlds = new ArrayList<>();
 
     public AbstractEntitySpawner(AutoSpawnTask spawnTask, Config pluginConfig) {
         this.spawnTask = spawnTask;
@@ -36,10 +36,6 @@ public abstract class AbstractEntitySpawner implements IEntitySpawner {
         }
     }
 
-    /*
-     * (@Override)
-     * @see cn.nukkit.entity.ai.IEntitySpawner#spawn(java.util.List, java.util.List)
-     */
     @Override
     public void spawn(List<Player> onlinePlayers) {
         if (isSpawnAllowedByDifficulty()) {
@@ -55,11 +51,6 @@ public abstract class AbstractEntitySpawner implements IEntitySpawner {
         }
     }
 
-    /**
-     * Checks if the given level's name is on blacklist for auto spawn
-     * @param level the level to be checked
-     * @return <code>true</code> when world spawn is allowed
-     */
     private boolean isWorldSpawnAllowed (Level level) {
         for (String worldName : this.disabledSpawnWorlds) {
             if (level.getName().toLowerCase().equals(worldName.toLowerCase())) {
@@ -73,7 +64,7 @@ public abstract class AbstractEntitySpawner implements IEntitySpawner {
         Position pos = ((Player) iPlayer).getPosition();
         Level level = ((Player) iPlayer).getLevel();
 
-        if (this.spawnTask.entitySpawnAllowed(level, getEntityNetworkId(), getEntityName())) {
+        if (this.spawnTask.entitySpawnAllowed(level, getEntityNetworkId())) {
             if (pos != null) {
                 pos.x += this.spawnTask.getRandomSafeXZCoord(50, 26, 6);
                 pos.z += this.spawnTask.getRandomSafeXZCoord(50, 26, 6);
@@ -90,11 +81,6 @@ public abstract class AbstractEntitySpawner implements IEntitySpawner {
         return spawn(iPlayer, pos, level);
     }
 
-    /**
-     * A simple method that evaluates based on the difficulty set in server if a spawn is allowed or not
-     *
-     * @return
-     */
     protected boolean isSpawnAllowedByDifficulty() {
 
         int randomNumber = Utils.rand(0, 4);
@@ -113,11 +99,6 @@ public abstract class AbstractEntitySpawner implements IEntitySpawner {
         }
     }
 
-    /**
-     * Returns currently set difficulty as en {@link Enum}
-     *
-     * @return a {@link Difficulty} instance
-     */
     protected Difficulty getCurrentDifficulty() {
         return Difficulty.getByDiffculty(this.server.getDifficulty());
     }

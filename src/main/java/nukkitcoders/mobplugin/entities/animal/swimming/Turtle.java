@@ -1,6 +1,5 @@
 package nukkitcoders.mobplugin.entities.animal.swimming;
 
-import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
@@ -44,10 +43,5 @@ public class Turtle extends SwimmingAnimal {
     @Override
     public int getKillExperience() {
         return Utils.rand(1, 4);
-    }
-    
-    @Override
-    public boolean isBaby() {
-        return this.getDataFlag(DATA_FLAGS, Entity.DATA_FLAG_BABY);
     }
 }

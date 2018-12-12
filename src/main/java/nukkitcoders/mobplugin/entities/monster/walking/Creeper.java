@@ -63,7 +63,7 @@ public class Creeper extends WalkingMonster implements EntityExplosive {
     public void initEntity() {
         super.initEntity();
 
-        setMaxHealth(20);
+        this.setMaxHealth(20);
     }
 
     public int getBombTime() {
@@ -206,7 +206,7 @@ public class Creeper extends WalkingMonster implements EntityExplosive {
     @Override
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
-        if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
+        if (this.lastDamageCause instanceof EntityDamageByEntityEvent && !this.isBaby()) {
             int gunPowder = Utils.rand(0, 3);
             for (int i = 0; i < gunPowder; i++) {
                 drops.add(Item.get(Item.GUNPOWDER, 0, 1));

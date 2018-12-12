@@ -6,6 +6,7 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.item.Item;
+import cn.nukkit.level.Level;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.EntityEventPacket;
@@ -51,7 +52,7 @@ public class ZombieVillager extends WalkingMonster {
         super.initEntity();
 
         this.setDamage(new float[] { 0, 3, 4, 6 });
-        setMaxHealth(20);
+        this.setMaxHealth(20);
     }
 
     @Override
@@ -106,9 +107,23 @@ public class ZombieVillager extends WalkingMonster {
     }
 
     @Override
+    public boolean entityBaseTick(int tickDiff) {
+        boolean hasUpdate;
+
+        hasUpdate = super.entityBaseTick(tickDiff);
+
+        int time = this.getLevel().getTime() % Level.TIME_FULL;
+        if (!this.isOnFire() && !this.level.isRaining() && (time < 12567 || time > 23450) && !this.isInsideOfWater() && this.level.canBlockSeeSky(this)) {
+            this.setOnFire(100);
+        }
+
+        return hasUpdate;
+    }
+
+    @Override
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
-        if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
+        if (this.lastDamageCause instanceof EntityDamageByEntityEvent && !this.isBaby()) {
             int rottenFlesh = Utils.rand(0, 3);
             for (int i=0; i < rottenFlesh; i++) {
                 drops.add(Item.get(Item.ROTTEN_FLESH, 0, 1));

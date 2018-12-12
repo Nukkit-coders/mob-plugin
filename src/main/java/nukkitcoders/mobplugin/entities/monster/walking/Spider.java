@@ -256,7 +256,7 @@ public class Spider extends WalkingMonster {
     @Override
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
-        if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
+        if (this.lastDamageCause instanceof EntityDamageByEntityEvent && !this.isBaby()) {
             int strings = Utils.rand(0, 3);
             int spiderEye = Utils.rand(0, 3) == 0 ? 1 : 0;
             for (int i = 0; i < strings; i++) {

@@ -9,6 +9,8 @@ import nukkitcoders.mobplugin.AutoSpawnTask;
 import nukkitcoders.mobplugin.entities.autospawn.AbstractEntitySpawner;
 import nukkitcoders.mobplugin.entities.autospawn.SpawnResult;
 import nukkitcoders.mobplugin.entities.monster.walking.Husk;
+import nukkitcoders.mobplugin.entities.BaseEntity;
+import nukkitcoders.mobplugin.utils.Utils;
 
 /**
  * @author PikyCZ
@@ -25,16 +27,20 @@ public class HuskSpawner extends AbstractEntitySpawner {
 
         int blockLightLevel = level.getBlockLightAt((int) pos.x, (int) pos.y, (int) pos.z);
         int biomeId = level.getBiomeId((int) pos.x, (int) pos.z);
+        int blockId = level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z);
         int time = level.getTime() % Level.TIME_FULL;
 
         if (blockLightLevel > 7) {
             result = SpawnResult.WRONG_LIGHTLEVEL;
-        } else if (pos.y > 256 || pos.y < 1 || level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z) == Block.AIR) {
+        } else if (pos.y > 127 || pos.y < 1 || blockId == Block.AIR) {
             result = SpawnResult.POSITION_MISMATCH;
         } else if (biomeId != 2) {
             result = SpawnResult.WRONG_BIOME;
         } else if (time > 13184 && time < 22800) {
-            this.spawnTask.createEntity(getEntityName(), pos.add(0, 2.8, 0));
+            BaseEntity entity = this.spawnTask.createEntity(getEntityName(), pos.add(0, 2.8, 0));
+            if (Utils.rand(0, 500) > 480) {
+                entity.setBaby(true);
+            }
         }
 
         return result;

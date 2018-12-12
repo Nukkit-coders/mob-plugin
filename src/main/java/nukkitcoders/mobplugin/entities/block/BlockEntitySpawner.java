@@ -50,12 +50,6 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
 
     @Override
     protected void initBlockEntity() {
-        /* for some reason entity id changes to -1
-        if (this.namedTag.contains(TAG_ENTITY_ID)) {
-            this.entityId = this.namedTag.getInt(TAG_ENTITY_ID);
-        }
-        */
-
         if (!this.namedTag.contains(TAG_SPAWN_RANGE) || !(this.namedTag.get(TAG_SPAWN_RANGE) instanceof ShortTag)) {
             this.namedTag.putShort(TAG_SPAWN_RANGE, SPAWN_RANGE);
         }
@@ -127,7 +121,7 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
         super.saveNBT();
 
         this.namedTag.putInt(TAG_ENTITY_ID, this.entityId);
-        this.namedTag.putString(TAG_ID, "MobSpawner"); // fix get save id
+        this.namedTag.putString(TAG_ID, "MobSpawner");
         this.namedTag.putShort(TAG_SPAWN_RANGE, this.spawnRange);
         this.namedTag.putShort(TAG_MIN_SPAWN_DELAY, this.minSpawnDelay);
         this.namedTag.putShort(TAG_MAX_SPAWN_DELAY, this.maxSpawnDelay);

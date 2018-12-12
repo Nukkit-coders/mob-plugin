@@ -10,7 +10,6 @@ import cn.nukkit.level.Level;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.EntityEventPacket;
-import co.aikar.timings.Timings;
 import nukkitcoders.mobplugin.entities.monster.WalkingMonster;
 import nukkitcoders.mobplugin.utils.Utils;
 
@@ -52,27 +51,6 @@ public class Drowned extends WalkingMonster {
 
         this.setDamage(new float[] { 0, 2, 3, 4 });
         this.setMaxHealth(20);
-    }
-
-    public boolean isBaby() {
-        return false;
-    }
-
-    @Override
-    public void setHealth(float health) {
-        super.setHealth(health);
-
-        if (this.isAlive()) {
-            if (15 < this.getHealth()) {
-                this.setDamage(new float[] { 0, 2, 3, 4 });
-            } else if (10 < this.getHealth()) {
-                this.setDamage(new float[] { 0, 3, 4, 6 });
-            } else if (5 < this.getHealth()) {
-                this.setDamage(new float[] { 0, 3, 5, 7 });
-            } else {
-                this.setDamage(new float[] { 0, 4, 6, 9 });
-            }
-        }
     }
 
     @Override
@@ -129,7 +107,6 @@ public class Drowned extends WalkingMonster {
     @Override
     public boolean entityBaseTick(int tickDiff) {
         boolean hasUpdate;
-        Timings.entityBaseTickTimer.startTiming();
 
         hasUpdate = super.entityBaseTick(tickDiff);
 
@@ -138,14 +115,13 @@ public class Drowned extends WalkingMonster {
             this.setOnFire(1);
         }
 
-        Timings.entityBaseTickTimer.stopTiming();
         return hasUpdate;
     }
 
     @Override
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
-        if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
+        if (this.lastDamageCause instanceof EntityDamageByEntityEvent && !this.isBaby()) {
             int rottenFlesh = Utils.rand(0, 3);
             for (int i = 0; i < rottenFlesh; i++) {
                 drops.add(Item.get(Item.ROTTEN_FLESH, 0, 1));

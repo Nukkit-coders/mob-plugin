@@ -54,10 +54,10 @@ public class Squid extends SwimmingAnimal {
 
     @Override
     public Item[] getDrops() {
-        if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
-
+        if (this.lastDamageCause instanceof EntityDamageByEntityEvent && !this.isBaby()) {
+            return new Item[]{new ItemDye(DyeColor.BLACK.getDyeData())};
         }
-        return new Item[]{new ItemDye(DyeColor.BLACK.getDyeData())};
+        return new Item[0];
     }
 
     @Override

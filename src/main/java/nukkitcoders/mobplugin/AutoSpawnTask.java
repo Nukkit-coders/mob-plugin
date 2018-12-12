@@ -7,6 +7,7 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.utils.Config;
+import nukkitcoders.mobplugin.entities.BaseEntity;
 import nukkitcoders.mobplugin.entities.animal.flying.*;
 import nukkitcoders.mobplugin.entities.animal.jumping.Rabbit;
 import nukkitcoders.mobplugin.entities.animal.walking.*;
@@ -21,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AutoSpawnTask implements Runnable {
+public class AutoSpawnTask extends Thread {
 
     private Map<Integer, Integer> maxSpawns = new HashMap<>();
 
@@ -80,6 +81,8 @@ public class AutoSpawnTask implements Runnable {
         entitySpawners.add(new SkeletonSpawner(this, this.pluginConfig));
         entitySpawners.add(new SpiderSpawner(this, this.pluginConfig));
         entitySpawners.add(new StraySpawner(this, this.pluginConfig));
+        entitySpawners.add(new WitchSpawner(this, this.pluginConfig));
+        entitySpawners.add(new WitherSkeletonSpawner(this, this.pluginConfig));
         entitySpawners.add(new WolfSpawner(this, this.pluginConfig));
         entitySpawners.add(new ZombieSpawner(this, this.pluginConfig));
     }
@@ -102,14 +105,14 @@ public class AutoSpawnTask implements Runnable {
         maxSpawns.put(Skeleton.NETWORK_ID, this.pluginConfig.getInt("max-spawns.skeleton", 0));
         maxSpawns.put(Spider.NETWORK_ID, this.pluginConfig.getInt("max-spawns.spider", 0));
         maxSpawns.put(Stray.NETWORK_ID, this.pluginConfig.getInt("max-spawns.stray", 0));
+        maxSpawns.put(Witch.NETWORK_ID, this.pluginConfig.getInt("max-spawns.witch", 0));
+        maxSpawns.put(WitherSkeleton.NETWORK_ID, this.pluginConfig.getInt("max-spawns.witherskeleton", 0));
         maxSpawns.put(Wolf.NETWORK_ID, this.pluginConfig.getInt("max-spawns.wolf", 0));
         maxSpawns.put(Zombie.NETWORK_ID, this.pluginConfig.getInt("max-spawns.zombie", 0));
-
     }
 
-    public boolean entitySpawnAllowed(Level level, int networkId, String entityName) {
-        int count = countEntity(level, networkId);
-        return count < maxSpawns.getOrDefault(networkId, 0);
+    public boolean entitySpawnAllowed(Level level, int networkId) {
+        return countEntity(level, networkId) < maxSpawns.getOrDefault(networkId, 0);
     }
 
     private int countEntity(Level level, int networkId) {
@@ -122,11 +125,12 @@ public class AutoSpawnTask implements Runnable {
         return count;
     }
 
-    public void createEntity(Object type, Position pos) {
-        Entity entity = MobPlugin.create(type, pos);
+    public BaseEntity createEntity(Object type, Position pos) {
+        BaseEntity entity = (BaseEntity) MobPlugin.create(type, pos);
         if (entity != null) {
             entity.spawnToAll();
         }
+        return entity;
     }
 
     public int getRandomSafeXZCoord(int degree, int safeDegree, int correctionDegree) {

@@ -7,7 +7,6 @@ import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
-import co.aikar.timings.Timings;
 import nukkitcoders.mobplugin.entities.monster.WalkingMonster;
 import nukkitcoders.mobplugin.route.WalkerRouteFinder;
 import nukkitcoders.mobplugin.utils.Utils;
@@ -49,24 +48,7 @@ public class Vindicator extends WalkingMonster {
     protected void initEntity() {
         super.initEntity();
         this.setDamage(new float[] { 0, 2, 3, 4 });
-        setMaxHealth(24);
-    }
-
-    @Override
-    public void setHealth(float health) {
-        super.setHealth(health);
-
-        if (this.isAlive()) {
-            if (15 < this.getHealth()) {
-                this.setDamage(new float[] { 0, 2, 3, 4 });
-            } else if (10 < this.getHealth()) {
-                this.setDamage(new float[] { 0, 3, 4, 6 });
-            } else if (5 < this.getHealth()) {
-                this.setDamage(new float[] { 0, 3, 5, 7 });
-            } else {
-                this.setDamage(new float[] { 0, 4, 6, 9 });
-            }
-        }
+        this.setMaxHealth(24);
     }
 
     @Override
@@ -117,20 +99,9 @@ public class Vindicator extends WalkingMonster {
     }
 
     @Override
-    public boolean entityBaseTick(int tickDiff) {
-        boolean hasUpdate = false;
-        Timings.entityBaseTickTimer.startTiming();
-
-        hasUpdate = super.entityBaseTick(tickDiff);
-
-        Timings.entityBaseTickTimer.stopTiming();
-        return hasUpdate;
-    }
-
-    @Override
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
-        if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
+        if (this.lastDamageCause instanceof EntityDamageByEntityEvent && !this.isBaby()) {
             int emerald = Utils.rand(0, 2);
             for (int i=0; i < emerald; i++) {
                 drops.add(Item.get(Item.EMERALD, 0, 1));

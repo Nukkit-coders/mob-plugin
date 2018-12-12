@@ -47,6 +47,7 @@ public class Ghast extends FlyingMonster {
         return 1.2;
     }
 
+    @Override
     public void initEntity() {
         super.initEntity();
 
@@ -96,7 +97,7 @@ public class Ghast extends FlyingMonster {
     @Override
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
-        if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
+        if (this.lastDamageCause instanceof EntityDamageByEntityEvent && !this.isBaby()) {
             int gunPowder = Utils.rand(0, 3);
             int ghastTears = Utils.rand(0, 2);
             for (int i = 0; i < gunPowder; i++) {

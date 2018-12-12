@@ -43,6 +43,7 @@ public class Enderman extends WalkingMonster {
         return 1.21;
     }
 
+    @Override
     protected void initEntity() {
         this.setMaxHealth(40);
         super.initEntity();
@@ -116,7 +117,7 @@ public class Enderman extends WalkingMonster {
     @Override
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
-        if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
+        if (this.lastDamageCause instanceof EntityDamageByEntityEvent && !this.isBaby()) {
             int enderPearls = Utils.rand(0, 2);
             for (int i = 0; i < enderPearls; i++) {
                 drops.add(Item.get(Item.ENDER_PEARL, 0, 1));

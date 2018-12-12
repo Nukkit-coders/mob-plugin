@@ -26,11 +26,6 @@ public class BlockMobSpawner extends cn.nukkit.block.BlockMobSpawner {
     }
 
     @Override
-    public boolean place(Item item, Block block, Block target, BlockFace face, double fx, double fy, double fz) {
-        return this.place(item, block, target, face, fx, fy, fz, null);
-    }
-
-    @Override
     public boolean place(Item item, Block block, Block target, BlockFace face, double fx, double fy, double fz, Player player) {
         if (!super.place(item, block, target, face, fx, fy, fz, player)) return false;
         CompoundTag nbt = new CompoundTag()

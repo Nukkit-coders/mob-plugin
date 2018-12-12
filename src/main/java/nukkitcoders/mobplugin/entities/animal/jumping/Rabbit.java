@@ -1,7 +1,6 @@
 package nukkitcoders.mobplugin.entities.animal.jumping;
 
 import cn.nukkit.Player;
-import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.item.Item;
@@ -50,10 +49,6 @@ public class Rabbit extends JumpingAnimal {
     }
 
     @Override
-    public boolean isBaby() {
-        return this.getDataFlag(DATA_FLAGS, Entity.DATA_FLAG_BABY);
-    }
-
     public void initEntity() {
         super.initEntity();
         this.setMaxHealth(3);
@@ -70,11 +65,8 @@ public class Rabbit extends JumpingAnimal {
 
     @Override
     public Item[] getDrops() {
-        if (this.isBaby()) {
-
-        }
         List<Item> drops = new ArrayList<>();
-        if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
+        if (this.lastDamageCause instanceof EntityDamageByEntityEvent && !this.isBaby()) {
             int rabbitHide = Utils.rand(0, 2);
             int rawRabbit = Utils.rand(0, 2);
             int rabbitfoot = Utils.rand(0, 101) <= 9 ? 1 : 0;
@@ -100,7 +92,7 @@ public class Rabbit extends JumpingAnimal {
     public boolean onUpdate(int currentTick) {
         boolean hasUpdate = super.onUpdate(currentTick);
         try {
-            this.level.addParticle(new PunchBlockParticle(this, this.level.getBlock((int) x, (int) y - 1, (int) z), BlockFace.UP));
+            if (this.isOnGround()) this.level.addParticle(new PunchBlockParticle(this, this.level.getBlock((int) x, (int) y - 1, (int) z), BlockFace.UP));
         } catch (Exception e) {}
         return hasUpdate;
     }

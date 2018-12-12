@@ -15,6 +15,7 @@ import java.util.HashMap;
 public class PolarBear extends WalkingMonster {
 
     public static final int NETWORK_ID = 28;
+
     int angry = 0;
 
     public PolarBear(FullChunk chunk, CompoundTag nbt) {
@@ -58,10 +59,6 @@ public class PolarBear extends WalkingMonster {
     @Override
     public double getSpeed() {
         return 1.25;
-    }
-
-    public boolean isBaby() {
-        return this.getDataFlag(DATA_FLAGS, Entity.DATA_FLAG_BABY);
     }
 
     @Override
@@ -155,7 +152,11 @@ public class PolarBear extends WalkingMonster {
 
     @Override
     public Item[] getDrops() {
-        return new Item[]{Item.get(Item.RAW_FISH), Item.get(Item.RAW_SALMON)};
+        if (this.lastDamageCause instanceof EntityDamageByEntityEvent && !this.isBaby()) {
+            return new Item[]{Item.get(Item.RAW_FISH), Item.get(Item.RAW_SALMON)};
+        } else {
+            return new Item[0];
+        }
     }
 
     @Override

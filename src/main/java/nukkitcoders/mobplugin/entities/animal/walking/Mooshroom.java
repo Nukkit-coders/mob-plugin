@@ -1,7 +1,6 @@
 package nukkitcoders.mobplugin.entities.animal.walking;
 
 import cn.nukkit.Player;
-import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.item.Item;
@@ -45,10 +44,6 @@ public class Mooshroom extends WalkingAnimal {
     }
 
     @Override
-    public boolean isBaby() {
-        return this.getDataFlag(DATA_FLAGS, Entity.DATA_FLAG_BABY);
-    }
-
     public void initEntity() {
         super.initEntity();
         this.setMaxHealth(10);
@@ -65,7 +60,7 @@ public class Mooshroom extends WalkingAnimal {
 
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
-        if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
+        if (this.lastDamageCause instanceof EntityDamageByEntityEvent && !this.isBaby()) {
             int leatherDrop = Utils.rand(0, 3);
             int beefDrop = Utils.rand(1, 4);
             for (int i = 0; i < leatherDrop; i++) {

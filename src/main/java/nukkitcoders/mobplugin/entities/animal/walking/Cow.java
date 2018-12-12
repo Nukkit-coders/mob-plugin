@@ -1,7 +1,6 @@
 package nukkitcoders.mobplugin.entities.animal.walking;
 
 import cn.nukkit.Player;
-import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.item.Item;
@@ -53,10 +52,6 @@ public class Cow extends WalkingAnimal {
     }
 
     @Override
-    public boolean isBaby() {
-        return this.getDataFlag(DATA_FLAGS, Entity.DATA_FLAG_BABY);
-    }
-
     public void initEntity() {
         super.initEntity();
         this.setMaxHealth(10);
@@ -65,15 +60,15 @@ public class Cow extends WalkingAnimal {
     @Override
     public boolean onInteract(Player player, Item item) {
         super.onInteract(player, item);
-        if (item.equals(Item.get(Item.BUCKET,0),true)) {
-            player.getInventory().removeItem(Item.get(Item.BUCKET,0,1));
-            player.getInventory().addItem(Item.get(Item.BUCKET,1,1));
+        if (item.equals(Item.get(Item.BUCKET, 0), true)) {
+            player.getInventory().removeItem(Item.get(Item.BUCKET, 0, 1));
+            player.getInventory().addItem(Item.get(Item.BUCKET, 1, 1));
             this.level.addSound(this, Sound.MOB_COW_MILK);
             return true;
-        }else if (item.equals(Item.get(Item.WHEAT,0)) && !this.isBaby()) {
-            player.getInventory().removeItem(Item.get(Item.WHEAT,0,1));
-            this.level.addSound(this,Sound.RANDOM_EAT);
-            this.level.addParticle(new ItemBreakParticle(this.add(0,this.getMountedYOffset(),0),Item.get(Item.WHEAT)));
+        } else if (item.equals(Item.get(Item.WHEAT, 0)) && !this.isBaby()) {
+            player.getInventory().removeItem(Item.get(Item.WHEAT, 0, 1));
+            this.level.addSound(this, Sound.RANDOM_EAT);
+            this.level.addParticle(new ItemBreakParticle(this.add(0, this.getMountedYOffset(), 0), Item.get(Item.WHEAT)));
             this.setInLove();
         }
         return false;
@@ -90,7 +85,7 @@ public class Cow extends WalkingAnimal {
 
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
-        if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
+        if (this.lastDamageCause instanceof EntityDamageByEntityEvent && !this.isBaby()) {
 
             int leatherDropCount = Utils.rand(0, 3);
             int beefDrop = Utils.rand(1, 4);

@@ -1,7 +1,6 @@
 package nukkitcoders.mobplugin.entities.monster.walking;
 
 import cn.nukkit.Player;
-import cn.nukkit.Server;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.entity.data.IntEntityData;
@@ -94,27 +93,39 @@ public class Wolf extends TameableMonster {
     public boolean onInteract(Player player, Item item) {
         super.onInteract(player, item);
         if (item.equals(Item.get(Item.BONE))) {
-            if (!this.hasOwner()) {
+            if (!this.hasOwner() && !this.isAngry()) {
                 player.getInventory().removeItem(Item.get(Item.BONE, 0, 1));
                 if (Utils.rand(0, 3) == 3) {
                     EntityEventPacket packet = new EntityEventPacket();
                     packet.eid = player.getId();
                     packet.event = EntityEventPacket.TAME_SUCCESS;
-                    Server.broadcastPacket(new Player[]{player}, packet);
+                    player.dataPacket(packet);
+
                     this.setOwner(player);
                     this.setCollarColor(DyeColor.RED);
+                    this.saveNBT();
                     return true;
                 } else {
                     EntityEventPacket packet = new EntityEventPacket();
                     packet.eid = player.getId();
                     packet.event = EntityEventPacket.TAME_FAIL;
-                    Server.broadcastPacket(new Player[]{player}, packet);
+                    player.dataPacket(packet);
                 }
             }
-        }else if (item.equals(Item.get(Item.DYE),false)) {
+        } else if (item.equals(Item.get(Item.DYE), false)) {
             if (this.hasOwner() && player.equals(this.getOwner())) {
-                this.setCollarColor(((ItemDye)item).getDyeColor());
+                this.setCollarColor(((ItemDye) item).getDyeColor());
                 return true;
+            }
+        } else if (this.hasOwner() && player.equals(this.getOwner())) {
+            if (this.namedTag.getByte("Sitting") == 0) {
+                this.namedTag.putByte("Sitting", 1);
+                this.setDataFlag(DATA_FLAGS, DATA_FLAG_SITTING, true);
+                this.saveNBT();
+            } else {
+                this.namedTag.putByte("Sitting", 0);
+                this.setDataFlag(DATA_FLAGS, DATA_FLAG_SITTING, false);
+                this.saveNBT();
             }
         }
         return false;
@@ -182,11 +193,6 @@ public class Wolf extends TameableMonster {
         return 3;
     }
 
-    /**
-     * Sets the color of the wolves collar (default is 14)
-     *
-     * @param color the color to be set (when tamed it should be RED)
-     */
     public void setCollarColor(DyeColor color) {
         this.namedTag.putInt(NBT_KEY_COLLAR_COLOR, color.getDyeData());
         this.setDataProperty(new IntEntityData(DATA_COLOUR, color.getColor().getRGB()));

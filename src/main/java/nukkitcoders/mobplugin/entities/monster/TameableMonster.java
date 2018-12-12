@@ -2,7 +2,6 @@ package nukkitcoders.mobplugin.entities.monster;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
-import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.data.LongEntityData;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
@@ -63,10 +62,6 @@ public abstract class TameableMonster extends WalkingMonster implements Tameable
         return owner!=null;
     }
 
-    /**
-     * Sets the owner of the tameable {@link Entity}
-     * @param player the player that is the owner
-     */
     public void setOwner(Player player) {
         this.owner = player;
         setDataProperty(new LongEntityData(DATA_OWNER_EID, player.getId()));

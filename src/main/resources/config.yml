@@ -1,10 +1,10 @@
-config-version: 2
+config-version: 3
 
 entities:
   auto-spawn-tick: 200
   worlds-spawn-disabled: "exampleworld1,exampleworld2"
   despawn-entities: true
-  despawn-ticks: 12000
+  despawn-ticks: 10000
 
 max-spawns:
   bat: 0
@@ -25,5 +25,7 @@ max-spawns:
   sheep: 1
   skeleton: 0
   spider: 0
+  witch: 0
+  witherskeleton: 0
   wolf: 0
   zombie: 0

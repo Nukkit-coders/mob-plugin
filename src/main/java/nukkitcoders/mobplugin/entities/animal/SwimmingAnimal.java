@@ -5,7 +5,6 @@ import cn.nukkit.entity.data.ShortEntityData;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
-import co.aikar.timings.Timings;
 import nukkitcoders.mobplugin.entities.SwimmingEntity;
 
 public abstract class SwimmingAnimal extends SwimmingEntity implements Animal {
@@ -28,13 +27,11 @@ public abstract class SwimmingAnimal extends SwimmingEntity implements Animal {
     @Override
     public boolean entityBaseTick(int tickDiff) {
         boolean hasUpdate;
-        Timings.entityBaseTickTimer.startTiming();
 
         hasUpdate = super.entityBaseTick(tickDiff);
 
         this.setDataProperty(new ShortEntityData(DATA_AIR, 300));
 
-        Timings.entityBaseTickTimer.stopTiming();
         return hasUpdate;
     }
 
@@ -67,10 +64,5 @@ public abstract class SwimmingAnimal extends SwimmingEntity implements Animal {
             this.moveTime = 0;
         }
         return true;
-    }
-
-    @Override
-    public boolean isBaby() {
-        return false;
     }
 }

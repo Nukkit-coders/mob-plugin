@@ -105,7 +105,7 @@ public class IronGolem extends WalkingMonster {
     @Override
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
-        if (this.lastDamageCause instanceof EntityDamageByEntityEvent) {
+        if (this.lastDamageCause instanceof EntityDamageByEntityEvent && !this.isBaby()) {
             int ironIngots = Utils.rand(3, 6);
             int poppies = Utils.rand(0, 3);
             for (int i=0; i < ironIngots; i++) {
@@ -119,7 +119,7 @@ public class IronGolem extends WalkingMonster {
     }
 
     @Override
-    public int getKillExperience () {
+    public int getKillExperience() {
         return 0;
     }
 

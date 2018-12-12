@@ -1,17 +1,18 @@
 package nukkitcoders.mobplugin.entities.monster.flying;
 
 import cn.nukkit.Player;
+import cn.nukkit.entity.Attribute;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
-import cn.nukkit.event.entity.ExplosionPrimeEvent;
 import cn.nukkit.event.entity.ProjectileLaunchEvent;
 import cn.nukkit.item.Item;
-import cn.nukkit.level.Explosion;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.level.Location;
 import cn.nukkit.level.Sound;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.network.protocol.AddEntityPacket;
+import cn.nukkit.network.protocol.DataPacket;
 import nukkitcoders.mobplugin.MobPlugin;
 import nukkitcoders.mobplugin.entities.monster.FlyingMonster;
 import nukkitcoders.mobplugin.entities.projectile.EntityBlueWitherSkull;
@@ -106,24 +107,22 @@ public class Wither extends FlyingMonster {
     }
 
     @Override
-    public boolean onUpdate(int currentTick) {
-        boolean hasUpdate = super.onUpdate(currentTick);
-        if (this.health < 1)
-            this.explode();
-        return hasUpdate;
-    }
-
-    public void explode() {
-        ExplosionPrimeEvent ev = new ExplosionPrimeEvent(this, 5);
-        this.server.getPluginManager().callEvent(ev);
-
-        if (!ev.isCancelled()) {
-            Explosion explosion = new Explosion(this, (float) ev.getForce(), this);
-            if (ev.isBlockBreaking()) {
-                explosion.explodeA();
-            }
-            explosion.explodeB();
-        }
-        this.close();
+    protected DataPacket createAddEntityPacket() {
+        AddEntityPacket addEntity = new AddEntityPacket();
+        addEntity.type = this.getNetworkId();
+        addEntity.entityUniqueId = this.getId();
+        addEntity.entityRuntimeId = this.getId();
+        addEntity.yaw = (float) this.yaw;
+        addEntity.headYaw = (float) this.yaw;
+        addEntity.pitch = (float) this.pitch;
+        addEntity.x = (float) this.x;
+        addEntity.y = (float) this.y;
+        addEntity.z = (float) this.z;
+        addEntity.speedX = (float) this.motionX;
+        addEntity.speedY = (float) this.motionY;
+        addEntity.speedZ = (float) this.motionZ;
+        addEntity.metadata = this.dataProperties;
+        addEntity.attributes = new Attribute[]{Attribute.getAttribute(Attribute.MAX_HEALTH).setMaxValue(200).setValue(200)};
+        return addEntity;
     }
 }

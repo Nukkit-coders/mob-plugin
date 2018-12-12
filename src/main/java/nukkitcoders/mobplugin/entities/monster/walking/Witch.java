@@ -5,7 +5,9 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.entity.item.EntityPotion;
 import cn.nukkit.event.entity.EntityDamageEvent;
+import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.ProjectileLaunchEvent;
+import cn.nukkit.item.Item;
 import cn.nukkit.level.Location;
 import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.FullChunk;
@@ -105,6 +107,15 @@ public class Witch extends WalkingMonster {
             }
         } else {
             this.attackDelay++;
+        }
+    }
+
+    @Override
+    public Item[] getDrops() {
+        if (this.lastDamageCause instanceof EntityDamageByEntityEvent && !this.isBaby() && Utils.rand(1, 5) == 1) {
+            return new Item[]{Item.get(Item.REDSTONE, 0, 1)};
+        } else {
+            return new Item[0];
         }
     }
 

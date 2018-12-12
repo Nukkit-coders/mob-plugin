@@ -9,17 +9,14 @@ import nukkitcoders.mobplugin.AutoSpawnTask;
 import nukkitcoders.mobplugin.entities.animal.jumping.Rabbit;
 import nukkitcoders.mobplugin.entities.autospawn.AbstractEntitySpawner;
 import nukkitcoders.mobplugin.entities.autospawn.SpawnResult;
+import nukkitcoders.mobplugin.entities.BaseEntity;
+import nukkitcoders.mobplugin.utils.Utils;
 
 /**
- * Each entity get it's own spawner class.
- *
  * @author <a href="mailto:kniffman@googlemail.com">Michael Gertz</a>
  */
 public class RabbitSpawner extends AbstractEntitySpawner {
 
-    /**
-     * @param spawnTask
-     */
     public RabbitSpawner(AutoSpawnTask spawnTask, Config pluginConfig) {
         super(spawnTask, pluginConfig);
     }
@@ -34,12 +31,13 @@ public class RabbitSpawner extends AbstractEntitySpawner {
             result = SpawnResult.WRONG_BLOCK;
         } else if (biomeId == 8) {
             result = SpawnResult.WRONG_BIOME;
-        } else if (pos.y > 256 || pos.y < 1 || level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z) == Block.AIR) {
+        } else if (pos.y > 127 || pos.y < 1 || blockId == Block.AIR) {
             result = SpawnResult.POSITION_MISMATCH;
-        //} else if (blockLightLevel < 9) {
-        //  result = SpawnResult.WRONG_LIGHTLEVEL;
         } else {
-            this.spawnTask.createEntity(getEntityName(), pos.add(0, 1.75, 0));
+            BaseEntity entity = this.spawnTask.createEntity(getEntityName(), pos.add(0, 1.75, 0));
+            if (Utils.rand(0, 500) > 480) {
+                entity.setBaby(true);
+            }
         }
 
         return result;

@@ -4,14 +4,11 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.block.BlockWater;
 import cn.nukkit.entity.Entity;
-import cn.nukkit.entity.data.ShortEntityData;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.math.NukkitMath;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.potion.Effect;
-import co.aikar.timings.Timings;
 import nukkitcoders.mobplugin.entities.WalkingEntity;
 import nukkitcoders.mobplugin.entities.monster.walking.Enderman;
 import nukkitcoders.mobplugin.utils.Utils;
@@ -139,6 +136,7 @@ public abstract class WalkingMonster extends WalkingEntity implements Monster {
         }
     }
 
+    @Override
     public boolean onUpdate(int currentTick) {
         if (this.closed) {
             return false;
@@ -177,8 +175,6 @@ public abstract class WalkingMonster extends WalkingEntity implements Monster {
 
         boolean hasUpdate;
 
-        Timings.entityBaseTickTimer.startTiming();
-
         hasUpdate = super.entityBaseTick(tickDiff);
 
         this.attackDelay += tickDiff;
@@ -187,21 +183,8 @@ public abstract class WalkingMonster extends WalkingEntity implements Monster {
                 this.attack(new EntityDamageEvent(this, EntityDamageEvent.DamageCause.DROWNING, 2));
                 this.move(Utils.rand(-20, 20), Utils.rand(-20, 20), Utils.rand(-20, 20));
             }
-        } else {
-            if (!this.hasEffect(Effect.WATER_BREATHING) && this.isInsideOfWater()) {
-                hasUpdate = true;
-                int airTicks = this.getDataPropertyShort(DATA_AIR) - tickDiff;
-                if (airTicks <= -20) {
-                    airTicks = 0;
-                    this.attack(new EntityDamageEvent(this, EntityDamageEvent.DamageCause.DROWNING, 2));
-                }
-                this.setDataProperty(new ShortEntityData(DATA_AIR, airTicks));
-            } else {
-                this.setDataProperty(new ShortEntityData(DATA_AIR, 300));
-            }
         }
 
-        Timings.entityBaseTickTimer.stopTiming();
         return hasUpdate;
     }
 }

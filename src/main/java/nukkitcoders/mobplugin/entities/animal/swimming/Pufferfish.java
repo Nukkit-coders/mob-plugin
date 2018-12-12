@@ -1,6 +1,8 @@
 package nukkitcoders.mobplugin.entities.animal.swimming;
 
 import cn.nukkit.entity.EntityCreature;
+import cn.nukkit.event.entity.EntityDamageByEntityEvent;
+import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import nukkitcoders.mobplugin.entities.animal.SwimmingAnimal;
@@ -37,6 +39,15 @@ public class Pufferfish extends SwimmingAnimal {
     @Override
     public boolean targetOption(EntityCreature creature, double distance) {
         return false;
+    }
+
+    @Override
+    public Item[] getDrops() {
+        if (this.lastDamageCause instanceof EntityDamageByEntityEvent && !this.isBaby()) {
+            return new Item[]{Item.get(Item.PUFFERFISH, 0, 1)};
+        } else {
+            return new Item[0];
+        }
     }
 
     @Override
