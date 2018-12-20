@@ -12,13 +12,13 @@ import nukkitcoders.mobplugin.utils.Utils;
 
 public abstract class SwimmingMonster extends SwimmingEntity implements Monster {
 
-    protected float[]   minDamage;
+    protected float[] minDamage;
 
-    protected float[]   maxDamage;
+    protected float[] maxDamage;
 
-    protected int   attackDelay = 0;
+    protected int attackDelay = 0;
 
-    protected boolean canAttack   = true;
+    protected boolean canAttack = true;
 
     public SwimmingMonster(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);

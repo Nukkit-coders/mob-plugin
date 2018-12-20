@@ -10,13 +10,13 @@ import nukkitcoders.mobplugin.utils.Utils;
 
 public abstract class JumpingMonster extends JumpingEntity implements Monster {
 
-    protected float[]   minDamage;
+    protected float[] minDamage;
 
-    protected float[]   maxDamage;
+    protected float[] maxDamage;
 
-    protected int     attackDelay = 0;
+    protected int attackDelay = 0;
 
-    protected boolean canAttack   = true;
+    protected boolean canAttack = true;
 
     public JumpingMonster(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);

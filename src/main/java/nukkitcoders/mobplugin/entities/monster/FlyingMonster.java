@@ -10,13 +10,13 @@ import nukkitcoders.mobplugin.utils.Utils;
 
 public abstract class FlyingMonster extends FlyingEntity implements Monster {
 
-    protected float[]   minDamage;
+    protected float[] minDamage;
 
-    protected float[]   maxDamage;
+    protected float[] maxDamage;
 
-    protected int     attackDelay = 0;
+    protected int attackDelay = 0;
 
-    protected boolean canAttack   = true;
+    protected boolean canAttack = true;
 
     public FlyingMonster(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);

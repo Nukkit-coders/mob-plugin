@@ -47,6 +47,10 @@ public class EntityFireBall extends EntityProjectile {
         return 4;
     }
 
+    public EntityFireBall(FullChunk chunk, CompoundTag nbt) {
+        this(chunk, nbt, null);
+    }
+
     public EntityFireBall(FullChunk chunk, CompoundTag nbt, Entity shootingEntity) {
         this(chunk, nbt, shootingEntity, false);
     }

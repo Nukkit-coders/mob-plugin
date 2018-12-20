@@ -179,6 +179,7 @@ public class MobPlugin extends PluginBase implements Listener {
         BlockEntity.registerBlockEntity("MobSpawner", BlockEntitySpawner.class);
 
         Entity.registerEntity(Bat.class.getSimpleName(), Bat.class);
+        Entity.registerEntity(Cat.class.getSimpleName(), Cat.class);
         Entity.registerEntity(Chicken.class.getSimpleName(), Chicken.class);
         Entity.registerEntity(Cod.class.getSimpleName(), Cod.class);
         Entity.registerEntity(Cow.class.getSimpleName(), Cow.class);
@@ -190,6 +191,7 @@ public class MobPlugin extends PluginBase implements Listener {
         Entity.registerEntity(Mooshroom.class.getSimpleName(), Mooshroom.class);
         Entity.registerEntity(Mule.class.getSimpleName(), Mule.class);
         Entity.registerEntity(Ocelot.class.getSimpleName(), Ocelot.class);
+        Entity.registerEntity(Panda.class.getSimpleName(), Panda.class);
         Entity.registerEntity(Parrot.class.getSimpleName(), Parrot.class);
         Entity.registerEntity(Pig.class.getSimpleName(), Pig.class);
         Entity.registerEntity(PolarBear.class.getSimpleName(), PolarBear.class);
