@@ -1,6 +1,5 @@
 package nukkitcoders.mobplugin.entities.animal.flying;
 
-import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import nukkitcoders.mobplugin.entities.animal.FlyingAnimal;
@@ -33,11 +32,6 @@ public class Bat extends FlyingAnimal {
         super.initEntity();
 
         this.setMaxHealth(6);
-    }
-
-    @Override
-    public boolean targetOption(EntityCreature creature, double distance) {
-        return false;
     }
 
     @Override

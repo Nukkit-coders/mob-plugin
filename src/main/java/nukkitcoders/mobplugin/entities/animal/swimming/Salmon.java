@@ -1,6 +1,5 @@
 package nukkitcoders.mobplugin.entities.animal.swimming;
 
-import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
@@ -34,11 +33,6 @@ public class Salmon extends SwimmingAnimal {
     public void initEntity() {
         super.initEntity();
         this.setMaxHealth(3);
-    }
-
-    @Override
-    public boolean targetOption(EntityCreature creature, double distance) {
-        return false;
     }
 
     @Override

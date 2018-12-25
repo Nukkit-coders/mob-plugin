@@ -14,8 +14,10 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import nukkitcoders.mobplugin.MobPlugin;
 import nukkitcoders.mobplugin.entities.monster.Monster;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class BaseEntity extends EntityCreature implements EntityAgeable {
 
@@ -56,6 +58,8 @@ public abstract class BaseEntity extends EntityCreature implements EntityAgeable
     protected boolean isJumping;
 
     public float jumpMovementFactor = 0.02F;
+
+    public AtomicBoolean inKnockback = new AtomicBoolean();
 
     public BaseEntity(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
@@ -269,5 +273,48 @@ public abstract class BaseEntity extends EntityCreature implements EntityAgeable
             }
         }
         return false;
+    }
+
+    @Override
+    public Item[] getDrops() {
+        if (this.hasCustomName()) {
+            return new Item[]{Item.get(Item.NAME_TAG, 0, 1)};
+        } else {
+            return new Item[0];
+        }
+    }
+
+    @Override
+    public void knockBack(Entity attacker, double damage, double x, double z) {
+        this.knockBack(attacker, damage, x, z, 0.1);
+    }
+
+    @Override
+    public void knockBack(Entity attacker, double damage, double x, double z, double base) {
+        if (inKnockback.get()) return;
+        inKnockback.set(true);
+        server.getScheduler().scheduleDelayedTask(MobPlugin.getInstance(), () -> inKnockback.compareAndSet(true, false), 10);
+
+        double f = Math.sqrt(x * x + z * z);
+        if (f <= 0) {
+            return;
+        }
+
+        f = 1 / f;
+
+        Vector3 motion = new Vector3(this.motionX, this.motionY, this.motionZ);
+
+        motion.x /= 2d;
+        motion.y /= 2d;
+        motion.z /= 2d;
+        motion.x += x * f * base;
+        motion.y += base;
+        motion.z += z * f * base;
+
+        if (motion.y > base) {
+            motion.y = base;
+        }
+
+        this.setMotion(motion);
     }
 }

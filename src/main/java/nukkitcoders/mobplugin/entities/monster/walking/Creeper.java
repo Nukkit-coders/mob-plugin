@@ -32,8 +32,6 @@ public class Creeper extends WalkingMonster implements EntityExplosive {
 
     private int bombTime = 0;
 
-    private boolean exploded = false;
-
     public Creeper(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
         this.route = new WalkerRouteFinder(this);
@@ -77,13 +75,15 @@ public class Creeper extends WalkingMonster implements EntityExplosive {
 
         if (!ev.isCancelled()) {
             Explosion explosion = new Explosion(this, (float) ev.getForce(), this);
+
             if (ev.isBlockBreaking()) {
                 explosion.explodeA();
             }
+
             explosion.explodeB();
             this.level.addParticle(new HugeExplodeSeedParticle(this));
-            this.exploded = true;
         }
+
         this.close();
     }
 

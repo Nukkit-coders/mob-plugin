@@ -1,6 +1,5 @@
 package nukkitcoders.mobplugin;
 
-import cn.nukkit.entity.projectile.EntityArrow;
 import cn.nukkit.IPlayer;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
@@ -10,6 +9,7 @@ import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.item.EntityItem;
+import cn.nukkit.entity.projectile.EntityArrow;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
@@ -80,14 +80,18 @@ public class MobPlugin extends PluginBase implements Listener {
     public void onEnable() {
         this.saveDefaultConfig();
         pluginConfig = getConfig();
+
         if (getConfig().getInt("config-version") != configVersion) {
             this.getServer().getLogger().warning("MobPlugin's config file is outdated. Delete old config and reload server to update it.");
         }
+
         int spawnDelay = pluginConfig.getInt("entities.auto-spawn-tick", 0);
-        this.getServer().getPluginManager().registerEvents(this, this);
+
         if (spawnDelay > 0) {
             this.getServer().getScheduler().scheduleDelayedRepeatingTask(this, new AutoSpawnTask(this), spawnDelay, spawnDelay);
         }
+
+        this.getServer().getPluginManager().registerEvents(this, this);
         this.registerEntities();
     }
 
@@ -110,7 +114,6 @@ public class MobPlugin extends PluginBase implements Listener {
 
         switch (args[0]) {
             case "spawn":
-
                 if (args.length == 1) {
                     sender.sendMessage("Usage: /mob spawn <mob> <opt:player>");
                     break;

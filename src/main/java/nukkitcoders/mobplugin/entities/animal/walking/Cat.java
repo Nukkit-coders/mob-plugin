@@ -1,6 +1,5 @@
 package nukkitcoders.mobplugin.entities.animal.walking;
 
-import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
@@ -45,11 +44,6 @@ public class Cat extends WalkingAnimal {
         super.initEntity();
 
         this.setMaxHealth(10);
-    }
-
-    @Override
-    public boolean targetOption(EntityCreature creature, double distance) {
-        return false;
     }
 
     @Override

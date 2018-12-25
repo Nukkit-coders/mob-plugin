@@ -140,9 +140,12 @@ public class PigZombie extends WalkingMonster {
     public boolean attack(EntityDamageEvent ev) {
         super.attack(ev);
 
-        if (!ev.isCancelled()) {
-            this.setAngry(1000);
+        if (!ev.isCancelled() && ev instanceof EntityDamageByEntityEvent) {
+            if (((EntityDamageByEntityEvent) ev).getDamager() instanceof Player) {
+                this.setAngry(1000);
+            }
         }
+
         return true;
     }
 

@@ -1,6 +1,5 @@
 package nukkitcoders.mobplugin.entities.animal.walking;
 
-import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import nukkitcoders.mobplugin.entities.animal.WalkingAnimal;
@@ -39,11 +38,6 @@ public class Panda extends WalkingAnimal {
         super.initEntity();
 
         this.setMaxHealth(20);
-    }
-
-    @Override
-    public boolean targetOption(EntityCreature creature, double distance) {
-        return false;
     }
 
     @Override

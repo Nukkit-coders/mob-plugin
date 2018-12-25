@@ -1,7 +1,6 @@
 package nukkitcoders.mobplugin.entities.animal.swimming;
 
 import nukkitcoders.mobplugin.utils.Utils;
-import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
@@ -38,11 +37,6 @@ public class Dolphin extends SwimmingAnimal {
     @Override
     public float getHeight() {
         return 0.6f;
-    }
-
-    @Override
-    public boolean targetOption(EntityCreature creature, double distance) {
-        return false;
     }
 
     @Override
