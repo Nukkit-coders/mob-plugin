@@ -6,9 +6,10 @@ import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.AddEntityPacket;
 import cn.nukkit.network.protocol.DataPacket;
+import nukkitcoders.mobplugin.entities.Boss;
 import nukkitcoders.mobplugin.entities.monster.FlyingMonster;
 
-public class EnderDragon extends FlyingMonster {
+public class EnderDragon extends FlyingMonster implements Boss {
 
     public static final int NETWORK_ID = 53;
 

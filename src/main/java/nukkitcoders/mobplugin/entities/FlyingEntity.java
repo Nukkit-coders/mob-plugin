@@ -157,7 +157,7 @@ public abstract class FlyingEntity extends BaseEntity {
             }
 
             if (this.isOnGround()) {
-                this.motionY = Utils.rand(0.1, 0.15);
+                this.motionY = Utils.rand(0.15, 0.20);
             } else {
                 this.motionY = Utils.rand(-0.15, 0.15);
             }

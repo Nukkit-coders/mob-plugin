@@ -105,8 +105,6 @@ public class Witch extends WalkingMonster {
                     this.level.addSound(this, Sound.MOB_WITCH_THROW);
                 }
             }
-        } else {
-            this.attackDelay++;
         }
     }
 

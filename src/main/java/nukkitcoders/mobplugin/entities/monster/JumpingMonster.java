@@ -14,8 +14,6 @@ public abstract class JumpingMonster extends JumpingEntity implements Monster {
 
     protected float[] maxDamage;
 
-    protected int attackDelay = 0;
-
     protected boolean canAttack = true;
 
     public JumpingMonster(FullChunk chunk, CompoundTag nbt) {

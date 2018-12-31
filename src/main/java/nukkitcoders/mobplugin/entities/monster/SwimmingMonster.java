@@ -16,8 +16,6 @@ public abstract class SwimmingMonster extends SwimmingEntity implements Monster 
 
     protected float[] maxDamage;
 
-    protected int attackDelay = 0;
-
     protected boolean canAttack = true;
 
     public SwimmingMonster(FullChunk chunk, CompoundTag nbt) {
@@ -169,16 +167,9 @@ public abstract class SwimmingMonster extends SwimmingEntity implements Monster 
 
     @Override
     public boolean entityBaseTick(int tickDiff) {
-
         boolean hasUpdate;
-
-
         hasUpdate = super.entityBaseTick(tickDiff);
-
-        this.attackDelay += tickDiff;
-
         this.setDataProperty(new ShortEntityData(DATA_AIR, 300));
-
         return hasUpdate;
     }
 }

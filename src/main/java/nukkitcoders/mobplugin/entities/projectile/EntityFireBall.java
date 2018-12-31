@@ -24,12 +24,12 @@ public class EntityFireBall extends EntityProjectile {
 
     @Override
     public float getWidth() {
-        return 0.5f;
+        return 0.45f;
     }
 
     @Override
     public float getHeight() {
-        return 0.5f;
+        return 0.45f;
     }
 
     @Override
@@ -40,11 +40,6 @@ public class EntityFireBall extends EntityProjectile {
     @Override
     public float getDrag() {
         return 0.01f;
-    }
-
-    @Override
-    protected double getDamage() {
-        return 4;
     }
 
     public EntityFireBall(FullChunk chunk, CompoundTag nbt) {
@@ -96,6 +91,7 @@ public class EntityFireBall extends EntityProjectile {
                     explosion.explodeB();
                 }
             }
+
             this.kill();
             hasUpdate = true;
         }

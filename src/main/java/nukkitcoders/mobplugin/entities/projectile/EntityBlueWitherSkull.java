@@ -16,10 +16,6 @@ public class EntityBlueWitherSkull extends EntityProjectile {
 
     protected boolean canExplode = false;
 
-    public EntityBlueWitherSkull(FullChunk chunk, CompoundTag nbt) {
-        super(chunk, nbt);
-    }
-
     @Override
     public int getNetworkId() {
         return NETWORK_ID;
@@ -50,9 +46,8 @@ public class EntityBlueWitherSkull extends EntityProjectile {
         return 0.01f;
     }
 
-    @Override
-    protected double getDamage() {
-        return 5;
+    public EntityBlueWitherSkull(FullChunk chunk, CompoundTag nbt) {
+        this(chunk, nbt, null);
     }
 
     public EntityBlueWitherSkull(FullChunk chunk, CompoundTag nbt, Entity shootingEntity) {

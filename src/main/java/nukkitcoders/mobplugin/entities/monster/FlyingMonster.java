@@ -14,8 +14,6 @@ public abstract class FlyingMonster extends FlyingEntity implements Monster {
 
     protected float[] maxDamage;
 
-    protected int attackDelay = 0;
-
     protected boolean canAttack = true;
 
     public FlyingMonster(FullChunk chunk, CompoundTag nbt) {

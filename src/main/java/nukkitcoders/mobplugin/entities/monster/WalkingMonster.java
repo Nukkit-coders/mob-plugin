@@ -2,15 +2,11 @@ package nukkitcoders.mobplugin.entities.monster;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
-import cn.nukkit.block.BlockWater;
 import cn.nukkit.entity.Entity;
-import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.level.format.FullChunk;
-import cn.nukkit.math.NukkitMath;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import nukkitcoders.mobplugin.entities.WalkingEntity;
-import nukkitcoders.mobplugin.entities.monster.walking.Enderman;
 import nukkitcoders.mobplugin.utils.Utils;
 
 public abstract class WalkingMonster extends WalkingEntity implements Monster {
@@ -18,8 +14,6 @@ public abstract class WalkingMonster extends WalkingEntity implements Monster {
     protected float[] minDamage;
 
     protected float[] maxDamage;
-
-    protected int attackDelay = 0;
 
     protected boolean canAttack = true;
 
@@ -168,23 +162,5 @@ public abstract class WalkingMonster extends WalkingEntity implements Monster {
             this.moveTime = 0;
         }
         return true;
-    }
-
-    @Override
-    public boolean entityBaseTick(int tickDiff) {
-
-        boolean hasUpdate;
-
-        hasUpdate = super.entityBaseTick(tickDiff);
-
-        this.attackDelay += tickDiff;
-        if (this instanceof Enderman) {
-            if (this.level.getBlock(new Vector3(NukkitMath.floorDouble(this.x), (int) this.y, NukkitMath.floorDouble(this.z))) instanceof BlockWater) {
-                this.attack(new EntityDamageEvent(this, EntityDamageEvent.DamageCause.DROWNING, 2));
-                this.move(Utils.rand(-20, 20), Utils.rand(-20, 20), Utils.rand(-20, 20));
-            }
-        }
-
-        return hasUpdate;
     }
 }
