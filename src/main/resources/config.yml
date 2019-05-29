@@ -1,42 +1,43 @@
-config-version: 7
+config-version: 8
 
 entities:
   autospawn-ticks: 200
   despawn-ticks: 8000
   worlds-spawning-disabled: "exampleworld1, exampleworld2"
 
-autospawn:
-  bat: true
-  blaze: true
-  chicken: true
-  cod: true
-  cow: true
-  creeper: true
-  dolphin: true
-  donkey: true
-  enderman: true
-  ghast: true
-  husk: true
-  horse: true
-  magmacube: true
-  mooshroom: true
-  ocelot: true
-  parrot: true
-  pig: true
-  polarbear: true
-  pufferfish: true
-  rabbit: true
-  salmon: true
-  sheep: true
-  skeleton: true
-  slime: true
-  spider: true
-  squid: true
-  stray: true
-  tropicalfish: true
-  turtle: true
-  witch: true
-  witherskeleton: true
-  wolf: true
-  zombie: true
-  zombiepigman: true
+#if want to disable, set 0
+spawncount:
+  bat: 1
+  blaze: 1
+  chicken: 1
+  cod: 1
+  cow: 1
+  creeper: 1
+  dolphin: 1
+  donkey: 1
+  enderman: 1
+  ghast: 1
+  husk: 1
+  horse: 1
+  magmacube: 1
+  mooshroom: 1
+  ocelot: 1
+  parrot: 1
+  pig: 1
+  polarbear: 1
+  pufferfish: 1
+  rabbit: 1
+  salmon: 1
+  sheep: 1
+  skeleton: 1
+  slime: 1
+  spider: 1
+  squid: 1
+  stray: 1
+  tropicalfish: 1
+  turtle: 1
+  witch: 1
+  witherskeleton: 1
+  wolf: 1
+  zombie: 1
+  zombiepigman: 1

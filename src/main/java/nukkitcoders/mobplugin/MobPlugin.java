@@ -73,7 +73,7 @@ public class MobPlugin extends PluginBase implements Listener {
         this.saveDefaultConfig();
         pluginConfig = getConfig();
 
-        if (getConfig().getInt("config-version") != 7) {
+        if (getConfig().getInt("config-version") != 8) {
             this.getServer().getLogger().warning("MobPlugin's config file is outdated. Please delete old config.");
             this.getServer().getPluginManager().disablePlugin(this);
         }
