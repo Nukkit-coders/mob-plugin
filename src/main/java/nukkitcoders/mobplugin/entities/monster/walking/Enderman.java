@@ -3,9 +3,11 @@ package nukkitcoders.mobplugin.entities.monster.walking;
 import cn.nukkit.Player;
 import cn.nukkit.block.BlockWater;
 import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.item.Item;
+import cn.nukkit.level.Level;
 import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.math.NukkitMath;
@@ -21,6 +23,8 @@ import java.util.List;
 public class Enderman extends WalkingMonster {
 
     public static final int NETWORK_ID = 38;
+
+    private boolean angry = false;
 
     public Enderman(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
@@ -104,7 +108,17 @@ public class Enderman extends WalkingMonster {
     public boolean attack(EntityDamageEvent ev) {
         super.attack(ev);
         if (!ev.isCancelled()) {
+
+            if(ev.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK){
+                if(!isAngry()) {
+                    setAngry(true);
+                }
+            }
+
             if (ev.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
+                if(!isAngry()) {
+                    setAngry(true);
+                }
                 ev.setCancelled(true);
                 tp();
             } else if (Utils.rand(1, 10) == 1) {
@@ -139,8 +153,19 @@ public class Enderman extends WalkingMonster {
 
         if (this.level.getBlock(new Vector3(NukkitMath.floorDouble(this.x), (int) this.y, NukkitMath.floorDouble(this.z))) instanceof BlockWater) {
             this.attack(new EntityDamageEvent(this, EntityDamageEvent.DamageCause.DROWNING, 2));
+            if(isAngry()) {
+                setAngry(false);
+            }
             tp();
         } else if (Utils.rand(0, 500) == 20) {
+            tp();
+        }
+
+        if(this.age % 20 == 0 && this.level.isRaining() || this.level.isThundering()){
+            this.attack(new EntityDamageEvent(this, EntityDamageEvent.DamageCause.DROWNING, 2));
+            if(isAngry()) {
+                setAngry(false);
+            }
             tp();
         }
 
@@ -155,10 +180,29 @@ public class Enderman extends WalkingMonster {
 
     @Override
     public boolean canDespawn() {
-        if (this.getLevel().getName().equals("end")) {
+        if (this.getLevel().getDimension() == Level.DIMENSION_THE_END) {
             return false;
         }
 
         return super.canDespawn();
+    }
+
+    public void makeVibrating(boolean bool){
+        this.setDataFlag(DATA_FLAGS,DATA_FLAG_VIBRATING,bool);
+    }
+
+    public boolean isAngry(){
+        return angry;
+    }
+
+    public void setAngry(boolean bool) {
+        this.angry = bool;
+        makeVibrating(bool);
+    }
+
+    @Override
+    public boolean targetOption(EntityCreature creature, double distance) {
+        if(!angry)return false;
+        return super.targetOption(creature, distance);
     }
 }
