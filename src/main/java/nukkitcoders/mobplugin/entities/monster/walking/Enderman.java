@@ -161,7 +161,7 @@ public class Enderman extends WalkingMonster {
             tp();
         }
 
-        if(this.age % 20 == 0 && this.level.isRaining() || this.level.isThundering()){
+        if(this.age % 20 == 0 && (this.level.isRaining() || this.level.isThundering())){
             this.attack(new EntityDamageEvent(this, EntityDamageEvent.DamageCause.DROWNING, 2));
             if(isAngry()) {
                 setAngry(false);
@@ -188,7 +188,7 @@ public class Enderman extends WalkingMonster {
     }
 
     public void makeVibrating(boolean bool){
-        this.setDataFlag(DATA_FLAGS,DATA_FLAG_VIBRATING,bool);
+        this.setDataFlag(DATA_FLAGS,67,bool);
     }
 
     public boolean isAngry(){
@@ -204,5 +204,11 @@ public class Enderman extends WalkingMonster {
     public boolean targetOption(EntityCreature creature, double distance) {
         if(!angry)return false;
         return super.targetOption(creature, distance);
+    }
+
+    public void stareToAngry(){
+        if(!isAngry()) {
+            setAngry(true);
+        }
     }
 }
