@@ -55,7 +55,7 @@ public class Enderman extends WalkingMonster {
         this.setMaxHealth(40);
         super.initEntity();
 
-        this.setDamage(new float[] { 0, 4, 7, 10 });
+        this.setDamage(new float[]{0, 4, 7, 10});
     }
 
     public void attackEntity(Entity player) {
@@ -109,14 +109,14 @@ public class Enderman extends WalkingMonster {
         super.attack(ev);
         if (!ev.isCancelled()) {
 
-            if(ev.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK){
-                if(!isAngry()) {
+            if (ev.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+                if (!isAngry()) {
                     setAngry(true);
                 }
             }
 
             if (ev.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
-                if(!isAngry()) {
+                if (!isAngry()) {
                     setAngry(true);
                 }
                 ev.setCancelled(true);
@@ -153,7 +153,7 @@ public class Enderman extends WalkingMonster {
 
         if (this.level.getBlock(new Vector3(NukkitMath.floorDouble(this.x), (int) this.y, NukkitMath.floorDouble(this.z))) instanceof BlockWater) {
             this.attack(new EntityDamageEvent(this, EntityDamageEvent.DamageCause.DROWNING, 2));
-            if(isAngry()) {
+            if (isAngry()) {
                 setAngry(false);
             }
             tp();
@@ -161,9 +161,9 @@ public class Enderman extends WalkingMonster {
             tp();
         }
 
-        if(this.age % 20 == 0 && (this.level.isRaining() || this.level.isThundering())){
+        if (this.age % 20 == 0 && (this.level.isRaining() || this.level.isThundering())) {
             this.attack(new EntityDamageEvent(this, EntityDamageEvent.DamageCause.DROWNING, 2));
-            if(isAngry()) {
+            if (isAngry()) {
                 setAngry(false);
             }
             tp();
@@ -187,11 +187,11 @@ public class Enderman extends WalkingMonster {
         return super.canDespawn();
     }
 
-    public void makeVibrating(boolean bool){
-        this.setDataFlag(DATA_FLAGS,67,bool);
+    public void makeVibrating(boolean bool) {
+        this.setDataFlag(DATA_FLAGS, 67, bool);
     }
 
-    public boolean isAngry(){
+    public boolean isAngry() {
         return angry;
     }
 
@@ -202,12 +202,12 @@ public class Enderman extends WalkingMonster {
 
     @Override
     public boolean targetOption(EntityCreature creature, double distance) {
-        if(!angry)return false;
+        if (!angry) return false;
         return super.targetOption(creature, distance);
     }
 
-    public void stareToAngry(){
-        if(!isAngry()) {
+    public void stareToAngry() {
+        if (!isAngry()) {
             setAngry(true);
         }
     }
