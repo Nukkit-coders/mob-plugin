@@ -93,7 +93,7 @@ public class MobPlugin extends PluginBase implements Listener {
             return true;
         }
 
-        switch (args[0].toLowerCase()) {
+        switch (args[0]) {
             case "spawn":
                 if (args.length == 1) {
                     sender.sendMessage("Usage: /mob spawn <entity> <opt:player>");
