@@ -6,7 +6,6 @@ import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
 import cn.nukkit.blockentity.BlockEntity;
 import cn.nukkit.entity.Entity;
-import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.entity.projectile.EntityEgg;
 import cn.nukkit.entity.projectile.EntityEnderPearl;
 import cn.nukkit.event.EventHandler;
@@ -215,9 +214,9 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL,ignoreCancelled = true)
-    public void stareEnderman(PlayerMoveEvent event){
-        if(event.getPlayer().getLevel().getCurrentTick() % 20 == 0){
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void stareEnderman(PlayerMoveEvent event) {
+        if (event.getPlayer().getLevel().getCurrentTick() % 20 == 0) {
             Player player = event.getPlayer();
             double kk = Math.tan(player.getPitch() * -1 * Math.PI / 180);
             AxisAlignedBB aab = new SimpleAxisAlignedBB(
@@ -228,10 +227,10 @@ public class EventListener implements Listener {
                     player.getY() + 2.9f,
                     player.getZ() + 0.6f
             );
-            for(int i = 0; i < 8;i++){
+            for (int i = 0; i < 8; i++) {
                 aab.offset(-Math.sin(player.getYaw() * Math.PI / 180) * i, i * kk, Math.cos(player.getYaw() * Math.PI / 180) * i);
                 Entity entities[] = player.getLevel().getCollidingEntities(aab);
-                if(entities.length > 0){
+                if (entities.length > 0) {
                     for (Entity e : entities) {
                         if (e instanceof Enderman) {
                             ((Enderman) e).stareToAngry();
