@@ -9,6 +9,7 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.projectile.EntityEgg;
 import cn.nukkit.entity.projectile.EntityEnderPearl;
 import cn.nukkit.event.EventHandler;
+import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
@@ -16,9 +17,12 @@ import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDeathEvent;
 import cn.nukkit.event.entity.ProjectileHitEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
+import cn.nukkit.event.player.PlayerMoveEvent;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.item.Item;
+import cn.nukkit.math.AxisAlignedBB;
 import cn.nukkit.math.BlockFace;
+import cn.nukkit.math.SimpleAxisAlignedBB;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.EntityEventPacket;
 import cn.nukkit.network.protocol.PlayerInputPacket;
@@ -27,6 +31,7 @@ import nukkitcoders.mobplugin.entities.HorseBase;
 import nukkitcoders.mobplugin.entities.animal.walking.Chicken;
 import nukkitcoders.mobplugin.entities.animal.walking.Llama;
 import nukkitcoders.mobplugin.entities.block.BlockEntitySpawner;
+import nukkitcoders.mobplugin.entities.monster.walking.Enderman;
 import nukkitcoders.mobplugin.entities.monster.walking.Silverfish;
 import nukkitcoders.mobplugin.event.entity.SpawnGolemEvent;
 import nukkitcoders.mobplugin.event.spawner.SpawnerChangeTypeEvent;
@@ -208,4 +213,33 @@ public class EventListener implements Listener {
             }
         }
     }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void stareEnderman(PlayerMoveEvent event) {
+        if (event.getPlayer().getLevel().getCurrentTick() % 20 == 0) {
+            Player player = event.getPlayer();
+            double kk = Math.tan(player.getPitch() * -1 * Math.PI / 180);
+            AxisAlignedBB aab = new SimpleAxisAlignedBB(
+                    player.getX() - 0.6f,
+                    player.getY() + 1.45f,
+                    player.getZ() - 0.6f,
+                    player.getX() + 0.6f,
+                    player.getY() + 2.9f,
+                    player.getZ() + 0.6f
+            );
+            for (int i = 0; i < 8; i++) {
+                aab.offset(-Math.sin(player.getYaw() * Math.PI / 180) * i, i * kk, Math.cos(player.getYaw() * Math.PI / 180) * i);
+                Entity entities[] = player.getLevel().getCollidingEntities(aab);
+                if (entities.length > 0) {
+                    for (Entity e : entities) {
+                        if (e instanceof Enderman) {
+                            ((Enderman) e).stareToAngry();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
+
