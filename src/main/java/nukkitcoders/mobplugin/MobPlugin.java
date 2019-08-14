@@ -236,8 +236,8 @@ public class MobPlugin extends PluginBase implements Listener {
         return time > 13184 && time < 22800;
     }
 
-    public boolean shouldMobBurn(Level level, Entity entity) {
+    public boolean shouldMobBurn(Level level, BaseEntity entity) {
         int time = level.getTime() % Level.TIME_FULL;
-        return !entity.isOnFire() && !level.isRaining() && (time < 12567 || time > 23450) && !entity.isInsideOfWater() && level.canBlockSeeSky(entity);
+        return !entity.isOnFire() && !level.isRaining() && !entity.isBaby() && (time < 12567 || time > 23450) && !entity.isInsideOfWater() && level.canBlockSeeSky(entity);
     }
 }
