@@ -20,7 +20,7 @@ public abstract class BaseEntity extends EntityCreature implements EntityAgeable
 
     protected int stayTime = 0;
     protected int moveTime = 0;
-    protected double moveMultifier = 1.0d;
+    protected float moveMultifier = 1.0f;
     protected Vector3 target = null;
     protected Entity followTarget = null;
     private boolean baby = false;

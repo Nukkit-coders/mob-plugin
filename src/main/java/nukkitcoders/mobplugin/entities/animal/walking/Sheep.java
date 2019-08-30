@@ -10,6 +10,7 @@ import cn.nukkit.item.ItemDye;
 import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.level.particle.ItemBreakParticle;
+import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.EntityEventPacket;
 import cn.nukkit.utils.DyeColor;
@@ -79,8 +80,7 @@ public class Sheep extends WalkingAnimal {
     }
 
     @Override
-    public boolean onInteract(Player player, Item item) {
-        super.onInteract(player, item);
+    public boolean onInteract(Player player, Item item, Vector3 clickedPos) {
         if (item.getId() == Item.DYE) {
             this.setColor(((ItemDye) item).getDyeColor().getWoolData());
             return true;
@@ -96,8 +96,7 @@ public class Sheep extends WalkingAnimal {
             player.getInventory().getItemInHand().setDamage(item.getDamage() + 1);
             return true;
         }
-        return false;
-
+        return super.onInteract(player, item, clickedPos);
     }
 
     public void shear(boolean shear) {

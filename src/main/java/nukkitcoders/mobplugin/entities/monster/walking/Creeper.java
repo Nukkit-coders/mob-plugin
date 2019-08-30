@@ -240,14 +240,13 @@ public class Creeper extends WalkingMonster implements EntityExplosive {
     }
 
     @Override
-    public boolean onInteract(Player player, Item item) {
-        super.onInteract(player, item);
+    public boolean onInteract(Player player, Item item, Vector3 clickedPos) {
         if (item.getId() == Item.FLINT_AND_STEEL) {
             this.level.addSound(this, Sound.FIRE_IGNITE);
             this.explode();
             return true;
         }
-        return false;
+        return super.onInteract(player, item, clickedPos);
     }
 
     public boolean isPowered() {

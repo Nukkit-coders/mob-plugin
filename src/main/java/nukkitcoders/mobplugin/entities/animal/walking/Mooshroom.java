@@ -7,6 +7,7 @@ import cn.nukkit.item.Item;
 import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.level.particle.ItemBreakParticle;
+import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import nukkitcoders.mobplugin.entities.animal.WalkingAnimal;
 import nukkitcoders.mobplugin.utils.Utils;
@@ -81,8 +82,7 @@ public class Mooshroom extends WalkingAnimal {
     }
     
     @Override
-    public boolean onInteract(Player player, Item item) {
-        super.onInteract(player, item);
+    public boolean onInteract(Player player, Item item, Vector3 clickedPos) {
         if (item.equals(Item.get(Item.BOWL, 0), true)) {
             player.getInventory().addItem(Item.get(Item.MUSHROOM_STEW, 0, 1));
             player.getInventory().decreaseCount(player.getInventory().getHeldItemIndex());
@@ -97,6 +97,6 @@ public class Mooshroom extends WalkingAnimal {
             this.level.addParticle(new ItemBreakParticle(this.add(0, this.getMountedYOffset(), 0), Item.get(Item.WHEAT)));
             this.setInLove();
         }
-        return false;
+        return super.onInteract(player, item, clickedPos);
     }
 }

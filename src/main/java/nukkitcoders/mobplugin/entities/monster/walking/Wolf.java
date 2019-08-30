@@ -9,6 +9,7 @@ import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemDye;
 import cn.nukkit.level.format.FullChunk;
+import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.EntityEventPacket;
 import cn.nukkit.utils.DyeColor;
@@ -99,8 +100,7 @@ public class Wolf extends TameableMonster {
     }
 
     @Override
-    public boolean onInteract(Player player, Item item) {
-        super.onInteract(player, item);
+    public boolean onInteract(Player player, Item item, Vector3 clickedPos) {
         if (item.equals(Item.get(Item.BONE))) {
             if (!this.hasOwner() && !this.isAngry()) {
                 player.getInventory().decreaseCount(player.getInventory().getHeldItemIndex());
@@ -133,7 +133,7 @@ public class Wolf extends TameableMonster {
                 this.setSitting(true);
             }
         }
-        return false;
+        return super.onInteract(player, item, clickedPos);
     }
 
     @Override

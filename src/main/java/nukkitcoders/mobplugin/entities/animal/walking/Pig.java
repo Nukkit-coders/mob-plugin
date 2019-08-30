@@ -9,6 +9,7 @@ import cn.nukkit.item.Item;
 import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.level.particle.ItemBreakParticle;
+import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import nukkitcoders.mobplugin.entities.animal.WalkingAnimal;
 import nukkitcoders.mobplugin.utils.Utils;
@@ -65,8 +66,7 @@ public class Pig extends WalkingAnimal implements EntityRideable {
     }
 
     @Override
-    public boolean onInteract(Player player, Item item) {
-        super.onInteract(player, item);
+    public boolean onInteract(Player player, Item item, Vector3 clickedPos) {
         if (item.equals(Item.get(Item.CARROT, 0)) && !this.isBaby()) {
             player.getInventory().decreaseCount(player.getInventory().getHeldItemIndex());
             this.level.addSound(this, Sound.RANDOM_EAT);
@@ -86,7 +86,7 @@ public class Pig extends WalkingAnimal implements EntityRideable {
             this.setInLove();
             return true;
         }
-        return false;
+        return super.onInteract(player, item, clickedPos);
     }
 
     @Override

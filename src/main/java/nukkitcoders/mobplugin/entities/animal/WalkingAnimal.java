@@ -119,9 +119,9 @@ public abstract class WalkingAnimal extends WalkingEntity implements Animal {
             this.panicTicks = time;
             this.stayTime = 0;
             this.moveTime = time;
-            this.moveMultifier = 1.8d;
+            this.moveMultifier = 1.8f;
         } else {
-            this.moveMultifier = 1.0d;
+            this.moveMultifier = 1.0f;
         }
     }
 
