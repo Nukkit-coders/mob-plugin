@@ -33,6 +33,11 @@ public class Turtle extends SwimmingAnimal {
         super.initEntity();
         this.setMaxHealth(30);
     }
+    
+    @Override
+    public Item[] getDrops() {
+            return new Item[]{Item.get(Item.SCUTE, 0, 1)};
+    }
 
     @Override
     public int getKillExperience() {
