@@ -68,6 +68,10 @@ public class Creeper extends WalkingMonster implements EntityExplosive {
         super.initEntity();
 
         this.setMaxHealth(20);
+
+        if (this.namedTag.contains("powered")) {
+           this.setPowered(this.namedTag.getBoolean("powered"));
+        }
     }
 
     public int getBombTime() {
@@ -255,6 +259,13 @@ public class Creeper extends WalkingMonster implements EntityExplosive {
 
     public void setPowered(boolean charged) {
         this.setDataFlag(DATA_FLAGS, DATA_FLAG_POWERED, charged);
+    }
+
+    @Override
+    public void saveNBT() {
+        super.saveNBT();
+
+        this.namedTag.putBoolean("powered", this.isPowered());
     }
 
     @Override
