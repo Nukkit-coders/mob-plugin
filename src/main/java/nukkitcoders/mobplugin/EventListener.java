@@ -30,6 +30,7 @@ import nukkitcoders.mobplugin.entities.BaseEntity;
 import nukkitcoders.mobplugin.entities.HorseBase;
 import nukkitcoders.mobplugin.entities.animal.walking.Chicken;
 import nukkitcoders.mobplugin.entities.animal.walking.Llama;
+import nukkitcoders.mobplugin.entities.animal.walking.Pig;
 import nukkitcoders.mobplugin.entities.block.BlockEntitySpawner;
 import nukkitcoders.mobplugin.entities.monster.walking.Enderman;
 import nukkitcoders.mobplugin.entities.monster.walking.Silverfish;
@@ -210,6 +211,8 @@ public class EventListener implements Listener {
             Player p = ev.getPlayer();
             if (p.riding instanceof HorseBase && !(p.riding instanceof Llama)) {
                 ((HorseBase) p.riding).onPlayerInput(p, ipk.motionX, ipk.motionY);
+            } else if (p.riding instanceof Pig) {
+                ((Pig) p.riding).onPlayerInput(p, ipk.motionX, ipk.motionY);
             }
         }
     }

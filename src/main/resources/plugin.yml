@@ -10,8 +10,11 @@ load: STARTUP
 commands:
  mob:
   description: Mob plugin main command
-  aliases: ["mob"]
   usage: /mob
+  permission: mobplugin.command
+ summon:
+  description: Summon entity
+  usage: /summon <entity> [player]
   permission: mobplugin.command
 
 permissions:

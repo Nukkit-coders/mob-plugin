@@ -41,7 +41,7 @@ public abstract class AbstractEntitySpawner implements IEntitySpawner {
         if (isSpawnAllowedByDifficulty()) {
             SpawnResult lastSpawnResult;
             for (Player player : server.getOnlinePlayers().values()) {
-                if (isWorldSpawnAllowed (player.getLevel())) {
+                if (isWorldSpawnAllowed(player.getLevel())) {
                     lastSpawnResult = spawn(player);
                     if (lastSpawnResult.equals(SpawnResult.MAX_SPAWN_REACHED)) {
                         break;
@@ -53,7 +53,7 @@ public abstract class AbstractEntitySpawner implements IEntitySpawner {
 
     private boolean isWorldSpawnAllowed (Level level) {
         for (String worldName : this.disabledSpawnWorlds) {
-            if (level.getName().toLowerCase().equals(worldName.toLowerCase())) {
+            if (level.getName().equalsIgnoreCase(worldName)) {
                 return false;
             }
         }

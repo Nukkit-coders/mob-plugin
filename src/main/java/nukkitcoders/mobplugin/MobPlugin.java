@@ -84,76 +84,108 @@ public class MobPlugin extends PluginBase implements Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!cmd.getName().toLowerCase().equals("mob")) return true;
+        if (cmd.getName().equalsIgnoreCase("summon")) {
+            if (args.length == 0 || (args.length == 1 && !(sender instanceof Player))) {
+                return false;
+            }
 
-        if (args.length == 0) {
-            sender.sendMessage("-- MobPlugin " + this.getDescription().getVersion() + " --");
-            sender.sendMessage("/mob spawn <entity> <opt:player> - Summon entity");
-            sender.sendMessage("/mob removeall - Remove all living mobs");
-            sender.sendMessage("/mob removeitems - Remove all items from ground");
-            return true;
-        }
-
-        switch (args[0].toLowerCase()) {
-            case "spawn":
-                if (args.length == 1) {
-                    sender.sendMessage("Usage: /mob spawn <entity> <opt:player>");
-                    break;
+            String mob = Character.toUpperCase(args[0].charAt(0)) + args[0].substring(1);
+            for (int x = 2; x < mob.length() - 1; x++) {
+                if (mob.charAt(x) == '_') {
+                    mob = mob.substring(0, x) + Character.toUpperCase(mob.charAt(x + 1)) + mob.substring(x + 2);
                 }
+            }
 
-                String mob = args[1];
-                Player playerThatSpawns;
+            Player playerThatSpawns;
 
-                if (args.length == 3) {
-                    playerThatSpawns = this.getServer().getPlayer(args[2]);
+            if (args.length == 2) {
+                playerThatSpawns = getServer().getPlayer(args[1].replace("@s", sender.getName()));
+            } else {
+                playerThatSpawns = (Player) sender;
+            }
+
+            if (playerThatSpawns != null) {
+                Position pos = playerThatSpawns.getPosition();
+                Entity ent;
+                if ((ent = Entity.createEntity(mob, pos)) != null) {
+                    ent.spawnToAll();
+                    sender.sendMessage("\u00A76Spawned " + mob + " to " + playerThatSpawns.getName());
                 } else {
-                    playerThatSpawns = (Player) sender;
+                    sender.sendMessage("\u00A7cUnable to spawn " + mob);
                 }
+            } else {
+                sender.sendMessage("\u00A7cUnknown player " + (args.length == 2 ? args[1] : sender.getName()));
+            }
+        } else if (cmd.getName().equalsIgnoreCase("mob")) {
+            if (args.length == 0) {
+                sender.sendMessage("-- MobPlugin " + this.getDescription().getVersion() + " --");
+                sender.sendMessage("/mob spawn <entity> <opt:player> - Summon entity");
+                sender.sendMessage("/mob removeall - Remove all living mobs");
+                sender.sendMessage("/mob removeitems - Remove all items from ground");
+                return true;
+            }
 
-                if (playerThatSpawns != null) {
-                    Position pos = playerThatSpawns.getPosition();
+            switch (args[0].toLowerCase()) {
+                case "spawn":
+                    if (args.length == 1 || (args.length == 2 && !(sender instanceof Player))) {
+                        sender.sendMessage("Usage: /mob spawn <entity> <opt:player>");
+                        break;
+                    }
 
-                    Entity ent;
-                    if ((ent = Entity.createEntity(mob, pos)) != null) {
-                        ent.spawnToAll();
-                        sender.sendMessage("Spawned " + mob + " to " + playerThatSpawns.getName());
+                    String mob = args[1];
+                    Player playerThatSpawns;
+
+                    if (args.length == 3) {
+                        playerThatSpawns = this.getServer().getPlayer(args[2]);
                     } else {
-                        sender.sendMessage("Unable to spawn " + mob);
+                        playerThatSpawns = (Player) sender;
                     }
-                } else {
-                    sender.sendMessage("Unknown player " + (args.length == 3 ? args[2] : sender.getName()));
-                }
-                break;
-            case "removeall":
-                int count = 0;
-                for (Level level : getServer().getLevels().values()) {
-                    for (Entity entity : level.getEntities()) {
-                        if (entity instanceof BaseEntity) {
-                            entity.close();
-                            ++count;
-                        }
-                    }
-                }
-                sender.sendMessage("Removed " + count + " entities from all levels.");
-                break;
-            case "removeitems":
-                count = 0;
-                for (Level level : getServer().getLevels().values()) {
-                    for (Entity entity : level.getEntities()) {
-                        if (entity instanceof EntityItem && entity.isOnGround()) {
-                            entity.close();
-                            ++count;
-                        }
-                    }
-                }
-                sender.sendMessage("Removed " + count + " items on ground from all levels.");
-                break;
-            default:
-                sender.sendMessage("Unknown command.");
-                break;
-        }
-        return true;
 
+                    if (playerThatSpawns != null) {
+                        Position pos = playerThatSpawns.getPosition();
+
+                        Entity ent;
+                        if ((ent = Entity.createEntity(mob, pos)) != null) {
+                            ent.spawnToAll();
+                            sender.sendMessage("Spawned " + mob + " to " + playerThatSpawns.getName());
+                        } else {
+                            sender.sendMessage("Unable to spawn " + mob);
+                        }
+                    } else {
+                        sender.sendMessage("Unknown player " + (args.length == 3 ? args[2] : sender.getName()));
+                    }
+                    break;
+                case "removeall":
+                    int count = 0;
+                    for (Level level : getServer().getLevels().values()) {
+                        for (Entity entity : level.getEntities()) {
+                            if (entity instanceof BaseEntity) {
+                                entity.close();
+                                ++count;
+                            }
+                        }
+                    }
+                    sender.sendMessage("Removed " + count + " entities from all levels.");
+                    break;
+                case "removeitems":
+                    count = 0;
+                    for (Level level : getServer().getLevels().values()) {
+                        for (Entity entity : level.getEntities()) {
+                            if (entity instanceof EntityItem && entity.isOnGround()) {
+                                entity.close();
+                                ++count;
+                            }
+                        }
+                    }
+                    sender.sendMessage("Removed " + count + " items on ground from all levels.");
+                    break;
+                default:
+                    sender.sendMessage("Unknown command.");
+                    break;
+            }
+        }
+
+        return true;
     }
 
     private void registerEntities() {
@@ -166,6 +198,7 @@ public class MobPlugin extends PluginBase implements Listener {
         Entity.registerEntity(Cow.class.getSimpleName(), Cow.class);
         Entity.registerEntity(Dolphin.class.getSimpleName(), Dolphin.class);
         Entity.registerEntity(Donkey.class.getSimpleName(), Donkey.class);
+        Entity.registerEntity(Fox.class.getSimpleName(), Fox.class);
         Entity.registerEntity(Horse.class.getSimpleName(), Horse.class);
         Entity.registerEntity(MagmaCube.class.getSimpleName(), MagmaCube.class);
         Entity.registerEntity(Llama.class.getSimpleName(), Llama.class);
