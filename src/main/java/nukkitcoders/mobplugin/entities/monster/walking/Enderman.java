@@ -155,7 +155,7 @@ public class Enderman extends WalkingMonster {
     }
 
     public void makeVibrating(boolean bool) {
-        this.setDataFlag(DATA_FLAGS, 40, bool);
+        this.setDataFlag(DATA_FLAGS, DATA_FLAG_VIBRATING, bool);
     }
 
     public boolean isAngry() {
