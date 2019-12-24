@@ -1,7 +1,9 @@
 package nukkitcoders.mobplugin.entities.animal.walking;
 
 import cn.nukkit.Player;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
+import cn.nukkit.entity.data.IntEntityData;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.FullChunk;
@@ -47,6 +49,10 @@ public class Mooshroom extends WalkingAnimal {
     public void initEntity() {
         super.initEntity();
         this.setMaxHealth(10);
+
+        if (this.namedTag.contains("Variant")) {
+           this.setBrown(this.namedTag.getInt("Variant") == 1);
+        }
     }
 
     @Override
@@ -97,5 +103,25 @@ public class Mooshroom extends WalkingAnimal {
             this.setInLove();
         }
         return super.onInteract(player, item, clickedPos);
+    }
+
+    @Override
+    public void saveNBT() {
+        super.saveNBT();
+        this.namedTag.putInt("Variant", this.isBrown() ? 1 : 0);
+    }
+
+    @Override
+    public void onStruckByLightning(Entity entity) {
+        this.setBrown(!this.isBrown());
+        super.onStruckByLightning(entity);
+    }
+
+    public boolean isBrown() {
+        return this.getDataPropertyInt(DATA_VARIANT) == 1;
+    }
+
+    public void setBrown(boolean brown) {
+        this.setDataProperty(new IntEntityData(DATA_VARIANT, brown ? 1 : 0));
     }
 }
