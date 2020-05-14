@@ -3,8 +3,10 @@ package nukkitcoders.mobplugin.entities;
 import cn.nukkit.block.*;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
+import cn.nukkit.level.Location;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.level.particle.BubbleParticle;
+import cn.nukkit.level.particle.DestroyBlockParticle;
 import cn.nukkit.math.NukkitMath;
 import cn.nukkit.math.Vector2;
 import cn.nukkit.math.Vector3;
@@ -74,20 +76,50 @@ public abstract class WalkingEntity extends BaseEntity {
             if (Utils.rand(1, 100) > 5) {
                 return;
             }
-            x = Utils.rand(10, 30);
-            z = Utils.rand(10, 30);
-            this.target = this.add(Utils.rand() ? x : -x, Utils.rand(-20.0, 20.0) / 10, Utils.rand() ? z : -z);
+            x = Utils.rand(1, 3);
+            z = Utils.rand(1, 3);
+            Location tempLoc = this.add(Utils.rand() ? x : -x, Utils.rand(-20.0, 20.0) / 10, Utils.rand() ? z : -z);
+            if(route!=null){
+                route.setDestination(tempLoc);
+                route.research();
+                if(!route.isReachable()){
+                    route.resetNodes();
+                    target = this.getLocation();
+                }
+            }
+            //System.out.println("cc"+this.getLocation()+route.nodes+route.isReachable()+route.hasNext());
+            //level.addParticle(new DestroyBlockParticle(tempLoc,Block.get(Block.DIAMOND_BLOCK)));
         } else if (Utils.rand(1, 100) == 1) {
-            x = Utils.rand(10, 30);
-            z = Utils.rand(10, 30);
+            x = Utils.rand(1, 3);
+            z = Utils.rand(1, 3);
             this.stayTime = Utils.rand(100, 200);
-            this.target = this.add(Utils.rand() ? x : -x, Utils.rand(-20.0, 20.0) / 10, Utils.rand() ? z : -z);
+            Location tempLoc = this.add(Utils.rand() ? x : -x, Utils.rand(-20.0, 20.0) / 10, Utils.rand() ? z : -z);
+            if(route!=null){
+                route.setDestination(tempLoc);
+                route.research();
+                if(!route.isReachable()){
+                    route.resetNodes();
+                    target = this.getLocation();
+                }
+            }
+            //System.out.println("dd"+this.getLocation()+route.nodes+route.isReachable()+route.hasNext());
+            //level.addParticle(new DestroyBlockParticle(tempLoc,Block.get(Block.DIAMOND_BLOCK)));
         } else if (this.moveTime <= 0 || this.target == null) {
-            x = Utils.rand(20, 100);
-            z = Utils.rand(20, 100);
+            x = Utils.rand(2, 10);
+            z = Utils.rand(2, 10);
             this.stayTime = 0;
-            this.moveTime = Utils.rand(100, 200);
-            this.target = this.add(Utils.rand() ? x : -x, 0, Utils.rand() ? z : -z);
+            this.moveTime = Utils.rand(300, 1200);
+            Location tempLoc = this.add(Utils.rand() ? x : -x, 0, Utils.rand() ? z : -z);
+            if(route!=null){
+                route.setDestination(tempLoc);
+                route.research();
+                if(!route.isReachable()){
+                    route.resetNodes();
+                    target = this.getLocation();
+                }
+            }
+            //System.out.println("ee"+this.getLocation()+route.nodes+route.isReachable()+route.hasNext());
+            //level.addParticle(new DestroyBlockParticle(tempLoc,Block.get(Block.DIAMOND_BLOCK)));
         }
     }
 
@@ -135,7 +167,9 @@ public abstract class WalkingEntity extends BaseEntity {
             }
 
             if (this.age % 10 == 0 && this.route != null && !this.route.isSearching()) {
-                RouteFinderThreadPool.executeRouteFinderThread(new RouteFinderSearchTask(this.route));
+                if(followTarget != null) {
+                    RouteFinderThreadPool.executeRouteFinderThread(new RouteFinderSearchTask(this.route));
+                }
                 if (this.route.hasNext()) {
                     this.target = this.route.next();
                 }

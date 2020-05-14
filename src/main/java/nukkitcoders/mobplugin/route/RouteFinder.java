@@ -143,7 +143,7 @@ public abstract class RouteFinder {
             this.nodes.clear();
             this.current = 0;
             this.interrupt = false;
-            this.destination = null;
+            //this.destination = null;
         }finally {
             this.lock.writeLock().unlock();
         }
@@ -153,7 +153,7 @@ public abstract class RouteFinder {
 
     public void research() {
         this.resetNodes();
-        this.search();
+        this.reachable = this.search();
     }
 
     public boolean hasNext() {
@@ -180,7 +180,11 @@ public abstract class RouteFinder {
         return this.interrupt;
     }
 
-    public boolean interrupt() {
-        return this.interrupt ^= true;
+    public void interrupt() {
+        this.setInterrupt(true);
+    }
+
+    public void setInterrupt(boolean interrupt){
+        this.interrupt = interrupt;
     }
 }

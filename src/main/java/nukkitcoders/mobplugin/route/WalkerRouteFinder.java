@@ -1,6 +1,9 @@
 package nukkitcoders.mobplugin.route;
 
 import cn.nukkit.block.Block;
+import cn.nukkit.event.block.BlockBreakEvent;
+import cn.nukkit.item.Item;
+import cn.nukkit.level.particle.ItemBreakParticle;
 import cn.nukkit.math.AxisAlignedBB;
 import cn.nukkit.math.SimpleAxisAlignedBB;
 import cn.nukkit.math.Vector3;
@@ -9,6 +12,7 @@ import nukkitcoders.mobplugin.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.PriorityQueue;
 
 /**
@@ -87,7 +91,6 @@ public class WalkerRouteFinder extends SimpleRouteFinder {
             } else {
                 this.searching = false;
                 this.finished = true;
-                this.reachable = false;
                 this.addNode(new Node(destination));
                 return false;
             }
@@ -331,7 +334,7 @@ public class WalkerRouteFinder extends SimpleRouteFinder {
         if (traverseDirection) {
             double loopStart = Math.min(pos1.getX(), pos2.getX());
             double loopEnd = Math.max(pos1.getX(), pos2.getX());
-            ArrayList<Vector3> list = new ArrayList<>();
+            List<Vector3> list = new ArrayList<>();
             for (double i = Math.ceil(loopStart); i <= Math.floor(loopEnd); i += 1.0) {
                 double result;
                 if ((result = Utils.calLinearFunction(pos1, pos2, i, Utils.ACCORDING_X_OBTAIN_Y)) != Double.MAX_VALUE)
@@ -341,7 +344,7 @@ public class WalkerRouteFinder extends SimpleRouteFinder {
         } else {
             double loopStart = Math.min(pos1.getZ(), pos2.getZ());
             double loopEnd = Math.max(pos1.getZ(), pos2.getZ());
-            ArrayList<Vector3> list = new ArrayList<>();
+            List<Vector3> list = new ArrayList<>();
             for (double i = Math.ceil(loopStart); i <= Math.floor(loopEnd); i += 1.0) {
                 double result;
                 if ((result = Utils.calLinearFunction(pos1, pos2, i, Utils.ACCORDING_Y_OBTAIN_X)) != Double.MAX_VALUE)
@@ -354,7 +357,7 @@ public class WalkerRouteFinder extends SimpleRouteFinder {
     }
 
 
-    private boolean hasBlocksAround(ArrayList<Vector3> list) {
+    private boolean hasBlocksAround(List<Vector3> list) {
         double radius = (this.entity.getWidth() * this.entity.getScale()) / 2 + 0.1;
         double height = this.entity.getHeight() * this.entity.getScale();
         for (Vector3 vector3 : list) {
