@@ -2,11 +2,14 @@ package nukkitcoders.mobplugin.entities.monster.walking;
 
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.data.LongEntityData;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.network.protocol.MobEquipmentPacket;
+import cn.nukkit.network.protocol.types.ContainerIds;
 import nukkitcoders.mobplugin.entities.monster.WalkingMonster;
 import nukkitcoders.mobplugin.route.WalkerRouteFinder;
 import nukkitcoders.mobplugin.utils.Utils;
@@ -88,6 +91,34 @@ public class Vindicator extends WalkingMonster {
             return true;
         }
 
+        if (this.getFollowTarget() != null) {
+            if (!this.getDataFlag(DATA_FLAGS, DATA_FLAG_ANGRY)) {
+                this.setDataFlag(DATA_FLAGS, DATA_FLAG_ANGRY, true); // show the axe
+            }
+            if (this.getDataPropertyLong(DATA_TARGET_EID) != this.getFollowTarget().getId()) {
+                this.setDataProperty(new LongEntityData(DATA_TARGET_EID, this.getFollowTarget().getId())); // raise the axe
+            }
+        } else {
+            if (this.getDataFlag(DATA_FLAGS, DATA_FLAG_ANGRY)) {
+                this.setDataFlag(DATA_FLAGS, DATA_FLAG_ANGRY, false);
+            }
+            if (this.getDataPropertyLong(DATA_TARGET_EID) != 0) {
+                this.setDataProperty(new LongEntityData(DATA_TARGET_EID, 0));
+            }
+        }
+
         return super.entityBaseTick(tickDiff);
+    }
+
+    @Override
+    public void spawnTo(Player player) {
+        super.spawnTo(player);
+
+        MobEquipmentPacket pk = new MobEquipmentPacket();
+        pk.eid = this.getId();
+        pk.item = Item.get(Item.IRON_AXE);
+        pk.windowId = ContainerIds.INVENTORY;
+        pk.inventorySlot = pk.hotbarSlot = 0;
+        player.dataPacket(pk);
     }
 }
