@@ -68,4 +68,9 @@ public class Zoglin extends WalkingMonster implements EntitySmite {
             player.attack(new EntityDamageByEntityEvent(this, player, EntityDamageEvent.DamageCause.ENTITY_ATTACK, damage));
         }
     }
+
+    @Override
+    public void jumpEntity(Entity player) {
+
+    }
 }

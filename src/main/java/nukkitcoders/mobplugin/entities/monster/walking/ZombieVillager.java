@@ -83,6 +83,11 @@ public class ZombieVillager extends WalkingMonster implements EntitySmite {
     }
 
     @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
+    @Override
     public boolean entityBaseTick(int tickDiff) {
         if (getServer().getDifficulty() == 0) {
             this.close();

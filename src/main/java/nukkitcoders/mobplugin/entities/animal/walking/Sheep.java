@@ -80,7 +80,7 @@ public class Sheep extends WalkingAnimal {
 
     @Override
     public boolean onInteract(Player player, Item item, Vector3 clickedPos) {
-        if (item.getId() == Item.DYE) {
+        if (item.getId() == Item.DYE && !this.isSheared()) {
             this.setColor(((ItemDye) item).getDyeColor().getWoolData());
             return true;
         } else if (item.getId() == Item.WHEAT && !this.isBaby()) {
@@ -89,7 +89,7 @@ public class Sheep extends WalkingAnimal {
             this.level.addParticle(new ItemBreakParticle(this.add(0, this.getMountedYOffset(), 0), Item.get(Item.WHEAT)));
             this.setInLove();
             return true;
-        } else if (item.getId() == Item.SHEARS && !this.isBaby() && !this.sheared) {
+        } else if (item.getId() == Item.SHEARS && !this.isBaby() && !isSheared()) {
             this.shear(true);
             this.level.addSound(this, Sound.MOB_SHEEP_SHEAR);
             player.getInventory().getItemInHand().setDamage(item.getDamage() + 1);
@@ -180,5 +180,9 @@ public class Sheep extends WalkingAnimal {
         }
 
         return super.entityBaseTick(tickDiff);
+    }
+
+    public boolean isSheared() {
+        return sheared;
     }
 }

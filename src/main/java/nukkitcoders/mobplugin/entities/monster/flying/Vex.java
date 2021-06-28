@@ -71,6 +71,11 @@ public class Vex extends FlyingMonster {
     }
 
     @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
+    @Override
     public void spawnTo(Player player) {
         super.spawnTo(player);
 

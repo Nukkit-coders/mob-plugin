@@ -96,6 +96,11 @@ public class Skeleton extends WalkingMonster implements EntitySmite {
     }
 
     @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
+    @Override
     public void spawnTo(Player player) {
         super.spawnTo(player);
 

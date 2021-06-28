@@ -80,6 +80,11 @@ public class IronGolem extends WalkingMonster {
         }
     }
 
+    @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
     public boolean targetOption(EntityCreature creature, double distance) {
         return (!(creature instanceof Player) || creature.getId() == this.isAngryTo) && !(creature instanceof EntityWolf) && creature.isAlive() && distance <= 100;
     }

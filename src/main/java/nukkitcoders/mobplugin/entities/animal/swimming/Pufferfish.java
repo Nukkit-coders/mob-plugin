@@ -12,6 +12,9 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.potion.Effect;
 import nukkitcoders.mobplugin.utils.Utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Pufferfish extends Fish {
 
     public static final int NETWORK_ID = 108;
@@ -45,21 +48,31 @@ public class Pufferfish extends Fish {
     @Override
     public void initEntity() {
         super.initEntity();
-        this.setMaxHealth(3);
+        this.setMaxHealth(6);
     }
 
     @Override
     public Item[] getDrops() {
-        return new Item[]{Item.get(Item.PUFFERFISH, 0, 1), Item.get(Item.BONE, 0, Utils.rand(0, 2))};
+        List<Item> drops = new ArrayList<>();
+        drops.add(Item.get(Item.PUFFERFISH, 0, 1));
+        if (Utils.rand(1, 4) == 1) {
+            drops.add(Item.get(Item.BONE, 0, 1));
+        }
+        return drops.toArray(new Item[0]);
+    }
+
+    @Override
+    public int getKillExperience() {
+        return Utils.rand(1, 3);
     }
 
     @Override
     public boolean attack(EntityDamageEvent ev) {
         super.attack(ev);
-        
+
         if (ev.getCause() != DamageCause.ENTITY_ATTACK) return true;
-        
-        if (ev instanceof EntityDamageByEntityEvent) {            
+
+        if (ev instanceof EntityDamageByEntityEvent) {
             Entity damager = ((EntityDamageByEntityEvent) ev).getDamager();
             if (damager instanceof Player) {
                 if (this.puffed > 0) return true;

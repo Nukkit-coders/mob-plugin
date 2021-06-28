@@ -65,6 +65,11 @@ public class PiglinBrute extends WalkingMonster {
     }
 
     @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
+    @Override
     public String getName() {
         return this.hasCustomName() ? this.getNameTag() : "Piglin Brute";
     }

@@ -7,7 +7,10 @@ import cn.nukkit.entity.EntityRideable;
 import cn.nukkit.entity.data.FloatEntityData;
 import cn.nukkit.entity.data.Vector3fEntityData;
 import cn.nukkit.item.Item;
+import cn.nukkit.item.MinecraftItemID;
+import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.FullChunk;
+import cn.nukkit.level.particle.ItemBreakParticle;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.math.Vector3f;
 import cn.nukkit.nbt.tag.CompoundTag;
@@ -28,13 +31,13 @@ public class Strider extends WalkingAnimal implements EntityRideable {
 
     private boolean saddled;
 
+    public Strider(FullChunk chunk, CompoundTag nbt) {
+        super(chunk, nbt);
+    }
+
     @Override
     public int getNetworkId() {
         return NETWORK_ID;
-    }
-
-    public Strider(FullChunk chunk, CompoundTag nbt) {
-        super(chunk, nbt);
     }
 
     @Override
@@ -55,12 +58,12 @@ public class Strider extends WalkingAnimal implements EntityRideable {
 
     @Override
     public float getWidth() {
-        return 0.9f;
+        return this.isBaby() ? 0.45f : 0.9f;
     }
 
     @Override
     public float getHeight() {
-        return 1.7f;
+        return this.isBaby() ? 0.85f : 1.7f;
     }
 
     public boolean mountEntity(Entity entity, byte mode) {
@@ -214,6 +217,14 @@ public class Strider extends WalkingAnimal implements EntityRideable {
             if (player.riding == null) {
                 this.mountEntity(player);
             }
+        } else if (!this.isBaby() && item.getId() == MinecraftItemID.WARPED_FUNGUS.get(1).getId()) {
+            if (!player.isCreative() || player.isSpectator()) {
+                player.getInventory().decreaseCount(player.getInventory().getHeldItemIndex());
+            }
+            this.level.addSound(this, Sound.RANDOM_EAT);
+            this.level.addParticle(new ItemBreakParticle(this.add(0, this.getMountedYOffset(), 0), item));
+            this.setInLove();
+            return true;
         }
         return super.onInteract(player, item, clickedPos);
     }
@@ -223,7 +234,7 @@ public class Strider extends WalkingAnimal implements EntityRideable {
         if (creature instanceof Player) {
             Player player = (Player) creature;
             return player.spawned && player.isAlive() && !player.closed && distance <= 40
-                    && player.getInventory().getItemInHand().getId() == Item.WARPED_FUNGUS_ON_A_STICK;
+                    && player.getInventory().getItemInHand().getId() == MinecraftItemID.WARPED_FUNGUS.get(1).getId();
         }
         return false;
     }

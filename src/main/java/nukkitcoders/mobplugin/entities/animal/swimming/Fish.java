@@ -1,6 +1,8 @@
 package nukkitcoders.mobplugin.entities.animal.swimming;
 
 import cn.nukkit.Player;
+import cn.nukkit.block.Block;
+import cn.nukkit.block.BlockWater;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.math.Vector3;
@@ -21,7 +23,9 @@ public abstract class Fish extends SwimmingAnimal {
 
     @Override
     public boolean onInteract(Player player, Item item, Vector3 clickedPos) {
-        if (item.getId() == Item.BUCKET && item.getDamage() == 0 && this.isInsideOfWater()) {
+        super.onInteract(player, item, clickedPos);
+
+        if (item.getId() == Item.BUCKET && (item.getDamage() == 0 && this.isInsideOfWater() || item.getDamage() == 8)) {
             this.close();
             if (item.getCount() <= 1) {
                 player.getInventory().setItemInHand(Item.get(Item.BUCKET, this.getBucketMeta(), 1));
@@ -31,6 +35,14 @@ public abstract class Fish extends SwimmingAnimal {
                     player.getInventory().decreaseCount(player.getInventory().getHeldItemIndex());
                 }
                 player.getInventory().addItem(Item.get(Item.BUCKET, this.getBucketMeta(), 1));
+                return true;
+            }
+        } else if (item.getId() == Item.NAME_TAG) {
+            if (item.hasCustomName()) {
+                this.setNameTag(item.getCustomName());
+                this.setNameTagVisible(true);
+
+                player.getInventory().decreaseCount(player.getInventory().getHeldItemIndex());
                 return true;
             }
         }

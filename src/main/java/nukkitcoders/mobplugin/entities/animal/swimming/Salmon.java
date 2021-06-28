@@ -5,6 +5,9 @@ import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import nukkitcoders.mobplugin.utils.Utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Salmon extends Fish {
 
     public static final int NETWORK_ID = 109;
@@ -36,11 +39,22 @@ public class Salmon extends Fish {
     @Override
     public void initEntity() {
         super.initEntity();
-        this.setMaxHealth(3);
+        this.setMaxHealth(6);
     }
 
     @Override
     public Item[] getDrops() {
-        return new Item[]{Item.get(Item.RAW_SALMON, 0, 1), Item.get(Item.BONE, 0, Utils.rand(0, 2))};
+        List<Item> drops = new ArrayList<>();
+        drops.add(Item.get(this.isOnFire() ? Item.COOKED_SALMON : Item.RAW_SALMON, 0, 1));
+        if (Utils.rand(1, 4) == 1) {
+            drops.add(Item.get(Item.BONE, 0, Utils.rand(1, 2)));
+        }
+
+        return drops.toArray(new Item[0]);
     }
+
+    public int getKillExperience() {
+        return Utils.rand(1, 3);
+    }
+
 }

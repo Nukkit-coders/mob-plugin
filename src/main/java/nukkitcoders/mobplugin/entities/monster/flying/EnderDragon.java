@@ -94,6 +94,11 @@ public class EnderDragon extends FlyingMonster implements Boss {
     }
 
     @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
+    @Override
     public String getName() {
         return this.hasCustomName() ? this.getNameTag() : "Ender Dragon";
     }

@@ -14,8 +14,10 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.MoveEntityAbsolutePacket;
 import cn.nukkit.network.protocol.SetEntityMotionPacket;
 import nukkitcoders.mobplugin.MobPlugin;
+import nukkitcoders.mobplugin.entities.animal.swimming.Axolotl;
 import nukkitcoders.mobplugin.entities.monster.Monster;
 import nukkitcoders.mobplugin.entities.monster.flying.EnderDragon;
+import nukkitcoders.mobplugin.entities.monster.walking.Goat;
 import nukkitcoders.mobplugin.utils.Utils;
 import org.apache.commons.math3.util.FastMath;
 
@@ -33,6 +35,7 @@ public abstract class BaseEntity extends EntityCreature implements EntityAgeable
     private boolean movement = true;
     private boolean friendly = false;
     protected int attackDelay = 0;
+    protected int jumpDelay = 0;
     public Item[] armor;
 
     public BaseEntity(FullChunk chunk, CompoundTag nbt) {
@@ -150,7 +153,7 @@ public abstract class BaseEntity extends EntityCreature implements EntityAgeable
     }
 
     public boolean targetOption(EntityCreature creature, double distance) {
-        if (this instanceof Monster) {
+        if (this instanceof Monster && !(this instanceof Goat)) {
             if (creature instanceof Player) {
                 Player player = (Player) creature;
                 return !player.closed && player.spawned && player.isAlive() && (player.isSurvival() || player.isAdventure()) && distance <= 100;
@@ -172,8 +175,12 @@ public abstract class BaseEntity extends EntityCreature implements EntityAgeable
             }
         }
 
-        if (this instanceof Monster && this.attackDelay < 200) {
+        if (this instanceof Monster && this.attackDelay < 800) {
             this.attackDelay++;
+        }
+
+        if(this instanceof Monster && this.jumpDelay < 600) {
+            this.jumpDelay++;
         }
 
         return true;

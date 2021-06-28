@@ -25,12 +25,18 @@ public class Squid extends SwimmingAnimal {
 
     @Override
     public float getWidth() {
-        return 0.8f;
+        if (this.isBaby()) {
+            return 0.475f;
+        }
+        return 0.95f;
     }
 
     @Override
     public float getHeight() {
-        return 0.8f;
+        if (this.isBaby()) {
+            return 0.475f;
+        }
+        return 0.95f;
     }
 
     @Override
@@ -42,17 +48,24 @@ public class Squid extends SwimmingAnimal {
 
     @Override
     public Item[] getDrops() {
-        return new Item[]{new ItemDye(DyeColor.BLACK.getDyeData(), Utils.rand(1, 3))};
+        if (!this.isBaby()) {
+            return new Item[]{new ItemDye(DyeColor.BLACK.getDyeData(), Utils.rand(1, 3))};
+        }
+
+        return new Item[]{};
     }
 
     @Override
     public int getKillExperience() {
-        return Utils.rand(1, 3);
+        if (!this.isBaby()) {
+            return Utils.rand(1, 3);
+        }
+        return 0;
     }
 
     @Override
     public boolean attack(EntityDamageEvent source) {
-        boolean att =  super.attack(source);
+        boolean att = super.attack(source);
         if (source.isCancelled()) {
             return att;
         }
@@ -61,7 +74,7 @@ public class Squid extends SwimmingAnimal {
         pk0.eid = this.getId();
         pk0.event = EntityEventPacket.SQUID_INK_CLOUD;
 
-        this.level.addChunkPacket(this.getChunkX() >> 4,this.getChunkZ() >> 4,pk0);
+        this.level.addChunkPacket(this.getChunkX() >> 4, this.getChunkZ() >> 4, pk0);
         return att;
     }
 }

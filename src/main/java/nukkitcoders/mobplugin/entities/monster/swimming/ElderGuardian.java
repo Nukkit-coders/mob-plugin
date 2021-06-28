@@ -55,6 +55,11 @@ public class ElderGuardian extends SwimmingMonster {
     }
 
     @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
+    @Override
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
 

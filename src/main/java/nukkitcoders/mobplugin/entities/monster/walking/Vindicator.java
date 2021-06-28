@@ -77,6 +77,11 @@ public class Vindicator extends WalkingMonster {
     }
 
     @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
+    @Override
     public Item[] getDrops() {
         return new Item[]{Item.get(Item.EMERALD, 0, Utils.rand(0, 1))};
     }

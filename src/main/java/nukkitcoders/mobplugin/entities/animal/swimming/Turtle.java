@@ -1,5 +1,8 @@
 package nukkitcoders.mobplugin.entities.animal.swimming;
 
+import cn.nukkit.Player;
+import cn.nukkit.entity.EntityCreature;
+import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import nukkitcoders.mobplugin.entities.animal.SwimmingAnimal;

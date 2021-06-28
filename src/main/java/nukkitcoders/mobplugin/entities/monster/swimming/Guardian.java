@@ -100,6 +100,11 @@ public class Guardian extends SwimmingMonster {
     }
 
     @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
+    @Override
     public boolean entityBaseTick(int tickDiff) {
         if (getServer().getDifficulty() == 0) {
             this.close();

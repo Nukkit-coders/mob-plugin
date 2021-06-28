@@ -108,6 +108,11 @@ public class Slime extends JumpingMonster {
     }
 
     @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
+    @Override
     public Item[] getDrops() {
         if (this.size == SIZE_BIG) {
             CreatureSpawnEvent ev = new CreatureSpawnEvent(NETWORK_ID, this, this.namedTag, CreatureSpawnEvent.SpawnReason.SLIME_SPLIT);

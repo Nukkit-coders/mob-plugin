@@ -68,6 +68,11 @@ public class Husk extends WalkingMonster implements EntityAgeable, EntitySmite {
     }
 
     @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
+    @Override
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
 

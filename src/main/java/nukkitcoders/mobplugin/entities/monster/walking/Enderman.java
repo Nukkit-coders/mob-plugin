@@ -77,6 +77,11 @@ public class Enderman extends WalkingMonster {
     }
 
     @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
+    @Override
     public boolean attack(EntityDamageEvent ev) {
         super.attack(ev);
         if (!ev.isCancelled()) {

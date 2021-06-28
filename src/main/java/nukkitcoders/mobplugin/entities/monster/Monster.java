@@ -9,6 +9,8 @@ public interface Monster {
 
     void attackEntity(Entity player);
 
+    void jumpEntity(Entity player);
+
     float getDamage();
 
     float getDamage(Integer difficulty);

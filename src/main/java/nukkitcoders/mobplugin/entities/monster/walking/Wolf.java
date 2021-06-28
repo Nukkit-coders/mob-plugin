@@ -165,6 +165,11 @@ public class Wolf extends TameableMonster {
     }
 
     @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
+    @Override
     public int getKillExperience() {
         return this.isBaby() ? 0 : 3;
     }

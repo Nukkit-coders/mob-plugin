@@ -34,17 +34,17 @@ public class Chicken extends WalkingAnimal {
     @Override
     public float getWidth() {
         if (this.isBaby()) {
-            return 0.2f;
+            return 0.3f;
         }
-        return 0.4f;
+        return 0.6f;
     }
 
     @Override
     public float getHeight() {
         if (this.isBaby()) {
-            return 0.35f;
+            return 0.4f;
         }
-        return 0.7f;
+        return 0.8f;
     }
 
     @Override
@@ -85,9 +85,9 @@ public class Chicken extends WalkingAnimal {
             int id = player.getInventory().getItemInHand().getId();
             return player.isAlive() && !player.closed
                     && (id == Item.SEEDS
-                            || id == Item.BEETROOT_SEEDS
-                            || id == Item.MELON_SEEDS
-                            || id == Item.PUMPKIN_SEEDS)
+                    || id == Item.BEETROOT_SEEDS
+                    || id == Item.MELON_SEEDS
+                    || id == Item.PUMPKIN_SEEDS)
                     && distance <= 49;
         }
         return false;
@@ -95,25 +95,12 @@ public class Chicken extends WalkingAnimal {
 
     @Override
     public boolean onInteract(Player player, Item item, Vector3 clickedPos) {
-        if (item.getId() == Item.SEEDS && !this.isBaby()) {
-            player.getInventory().decreaseCount(player.getInventory().getHeldItemIndex());
+        if ((item.getId() == Item.SEEDS || item.getId() == Item.BEETROOT_SEEDS || item.getId() == Item.MELON_SEEDS || item.getId() == Item.PUMPKIN_SEEDS) && !this.isBaby()) {
+            if (!player.isCreative() || !player.isSpectator()) {
+                player.getInventory().decreaseCount(player.getInventory().getHeldItemIndex());
+            }
             this.level.addSound(this, Sound.RANDOM_EAT);
-            this.level.addParticle(new ItemBreakParticle(this.add(Utils.rand(-0.5, 0.5), this.getMountedYOffset(), Utils.rand(-0.5, 0.5)), Item.get(Item.SEEDS)));
-            this.setInLove();
-        } else if (item.getId() == Item.BEETROOT_SEEDS && !this.isBaby()) {
-            player.getInventory().decreaseCount(player.getInventory().getHeldItemIndex());
-            this.level.addSound(this, Sound.RANDOM_EAT);
-            this.level.addParticle(new ItemBreakParticle(this.add(Utils.rand(-0.5, 0.5), this.getMountedYOffset(), Utils.rand(-0.5, 0.5)), Item.get(Item.BEETROOT_SEEDS)));
-            this.setInLove();
-        } else if (item.getId() == Item.MELON_SEEDS && !this.isBaby()) {
-            player.getInventory().decreaseCount(player.getInventory().getHeldItemIndex());
-            this.level.addSound(this, Sound.RANDOM_EAT);
-            this.level.addParticle(new ItemBreakParticle(this.add(Utils.rand(-0.5, 0.5), this.getMountedYOffset(), Utils.rand(-0.5, 0.5)), Item.get(Item.MELON_SEEDS)));
-            this.setInLove();
-        } else if (item.getId() == Item.PUMPKIN_SEEDS && !this.isBaby()) {
-            player.getInventory().decreaseCount(player.getInventory().getHeldItemIndex());
-            this.level.addSound(this, Sound.RANDOM_EAT);
-            this.level.addParticle(new ItemBreakParticle(this.add(Utils.rand(-0.5, 0.5), this.getMountedYOffset(), Utils.rand(-0.5, 0.5)), Item.get(Item.PUMPKIN_SEEDS)));
+            this.level.addParticle(new ItemBreakParticle(this.add(Utils.rand(-0.5, 0.5), this.getMountedYOffset(), Utils.rand(-0.5, 0.5)), item));
             this.setInLove();
         }
         return super.onInteract(player, item, clickedPos);
@@ -130,10 +117,7 @@ public class Chicken extends WalkingAnimal {
         List<Item> drops = new ArrayList<>();
 
         if (!this.isBaby()) {
-            for (int i = 0; i < Utils.rand(0, 2); i++) {
-                drops.add(Item.get(Item.FEATHER, 0, 1));
-            }
-
+            drops.add(Item.get(Item.FEATHER, 0, Utils.rand(0, 2)));
             drops.add(Item.get(this.isOnFire() ? Item.COOKED_CHICKEN : Item.RAW_CHICKEN, 0, 1));
         }
 
@@ -142,7 +126,13 @@ public class Chicken extends WalkingAnimal {
 
     @Override
     public int getKillExperience() {
-        return this.isBaby() ? 0 : Utils.rand(1, 3);
+        if (!this.isBaby()) {
+            if (this.isChickenJockey) {
+                return 10;
+            }
+            return Utils.rand(1, 3);
+        }
+        return 0;
     }
 
     @Override

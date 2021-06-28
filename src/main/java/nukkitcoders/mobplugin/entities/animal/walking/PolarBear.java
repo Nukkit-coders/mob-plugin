@@ -59,7 +59,7 @@ public class PolarBear extends WalkingMonster {
     @Override
     public void initEntity() {
         super.initEntity();
-        this.setDamage(new float[] { 0, 4, 6, 9 });
+        this.setDamage(new float[]{0, 4, 6, 9});
         this.setMaxHealth(30);
         if (this.namedTag.contains("Angry")) {
             this.angry = this.namedTag.getInt("Angry");
@@ -99,6 +99,11 @@ public class PolarBear extends WalkingMonster {
         }
     }
 
+    @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
     public boolean isAngry() {
         return this.angry > 0;
     }
@@ -125,8 +130,12 @@ public class PolarBear extends WalkingMonster {
         List<Item> drops = new ArrayList<>();
 
         if (!this.isBaby()) {
-            drops.add(Item.get(Item.RAW_FISH, 0, Utils.rand(0, 2)));
-            drops.add(Item.get(Item.RAW_SALMON, 0, Utils.rand(0, 2)));
+            if (Utils.rand(1, 25) == 1) {
+                drops.add(Item.get(Item.RAW_FISH, 0, Utils.rand(0, 2)));
+            }
+            if (Utils.rand(1, 75) == 1) {
+                drops.add(Item.get(Item.RAW_SALMON, 0, Utils.rand(0, 2)));
+            }
         }
 
         return drops.toArray(new Item[0]);

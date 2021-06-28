@@ -3,10 +3,12 @@ package nukkitcoders.mobplugin.entities.monster;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.data.ByteEntityData;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import nukkitcoders.mobplugin.entities.WalkingEntity;
+import nukkitcoders.mobplugin.entities.monster.walking.Goat;
 import nukkitcoders.mobplugin.utils.Utils;
 
 public abstract class WalkingMonster extends WalkingEntity implements Monster {
@@ -22,6 +24,8 @@ public abstract class WalkingMonster extends WalkingEntity implements Monster {
     public WalkingMonster(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
     }
+
+
 
     @Override
     public void setFollowTarget(Entity target) {
@@ -132,6 +136,10 @@ public abstract class WalkingMonster extends WalkingEntity implements Monster {
         }
     }
 
+    public void setRamming(int b) {
+        this.setDataProperty(new ByteEntityData(DATA_FLAG_RAM_ATTACK, b));
+    }
+
     @Override
     public boolean onUpdate(int currentTick) {
         if (this.closed) {
@@ -155,11 +163,22 @@ public abstract class WalkingMonster extends WalkingEntity implements Monster {
         this.lastUpdate = currentTick;
         this.entityBaseTick(tickDiff);
 
+
         Vector3 target = this.updateMove(tickDiff);
+
         if (target instanceof Entity && (!this.isFriendly() || !(target instanceof Player) || ((Entity) target).getId() == this.isAngryTo)) {
             Entity entity = (Entity) target;
+
             if (!entity.closed && (target != this.followTarget || this.canAttack)) {
-                this.attackEntity(entity);
+                if(this instanceof Goat) {
+                    if(this.attackDelay > 360) {
+                        this.attackEntity(entity);
+                    } if(this.jumpDelay > 60) {
+                        this.jumpEntity(entity); // not working
+                    }
+                } else {
+                    this.attackEntity(entity);
+                }
             }
         }
         return true;

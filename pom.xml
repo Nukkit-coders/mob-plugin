@@ -56,16 +56,15 @@
     </build>
     <repositories>
         <repository>
-            <id>nukkitx</id>
-            <url>https://repo.nukkitx.com/main/</url>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
     <dependencies>
         <dependency>
-            <groupId>cn.nukkit</groupId>
-            <artifactId>nukkit</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>provided</scope>
+            <groupId>com.github.Superzock3003</groupId>
+            <artifactId>PowerNukkit</artifactId>
+            <version>v1.17-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

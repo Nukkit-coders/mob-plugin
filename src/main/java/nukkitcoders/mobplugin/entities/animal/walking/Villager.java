@@ -33,9 +33,9 @@ public class Villager extends WalkingAnimal {
     @Override
     public float getHeight() {
         if (this.isBaby()) {
-            return 0.975f;
+            return 0.9f;
         }
-        return 1.95f;
+        return 1.9f;
     }
 
     @Override

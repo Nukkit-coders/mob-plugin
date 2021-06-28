@@ -1,6 +1,7 @@
 package nukkitcoders.mobplugin.entities.animal;
 
 import cn.nukkit.Player;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
@@ -9,6 +10,8 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import nukkitcoders.mobplugin.entities.WalkingEntity;
 import nukkitcoders.mobplugin.utils.Utils;
+
+import java.lang.reflect.InvocationTargetException;
 
 public abstract class WalkingAnimal extends WalkingEntity implements Animal {
 
@@ -38,12 +41,40 @@ public abstract class WalkingAnimal extends WalkingEntity implements Animal {
             this.inLoveTicks -= tickDiff;
             if (this.age % 20 == 0) {
                 for (int i = 0; i < 3; i++) {
-                    this.level.addParticle(new HeartParticle(this.add(Utils.rand(-1.0,1.0),this.getMountedYOffset()+ Utils.rand(-1.0,1.0),Utils.rand(-1.0,1.0))));
+                    this.level.addParticle(new HeartParticle(this.add(Utils.rand(-1.0, 1.0), this.getMountedYOffset() + Utils.rand(-1.0, 1.0), Utils.rand(-1.0, 1.0))));
+                }
+                for (Entity entity : this.getLevel().getNearbyEntities(this.getBoundingBox().grow(10, 5, 10), this)) {
+                    if (!entity.isClosed() && this.getClass().isInstance(entity)) {
+                        WalkingAnimal animal = (WalkingAnimal) entity;
+                        if (animal.isInLove()) {
+                            this.inLoveTicks = 0;
+                            animal.inLoveTicks = 0;
+                            this.spawnBaby();
+                            break;
+                        }
+                    }
                 }
             }
         }
 
         return hasUpdate;
+    }
+
+    protected void spawnBaby() {
+        try {
+            WalkingAnimal animal = this.getClass().getConstructor(FullChunk.class, CompoundTag.class).newInstance(this.getChunk(), Entity.getDefaultNBT(this));
+            animal.setBaby(true);
+            animal.spawnToAll();
+            this.getLevel().dropExpOrb(this, Utils.rand(1, 7));
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

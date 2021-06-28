@@ -120,6 +120,11 @@ public class Stray extends WalkingMonster implements EntitySmite {
     }
 
     @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
+    @Override
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
 

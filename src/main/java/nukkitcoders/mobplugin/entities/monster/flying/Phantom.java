@@ -81,6 +81,11 @@ public class Phantom extends FlyingMonster implements EntitySmite {
     }
 
     @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
+    @Override
     public Item[] getDrops() {
         return new Item[]{Item.get(Item.PHANTOM_MEMBRANE, 0, Utils.rand(0, 1))};
     }

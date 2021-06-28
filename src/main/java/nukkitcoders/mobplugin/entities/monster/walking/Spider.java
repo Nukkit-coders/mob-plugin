@@ -131,7 +131,12 @@ public class Spider extends WalkingMonster implements EntityArthropod {
             }
         }
     }
-    
+
+    @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
     @Override
     public boolean attack(EntityDamageEvent ev) {
         super.attack(ev);

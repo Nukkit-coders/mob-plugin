@@ -110,6 +110,11 @@ public class SnowGolem extends WalkingMonster {
     }
 
     @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
+    @Override
     public Item[] getDrops() {
         List<Item> drops = new ArrayList<>();
 

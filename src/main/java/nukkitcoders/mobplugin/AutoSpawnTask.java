@@ -89,7 +89,9 @@ public class AutoSpawnTask implements Runnable {
         animalSpawners.add(new PufferfishSpawner(this));
         animalSpawners.add(new RabbitSpawner(this));
         animalSpawners.add(new SalmonSpawner(this));
+        animalSpawners.add(new AxolotlSpawner(this));
         animalSpawners.add(new SheepSpawner(this));
+        animalSpawners.add(new GoatSpawner(this));
         monsterSpawners.add(new SkeletonSpawner(this));
         monsterSpawners.add(new SlimeSpawner(this));
         monsterSpawners.add(new SpiderSpawner(this));
@@ -114,6 +116,7 @@ public class AutoSpawnTask implements Runnable {
         maxSpawns.put(Chicken.NETWORK_ID, this.pluginConfig.getInt("autospawn.chicken"));
         maxSpawns.put(Cod.NETWORK_ID, this.pluginConfig.getInt("autospawn.cod"));
         maxSpawns.put(Cow.NETWORK_ID, this.pluginConfig.getInt("autospawn.cow"));
+        maxSpawns.put(Goat.NETWORK_ID, this.pluginConfig.getInt("autospawn.goat"));
         maxSpawns.put(Creeper.NETWORK_ID, this.pluginConfig.getInt("autospawn.creeper"));
         maxSpawns.put(Dolphin.NETWORK_ID, this.pluginConfig.getInt("autospawn.dolphin"));
         maxSpawns.put(Donkey.NETWORK_ID, this.pluginConfig.getInt("autospawn.donkey"));
@@ -126,6 +129,8 @@ public class AutoSpawnTask implements Runnable {
         maxSpawns.put(Ocelot.NETWORK_ID, this.pluginConfig.getInt("autospawn.ocelot"));
         maxSpawns.put(Parrot.NETWORK_ID, this.pluginConfig.getInt("autospawn.parrot"));
         maxSpawns.put(Pig.NETWORK_ID, this.pluginConfig.getInt("autospawn.pig"));
+        maxSpawns.put(Axolotl.NETWORK_ID, this.pluginConfig.getInt("autospawn.axolotl"));
+        maxSpawns.put(GlowSquid.NETWORK_ID, this.pluginConfig.getInt("autospawn.glowsquid"));
         maxSpawns.put(PolarBear.NETWORK_ID, this.pluginConfig.getInt("autospawn.polarbear"));
         maxSpawns.put(Pufferfish.NETWORK_ID, this.pluginConfig.getInt("autospawn.pufferfish"));
         maxSpawns.put(Rabbit.NETWORK_ID, this.pluginConfig.getInt("autospawn.rabbit"));

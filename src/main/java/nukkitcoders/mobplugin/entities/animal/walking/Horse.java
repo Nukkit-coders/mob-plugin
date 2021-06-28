@@ -3,6 +3,7 @@ package nukkitcoders.mobplugin.entities.animal.walking;
 import cn.nukkit.Player;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.entity.data.IntEntityData;
+import cn.nukkit.event.EventHandler;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
@@ -36,9 +37,9 @@ public class Horse extends HorseBase {
     @Override
     public float getWidth() {
         if (this.isBaby()) {
-            return 0.6982f;
+            return 0.7f;
         }
-        return 1.3965f;
+        return 1.4f;
     }
 
     @Override
@@ -52,7 +53,7 @@ public class Horse extends HorseBase {
     @Override
     public void initEntity() {
         super.initEntity();
-        this.setMaxHealth(15);
+        this.setMaxHealth(Utils.rand(15, 30));
 
         if (this.namedTag.contains("Variant")) {
             this.variant = this.namedTag.getInt("Variant");

@@ -92,4 +92,9 @@ public class Ravager extends WalkingMonster {
             player.attack(new EntityDamageByEntityEvent(this, player, EntityDamageEvent.DamageCause.ENTITY_ATTACK, damage));
         }
     }
+
+    @Override
+    public void jumpEntity(Entity player) {
+
+    }
 }

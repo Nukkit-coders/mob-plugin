@@ -128,6 +128,11 @@ public class Wither extends FlyingMonster implements Boss, EntitySmite {
     }
 
     @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
+    @Override
     public Item[] getDrops() {
         return new Item[]{Item.get(Item.NETHER_STAR, 0, 1)};
     }

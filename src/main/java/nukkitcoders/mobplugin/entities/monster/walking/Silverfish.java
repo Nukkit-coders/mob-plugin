@@ -73,6 +73,11 @@ public class Silverfish extends WalkingMonster implements EntityArthropod {
     }
 
     @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
+    @Override
     public int getKillExperience() {
         return 5;
     }

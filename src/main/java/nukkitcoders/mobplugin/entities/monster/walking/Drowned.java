@@ -107,7 +107,12 @@ public class Drowned extends WalkingMonster implements EntitySmite {
             }
         }
     }
-    
+
+    @Override
+    public void jumpEntity(Entity player) {
+
+    }
+
     @Override
     public boolean entityBaseTick(int tickDiff) {
         if (getServer().getDifficulty() == 0) {
