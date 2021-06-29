@@ -14,6 +14,7 @@ import nukkitcoders.mobplugin.RouteFinderThreadPool;
 import nukkitcoders.mobplugin.entities.animal.Animal;
 import nukkitcoders.mobplugin.entities.animal.walking.Llama;
 import nukkitcoders.mobplugin.entities.animal.walking.Pig;
+import nukkitcoders.mobplugin.entities.animal.walking.SkeletonHorse;
 import nukkitcoders.mobplugin.entities.monster.walking.Drowned;
 import nukkitcoders.mobplugin.route.RouteFinder;
 import nukkitcoders.mobplugin.runnable.RouteFinderSearchTask;
@@ -48,8 +49,8 @@ public abstract class WalkingEntity extends BaseEntity {
 
         double near = Integer.MAX_VALUE;
 
-        for (Entity entity : this.getViewers().values()) {
-            if (entity == this || !(entity instanceof EntityCreature) || entity instanceof Animal) {
+        for (Entity entity : this.getLevel().getEntities()) {
+            if (entity == this || !(entity instanceof EntityCreature) || !this.canTarget(entity)) {
                 continue;
             }
 
@@ -68,10 +69,9 @@ public abstract class WalkingEntity extends BaseEntity {
             this.moveTime = 0;
             this.followTarget = creature;
             if (this.route == null && this.passengers.isEmpty()) this.target = creature;
-
         }
 
-        if (this.followTarget instanceof EntityCreature && !((EntityCreature) this.followTarget).closed && this.followTarget.isAlive() && this.targetOption((EntityCreature) this.followTarget, this.distanceSquared(this.followTarget)) && this.target != null) {
+        if (this.followTarget instanceof EntityCreature && !this.followTarget.closed && this.followTarget.isAlive() && this.targetOption((EntityCreature) this.followTarget, this.distanceSquared(this.followTarget)) && this.target != null) {
             return;
         }
 
@@ -100,8 +100,8 @@ public abstract class WalkingEntity extends BaseEntity {
     protected boolean checkJump(double dx, double dz) {
         if (this.motionY == this.getGravity() * 2) {
             int b = level.getBlockIdAt(NukkitMath.floorDouble(this.x), (int) this.y, NukkitMath.floorDouble(this.z));
-            return false/*b == BlockID.WATER || b == BlockID.STILL_WATER*/;
-        } else {
+            return b == BlockID.WATER || b == BlockID.STILL_WATER;
+        } else if (!(this instanceof SkeletonHorse)) {
             int b = level.getBlockIdAt(NukkitMath.floorDouble(this.x), (int) (this.y + 0.8), NukkitMath.floorDouble(this.z));
             if (b == BlockID.WATER || b == BlockID.STILL_WATER) {
                 if (!this.isDrowned || this.target == null) {
@@ -157,8 +157,9 @@ public abstract class WalkingEntity extends BaseEntity {
                 return null;
             }
 
-            boolean inWater = getLevelBlock().getId() == 8 || getLevelBlock().getId() == 9;
-            int downFaceID = getLevelBlock().getSide(BlockFace.DOWN).getId();
+            Block blockInEntityLocation = getLevelBlock();
+            boolean inWater = blockInEntityLocation.getId() == 8 || blockInEntityLocation.getId() == 9;
+            int downFaceID = blockInEntityLocation.getSide(BlockFace.DOWN).getId();
             if(inWater && (downFaceID == 0 || downFaceID == 8 || downFaceID == 9 || downFaceID == BlockID.LAVA || downFaceID == BlockID.STILL_LAVA)) onGround = false;
             if(downFaceID == 0) onGround = false;
             if (this.followTarget != null && !this.followTarget.closed && this.followTarget.isAlive() && this.target!=null) {
