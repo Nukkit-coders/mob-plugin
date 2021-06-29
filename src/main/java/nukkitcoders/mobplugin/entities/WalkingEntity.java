@@ -174,8 +174,9 @@ public abstract class WalkingEntity extends BaseEntity {
                 } else {
                     if (blockInEntityLocation.getId() == 8) {
                         BlockWater blockWater = (BlockWater) blockInEntityLocation;
-                        motionX = blockWater.getFlowVector().getX() * FLOW_MULTIPLIER;
-                        motionZ = blockWater.getFlowVector().getZ() * FLOW_MULTIPLIER;
+                        Vector3 flowVector = blockWater.getFlowVector();
+                        motionX = flowVector.getX() * FLOW_MULTIPLIER;
+                        motionZ = flowVector.getZ() * FLOW_MULTIPLIER;
                     } else if(blockInEntityLocation.getId() == 9) {
                         this.motionX = this.getSpeed() * moveMultiplier * 0.05 * (x / diff);
                         this.motionZ = this.getSpeed() * moveMultiplier * 0.05 * (z / diff);
@@ -202,8 +203,9 @@ public abstract class WalkingEntity extends BaseEntity {
                 } else {
                     if (blockInEntityLocation.getId() == 8) {
                         BlockWater blockWater = (BlockWater) blockInEntityLocation;
-                        motionX = blockWater.getFlowVector().getX() * FLOW_MULTIPLIER;
-                        motionZ = blockWater.getFlowVector().getZ() * FLOW_MULTIPLIER;
+                        Vector3 flowVector = blockWater.getFlowVector();
+                        motionX = flowVector.getX() * FLOW_MULTIPLIER;
+                        motionZ = flowVector.getZ() * FLOW_MULTIPLIER;
                     } else if(blockInEntityLocation.getId() == 9) {
                         this.motionX = this.getSpeed() * moveMultiplier * 0.05 * (x / diff);
                         this.motionZ = this.getSpeed() * moveMultiplier * 0.05 * (z / diff);
