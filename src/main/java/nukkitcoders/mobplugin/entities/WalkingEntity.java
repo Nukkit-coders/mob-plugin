@@ -23,7 +23,7 @@ import org.apache.commons.math3.util.FastMath;
 
 public abstract class WalkingEntity extends BaseEntity {
 
-    private static final double FLOW_MULTIPLIER = 0.3;
+    private static final double FLOW_MULTIPLIER = .1;
     protected RouteFinder route = null;
 
     protected final boolean isDrowned = this instanceof Drowned;
@@ -160,8 +160,8 @@ public abstract class WalkingEntity extends BaseEntity {
             Block blockInEntityLocation = getLevelBlock();
             boolean inWater = blockInEntityLocation.getId() == 8 || blockInEntityLocation.getId() == 9;
             int downFaceID = blockInEntityLocation.getSide(BlockFace.DOWN).getId();
-            if(inWater && (downFaceID == 0 || downFaceID == 8 || downFaceID == 9 || downFaceID == BlockID.LAVA || downFaceID == BlockID.STILL_LAVA)) onGround = false;
-            if(downFaceID == 0) onGround = false;
+            if(inWater && (downFaceID == 0 || downFaceID == 8 || downFaceID == 9 || downFaceID == BlockID.LAVA || downFaceID == BlockID.STILL_LAVA || downFaceID == BlockID.SIGN_POST || downFaceID == BlockID.WALL_SIGN)) onGround = false;
+            if(downFaceID == 0 || downFaceID == BlockID.SIGN_POST || downFaceID == BlockID.WALL_SIGN) onGround = false;
             if (this.followTarget != null && !this.followTarget.closed && this.followTarget.isAlive() && this.target!=null) {
 
                 double x = this.target.x - this.x;
