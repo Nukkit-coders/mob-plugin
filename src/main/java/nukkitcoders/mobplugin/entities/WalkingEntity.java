@@ -50,7 +50,7 @@ public abstract class WalkingEntity extends BaseEntity {
         double near = Integer.MAX_VALUE;
 
         for (Entity entity : this.getLevel().getEntities()) {
-            if (entity == this || !(entity instanceof EntityCreature) || !this.canTarget(entity)) {
+            if (entity == null || entity == this || !(entity instanceof EntityCreature) || !this.canTarget(entity)) {
                 continue;
             }
 
