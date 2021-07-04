@@ -20,6 +20,7 @@ import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.level.particle.HugeExplodeSeedParticle;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.network.protocol.LevelSoundEventPacket;
 import nukkitcoders.mobplugin.entities.monster.WalkingMonster;
 import nukkitcoders.mobplugin.route.WalkerRouteFinder;
 import nukkitcoders.mobplugin.utils.Utils;
@@ -136,7 +137,7 @@ public class Creeper extends WalkingMonster implements EntityExplosive {
     public boolean onInteract(Player player, Item item, Vector3 clickedPos) {
         if (item.getId() == Item.FLINT_AND_STEEL && !exploding) {
             this.exploding = true;
-            this.level.addSound(this, Sound.FIRE_IGNITE);
+            level.addLevelSoundEvent(this, LevelSoundEventPacket.SOUND_IGNITE);
             this.setDataFlag(DATA_FLAGS, DATA_FLAG_IGNITED, true);
             this.level.addSound(this, Sound.RANDOM_FUSE);
             level.getServer().getScheduler().scheduleDelayedTask(null, this::explode, 30);

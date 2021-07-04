@@ -9,6 +9,7 @@ import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.level.particle.ItemBreakParticle;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.network.protocol.LevelSoundEventPacket;
 import nukkitcoders.mobplugin.entities.animal.WalkingAnimal;
 import nukkitcoders.mobplugin.utils.Utils;
 
@@ -72,7 +73,7 @@ public class Chicken extends WalkingAnimal {
             EggLayTime -= tickDiff;
         } else {
             this.level.dropItem(this, Item.get(Item.EGG, 0, 1));
-            this.level.addSound(this, Sound.MOB_CHICKEN_PLOP);
+            this.level.addLevelSoundEvent(this, LevelSoundEventPacket.SOUND_PLOP);
             this.EggLayTime = this.getRandomEggLayTime();
         }
         return hasUpdate;
