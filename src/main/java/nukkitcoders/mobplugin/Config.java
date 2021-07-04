@@ -8,6 +8,8 @@ public class Config {
     public int despawnTicks;
     public int spawnerRange;
     public int endEndermanSpawnRate;
+    public int maxSpawnerSpawnCount;
+    public int minSpawnerSpawnCount;
     public boolean noXpOrbs;
     public boolean noSpawnEggWasting;
     public boolean killOnDespawn;
@@ -20,10 +22,13 @@ public class Config {
     }
 
     boolean init(MobPlugin plugin) {
-        int ver = 15;
+        int ver = 16;
 
         if (pluginConfig.getInt("config-version") != ver) {
-            if (pluginConfig.getInt("config-version") == 14) {
+            if (pluginConfig.getInt("config-version") == 15) {
+                pluginConfig.set("other.minimum-spawner-count", 1);
+                pluginConfig.set("other.maximum-spawner-count", 4);
+            } else if (pluginConfig.getInt("config-version") == 14) {
                 pluginConfig.set("other.check-tamed-entity-attack", true);
             } else if (pluginConfig.getInt("config-version") == 13) {
                 pluginConfig.set("autospawn.piglin", 0);
@@ -81,6 +86,8 @@ public class Config {
         endEndermanSpawnRate = pluginConfig.getInt("other.end-enderman-spawning");
         spawnersEnabled = pluginConfig.getBoolean("other.spawners-enabled");
         checkTamedEntityAttack = pluginConfig.getBoolean("other.check-tamed-entity-attack");
+        maxSpawnerSpawnCount = pluginConfig.getInt("other.maximum-spawner-count");
+        minSpawnerSpawnCount = pluginConfig.getInt("other.minimum-spawner-count");
         return true;
     }
 }

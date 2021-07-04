@@ -1,15 +1,19 @@
 package nukkitcoders.mobplugin.entities.block;
 
 import cn.nukkit.Player;
+import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockID;
 import cn.nukkit.blockentity.BlockEntity;
 import cn.nukkit.blockentity.BlockEntitySpawnable;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.entity.CreatureSpawnEvent;
+import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.level.format.FullChunk;
+import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.ShortTag;
+import cn.nukkit.utils.Config;
 import nukkitcoders.mobplugin.MobPlugin;
 import nukkitcoders.mobplugin.entities.BaseEntity;
 import nukkitcoders.mobplugin.entities.monster.Monster;
@@ -29,6 +33,9 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
     private int minSpawnDelay;
     private int maxSpawnDelay;
 
+    private int minSpawnCount;
+    private int maxSpawnCount;
+
     public static final String TAG_ID = "id";
     public static final String TAG_X = "x";
     public static final String TAG_Y = "y";
@@ -39,8 +46,12 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
     public static final String TAG_MAX_SPAWN_DELAY = "MaxSpawnDelay";
     public static final String TAG_MAX_NEARBY_ENTITIES = "MaxNearbyEntities";
     public static final String TAG_REQUIRED_PLAYER_RANGE = "RequiredPlayerRange";
+    public static final String TAG_MINIMUM_SPAWN_COUNT = "MinimumSpawnerCount";
+    public static final String TAG_MAXIMUM_SPAWN_COUNT = "MaximumSpawnerCount";
 
     public static final short SPAWN_RANGE = (short) MobPlugin.getInstance().config.spawnerRange;
+    public static final short MINIMUM_SPAWN_COUNT = (short) MobPlugin.getInstance().config.minSpawnerSpawnCount;
+    public static final short MAXIMUM_SPAWN_COUNT = (short) MobPlugin.getInstance().config.maxSpawnerSpawnCount;
     public static final short MIN_SPAWN_DELAY = 200;
     public static final short MAX_SPAWN_DELAY = 5000;
     public static final short MAX_NEARBY_ENTITIES = 20;
@@ -73,11 +84,21 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
             this.namedTag.putShort(TAG_REQUIRED_PLAYER_RANGE, REQUIRED_PLAYER_RANGE);
         }
 
+        if (!this.namedTag.contains(TAG_MINIMUM_SPAWN_COUNT) || !(this.namedTag.get(TAG_MINIMUM_SPAWN_COUNT) instanceof ShortTag)) {
+            this.namedTag.putShort(TAG_MINIMUM_SPAWN_COUNT, MINIMUM_SPAWN_COUNT);
+        }
+
+        if (!this.namedTag.contains(TAG_MAXIMUM_SPAWN_COUNT) || !(this.namedTag.get(TAG_MAXIMUM_SPAWN_COUNT) instanceof ShortTag)) {
+            this.namedTag.putShort(TAG_MAXIMUM_SPAWN_COUNT, MAXIMUM_SPAWN_COUNT);
+        }
+
         this.spawnRange = this.namedTag.getShort(TAG_SPAWN_RANGE);
         this.minSpawnDelay = this.namedTag.getShort(TAG_MIN_SPAWN_DELAY);
         this.maxSpawnDelay = this.namedTag.getShort(TAG_MAX_SPAWN_DELAY);
         this.maxNearbyEntities = this.namedTag.getShort(TAG_MAX_NEARBY_ENTITIES);
         this.requiredPlayerRange = this.namedTag.getShort(TAG_REQUIRED_PLAYER_RANGE);
+        this.minSpawnCount = this.namedTag.getShort(TAG_MINIMUM_SPAWN_COUNT);
+        this.maxSpawnCount = this.namedTag.getShort(TAG_MAXIMUM_SPAWN_COUNT);
 
         this.scheduleUpdate();
         super.initBlockEntity();
@@ -105,29 +126,41 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
                 }
             }
 
-            if (isValid && list.size() <= this.maxNearbyEntities) {
-                Position pos = new Position
-                        (
-                                this.x + Utils.rand(-this.spawnRange, this.spawnRange),
-                                this.y,
-                                this.z + Utils.rand(-this.spawnRange, this.spawnRange),
-                                this.level
-                        );
-
-                CreatureSpawnEvent ev = new CreatureSpawnEvent(this.entityId, pos, new CompoundTag(), CreatureSpawnEvent.SpawnReason.SPAWNER);
-                level.getServer().getPluginManager().callEvent(ev);
-
-                if (ev.isCancelled()) {
-                    return true;
-                }
-
-                Entity entity = Entity.createEntity(this.entityId, pos);
-                if (entity != null) {
-                    if (entity instanceof Monster && this.level.getBlockLightAt((int) x, (int) y, (int) z) > 3) {
-                        entity.close();
-                        return true;
+            int amountToSpawn = minSpawnCount + new NukkitRandom().nextBoundedInt(maxSpawnCount);
+            for(int i = 0; i < amountToSpawn; i++) {
+                if (isValid && list.size() <= this.maxNearbyEntities) {
+                    Position pos = new Position
+                            (
+                                    this.x + Utils.rand(-this.spawnRange, this.spawnRange),
+                                    this.y,
+                                    this.z + Utils.rand(-this.spawnRange, this.spawnRange),
+                                    this.level
+                            );
+                    Block block = level.getBlock(pos);
+                    //Mobs shouldn't spawn in walls and they shouldn't retry to
+                    if (
+                            block.getId() != 0 && block.getId() != BlockID.SIGN_POST && block.getId() != BlockID.WALL_SIGN &&
+                            block.getId() != BlockID.STILL_WATER && block.getId() != BlockID.WATER &&
+                            block.getId() != BlockID.LAVA && block.getId() != BlockID.STILL_LAVA
+                    ) {
+                        continue;
                     }
-                    entity.spawnToAll();
+
+                    CreatureSpawnEvent ev = new CreatureSpawnEvent(this.entityId, pos, new CompoundTag(), CreatureSpawnEvent.SpawnReason.SPAWNER);
+                    level.getServer().getPluginManager().callEvent(ev);
+
+                    if (ev.isCancelled()) {
+                        continue;
+                    }
+
+                    Entity entity = Entity.createEntity(this.entityId, pos);
+                    if (entity != null) {
+                        if (entity instanceof Monster && this.level.getBlockLightAt((int) x, (int) y, (int) z) > 3) {
+                            entity.close();
+                            continue;
+                        }
+                        entity.spawnToAll();
+                    }
                 }
             }
         }
@@ -145,6 +178,8 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
         this.namedTag.putShort(TAG_MAX_SPAWN_DELAY, this.maxSpawnDelay);
         this.namedTag.putShort(TAG_MAX_NEARBY_ENTITIES, this.maxNearbyEntities);
         this.namedTag.putShort(TAG_REQUIRED_PLAYER_RANGE, this.requiredPlayerRange);
+        this.namedTag.putShort(TAG_MINIMUM_SPAWN_COUNT, this.minSpawnCount);
+        this.namedTag.putShort(TAG_MAXIMUM_SPAWN_COUNT, this.maxSpawnCount);
     }
 
     @Override
@@ -203,4 +238,6 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
     public void setMaxNearbyEntities(int count) {
         this.maxNearbyEntities = count;
     }
+
+
 }
