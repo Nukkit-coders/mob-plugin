@@ -5,13 +5,11 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.level.particle.BubbleParticle;
-import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.NukkitMath;
 import cn.nukkit.math.Vector2;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import nukkitcoders.mobplugin.RouteFinderThreadPool;
-import nukkitcoders.mobplugin.entities.animal.Animal;
 import nukkitcoders.mobplugin.entities.animal.walking.Llama;
 import nukkitcoders.mobplugin.entities.animal.walking.Pig;
 import nukkitcoders.mobplugin.entities.animal.walking.SkeletonHorse;
@@ -157,13 +155,12 @@ public abstract class WalkingEntity extends BaseEntity {
                 return null;
             }
 
-            Block blockInEntityLocation = getLevelBlock();
-            boolean inWater = blockInEntityLocation.getId() == 8 || blockInEntityLocation.getId() == 9;
-            int downFaceID = blockInEntityLocation.getSide(BlockFace.DOWN).getId();
-            if(inWater && (downFaceID == 0 || downFaceID == 8 || downFaceID == 9 || downFaceID == BlockID.LAVA || downFaceID == BlockID.STILL_LAVA || downFaceID == BlockID.SIGN_POST || downFaceID == BlockID.WALL_SIGN)) onGround = false;
-            if(downFaceID == 0 || downFaceID == BlockID.SIGN_POST || downFaceID == BlockID.WALL_SIGN) onGround = false;
+            Block levelBlock = getLevelBlock();
+            boolean inWater = levelBlock.getId() == 8 || levelBlock.getId() == 9;
+            int downId = level.getBlockIdAt(getFloorX(), getFloorY() - 1, getFloorZ());
+            if (inWater && (downId == 0 || downId == 8 || downId == 9 || downId == BlockID.LAVA || downId == BlockID.STILL_LAVA || downId == BlockID.SIGN_POST || downId == BlockID.WALL_SIGN)) onGround = false;
+            if (downId == 0 || downId == BlockID.SIGN_POST || downId == BlockID.WALL_SIGN) onGround = false;
             if (this.followTarget != null && !this.followTarget.closed && this.followTarget.isAlive() && this.target!=null) {
-
                 double x = this.target.x - this.x;
                 double z = this.target.z - this.z;
 
@@ -172,12 +169,12 @@ public abstract class WalkingEntity extends BaseEntity {
                     this.motionX = 0;
                     this.motionZ = 0;
                 } else {
-                    if (blockInEntityLocation.getId() == 8) {
-                        BlockWater blockWater = (BlockWater) blockInEntityLocation;
+                    if (levelBlock.getId() == 8) {
+                        BlockWater blockWater = (BlockWater) levelBlock;
                         Vector3 flowVector = blockWater.getFlowVector();
                         motionX = flowVector.getX() * FLOW_MULTIPLIER;
                         motionZ = flowVector.getZ() * FLOW_MULTIPLIER;
-                    } else if(blockInEntityLocation.getId() == 9) {
+                    } else if (levelBlock.getId() == 9) {
                         this.motionX = this.getSpeed() * moveMultiplier * 0.05 * (x / diff);
                         this.motionZ = this.getSpeed() * moveMultiplier * 0.05 * (z / diff);
                         if (!this.isDrowned)
@@ -201,12 +198,12 @@ public abstract class WalkingEntity extends BaseEntity {
                     this.motionX = 0;
                     this.motionZ = 0;
                 } else {
-                    if (blockInEntityLocation.getId() == 8) {
-                        BlockWater blockWater = (BlockWater) blockInEntityLocation;
+                    if (levelBlock.getId() == 8) {
+                        BlockWater blockWater = (BlockWater) levelBlock;
                         Vector3 flowVector = blockWater.getFlowVector();
                         motionX = flowVector.getX() * FLOW_MULTIPLIER;
                         motionZ = flowVector.getZ() * FLOW_MULTIPLIER;
-                    } else if(blockInEntityLocation.getId() == 9) {
+                    } else if (levelBlock.getId() == 9) {
                         this.motionX = this.getSpeed() * moveMultiplier * 0.05 * (x / diff);
                         this.motionZ = this.getSpeed() * moveMultiplier * 0.05 * (z / diff);
                         if (!this.isDrowned)

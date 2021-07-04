@@ -25,7 +25,7 @@ public class StraySpawner extends AbstractEntitySpawner {
         int biomeId = level.getBiomeId((int) pos.x, (int) pos.z);
 
         if (Block.transparent[blockId]) {
-        }else if (blockLightLevel > 7) {
+        } else if (blockLightLevel > 7) {
         } else if (pos.y > 255 || pos.y < 1 || blockId == Block.AIR) {
         } else if (biomeId != 12) {
         } else if (MobPlugin.isMobSpawningAllowedByTime(level)) {
