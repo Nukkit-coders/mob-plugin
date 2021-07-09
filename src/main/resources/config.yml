@@ -1,20 +1,20 @@
-# config version, do not edit!
-config-version: 15
+# Config version, do not edit!
+config-version: 16
 
 entities:
-  # how often the spawn task should run
-  # in ticks, 20 ticks = 1 second
-  # use 0 to disable entity spawning
+  # How often the spawn task should run
+  # In ticks, 20 ticks = 1 second
+  # Use 0 to disable entity spawning
   autospawn-ticks: 200
-  # how often the despawn task should run
-  # in ticks, 20 ticks = 1 second
-  # use 0 to disable entity despawning
+  # How often the despawn task should run
+  # In ticks, 20 ticks = 1 second
+  # Use 0 to disable entity despawning
   despawn-ticks: 12000
-  # do not spawn entities in these worlds
+  # Do not spawn entities in these worlds
   worlds-spawning-disabled: "exampleworld1, exampleworld2"
 
-# spawning limit settings
-# per player, in 100 blocks range
+# Spawning limit settings
+# Per player, in 100 blocks range
 autospawn:
   bat: 0
   blaze: 0
@@ -56,20 +56,24 @@ autospawn:
   piglin: 2
 
 other:
-  # mob spawner spawning range
-  spawner-spawn-range: 8
-  # don't reduce spawn eggs if there is same entity already in the spawner (non vanilla behavior)
+  # Mob spawner spawning range
+  spawner-spawn-range: 4
+  # Minimum amount of mobs spawned from spawner
+  minimum-spawner-count: 1
+  # Maximum amount of mobs spawned from spawner
+  maximum-spawner-count: 4
+  # Don't reduce spawn eggs if there is same entity already in the spawner (non vanilla behavior)
   do-not-waste-spawn-eggs: false
-  # give xp drops straight to player
+  # Give xp drops straight to player
   use-no-xp-orbs: false
-  # do not spawn mobs this near to spawn area
-  # set -1 to disable
+  # Do not spawn mobs this near to spawn area
+  # Set -1 to disable
   spawn-no-spawning-area: -1
-  # kill entities instead of despawning them
+  # Kill entities instead of despawning them
   kill-mobs-on-despawn: false
-  # enable mob spawner blocks
+  # Enable mob spawner blocks
   spawners-enabled: true
-  # custom enderman max spawns rule for the end world
+  # Custom enderman max spawns rule for the end world
   end-enderman-spawning: 10
-  # if tamed entity owner attacked or attack entity, it will be angry
+  # If tamed entity owner attacked or attack entity, it will be angry
   check-tamed-entity-attack: true
